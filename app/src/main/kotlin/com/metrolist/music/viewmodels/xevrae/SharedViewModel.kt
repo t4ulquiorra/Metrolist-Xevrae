@@ -1625,7 +1625,7 @@ class SharedViewModel @Inject constructor(
                         videoId = track.videoId,
                         path = path,
                         isVideo = nowPlayingScreenData.value.isVideo,
-                    ).collectLatest {
+                    ).collectLatest<DownloadProgress> {
                         _downloadFileProgress.value = it
                     }
             }
@@ -1650,7 +1650,7 @@ class SharedViewModel @Inject constructor(
         viewModelScope.launch {
             dataStoreManager.setHelpBuildLyricsDatabase(true)
             dataStoreManager.setContributorLyricsDatabase(
-                contributor,
+                contributor ?: Pair("", ""),
             )
         }
     }
@@ -1877,5 +1877,4 @@ sealed class VoteState {
     data class Error(
         val message: String,
     ) : VoteState()
-} ) : VoteState()
-}
+    }

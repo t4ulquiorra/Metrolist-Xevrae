@@ -166,6 +166,15 @@ class SongRepository @Inject constructor(
 
     fun getLikeStatus(videoId: String): Flow<Int> =
         database.song(videoId).map { if (it?.song?.liked == true) 1 else 0 }
+
+    fun downloadToFile(
+        track: SongItem,
+        videoId: String,
+        path: String,
+        isVideo: Boolean
+    ): Flow<DownloadProgress> = flow {
+        emit(DownloadProgress.INIT)
+    }
 }
 
 @Singleton
