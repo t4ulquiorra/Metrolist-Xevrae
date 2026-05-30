@@ -13,7 +13,6 @@ room = "2.8.4"
 hilt = "2.59.2"
 ktor = "3.5.0"
 ksp = "2.3.6"
-jsoup = "1.22.2"
 coil = "3.4.0"
 ucrop = "2.2.11"
 guava = "33.6.0-jre"
@@ -38,7 +37,7 @@ tinypinyin = "2.0.3"
 protobuf = "4.34.1"
 haze = "1.5.1"
 liquidGlass = "2.0.0-alpha03"
-liquidGlassShapes = "1.2.0"
+liquidGlassShapes = "2.0.0-alpha03"
 kmpalette = "3.1.0"
 compottie = "2.0.0"
 cmptoast = "0.5.0"
@@ -104,8 +103,6 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-encoding = { module = "io.ktor:ktor-client-encoding", version.ref = "ktor" }
 ktor-serialization-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
-
-jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 
 json = { module = "org.json:json", version.ref = "json" }
 

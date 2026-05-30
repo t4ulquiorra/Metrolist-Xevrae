@@ -373,7 +373,6 @@ dependencies {
     implementation(libs.apache.lang3)
 
     implementation(libs.hilt)
-    implementation(libs.jsoup)
     ksp(libs.hilt.compiler)
 
     implementation(project(":innertube"))
