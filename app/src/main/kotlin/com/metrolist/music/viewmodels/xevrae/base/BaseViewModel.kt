@@ -21,7 +21,7 @@ abstract class BaseViewModel(
     protected val context: Context
 ) : ViewModel() {
     @Inject
-    protected lateinit var playerConnection: PlayerConnection
+    internal lateinit var playerConnection: PlayerConnection
     private val _nowPlayingVideoId: MutableStateFlow<String> = MutableStateFlow("")
 
     /**
