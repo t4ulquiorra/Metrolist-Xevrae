@@ -32,10 +32,6 @@ fun getSizeOfFile(dir: File): Long {
     return dirSize
 }
 
-fun InputStream.zipInputStream(): ZipInputStream = ZipInputStream(this)
-
-fun OutputStream.zipOutputStream(): ZipOutputStream = ZipOutputStream(this)
-
 fun formatDuration(duration: Long): String {
     if (duration < 0L) return "00:00"
     val minutes: Long = TimeUnit.MINUTES.convert(duration, TimeUnit.MILLISECONDS)

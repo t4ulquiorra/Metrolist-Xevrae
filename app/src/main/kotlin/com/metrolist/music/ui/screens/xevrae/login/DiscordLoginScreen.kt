@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.metrolist.music.ui.utils.DiscordWebView
 import com.metrolist.music.ui.utils.rememberWebViewState
-import com.metrolist.music.extension.getStringBlocking
+import com.metrolist.music.extensions.getStringBlocking
 import com.metrolist.music.ui.component.DevLogInBottomSheet
 import com.metrolist.music.ui.component.DevLogInType
 import com.metrolist.music.ui.component.RippleIconButton

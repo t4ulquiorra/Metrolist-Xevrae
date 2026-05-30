@@ -58,7 +58,7 @@ data class SongsResult(
     val title: String? = null,
     val videoId: String,
     val videoType: String? = null,
-    val year: Any? = null,
+    val year: String? = null,
 ) : SearchResultType {
     override fun objectType(): SearchResultType.Type = SearchResultType.Type.SONG
 }
@@ -75,7 +75,7 @@ data class VideosResult(
     val videoId: String,
     val videoType: String? = null,
     val views: String? = null,
-    val year: Any? = null,
+    val year: String? = null,
 ) : SearchResultType {
     override fun objectType(): SearchResultType.Type = SearchResultType.Type.VIDEO
 }
@@ -127,17 +127,6 @@ data class Artist(
 data class Album(
     val name: String,
     val id: String,
-)
-
-@Serializable
-data class Thumbnail(
-    val url: String,
-)
-
-@Serializable
-data class FeedbackTokens(
-    val add: String? = null,
-    val remove: String? = null,
 )
 
 data class SearchSuggestions(

@@ -78,6 +78,27 @@ fun SongEntity.toTrack(): Track {
     )
 }
 
+fun Content.toTrack(): Track =
+    Track(
+        album = album,
+        artists = artists ?: emptyList(),
+        duration = "",
+        durationSeconds = durationSeconds,
+        isAvailable = true,
+        isExplicit = isExplicit ?: false,
+        likeStatus = "INDIFFERENT",
+        thumbnails = thumbnails,
+        title = title,
+        videoId = videoId ?: "",
+        videoType = "",
+        category = null,
+        feedbackTokens = null,
+        resultType = null,
+        year = "",
+    )
+
+fun List<Artist>.toListName(): List<String> = map { it.name }
+
 fun List<String>.connectArtists(): String {
     return joinToString(", ")
 }

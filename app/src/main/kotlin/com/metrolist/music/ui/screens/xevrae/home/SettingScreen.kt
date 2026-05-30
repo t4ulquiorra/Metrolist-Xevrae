@@ -100,10 +100,10 @@ import com.metrolist.music.common.SUPPORTED_LANGUAGE
 import com.metrolist.music.common.SUPPORTED_LOCATION
 import com.metrolist.music.common.SponsorBlockType
 import com.metrolist.music.common.VIDEO_QUALITY
-import com.metrolist.music.domain.extension.now
+import com.metrolist.music.extensions.now
 import com.metrolist.music.domain.manager.DataStoreManager
 import com.metrolist.music.domain.utils.LocalResource
-import com.metrolist.music.logger.Logger
+import com.metrolist.music.utils.Logger
 import com.metrolist.music.Platform
 import com.metrolist.music.ui.utils.fileSaverResult
 import com.metrolist.music.ui.utils.openEqResult
@@ -125,7 +125,7 @@ import com.metrolist.music.ui.theme.xevrae.DarkColors
 import com.metrolist.music.ui.theme.xevrae.md_theme_dark_primary
 import com.metrolist.music.ui.theme.xevrae.typo
 import com.metrolist.music.ui.theme.xevrae.white
-import com.metrolist.music.utils.VersionManager
+import com.metrolist.music.models.xevrae.VersionManager
 import com.metrolist.music.viewmodels.xevrae.SettingAlertState
 import com.metrolist.music.viewmodels.xevrae.SettingBasicAlertState
 import com.metrolist.music.viewmodels.xevrae.SettingsViewModel

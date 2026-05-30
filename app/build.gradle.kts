@@ -328,6 +328,7 @@ dependencies {
     implementation(libs.activity)
     implementation(libs.hilt.navigation)
     implementation(libs.datastore)
+    implementation(libs.work.runtime)
 
     implementation(libs.compose.runtime)
     implementation(libs.compose.foundation)
@@ -336,12 +337,15 @@ dependencies {
     implementation(libs.compose.ui.tooling)
     implementation(libs.compose.animation)
     implementation(libs.compose.reorderable)
+    implementation(libs.compose.constraintlayout)
 
     implementation(libs.viewmodel)
     implementation(libs.viewmodel.compose)
     implementation(libs.lifecycle.process)
 
     implementation(libs.material3)
+    implementation(libs.compose.icons.core)
+    implementation(libs.compose.icons.extended)
     implementation(libs.palette)
     implementation(libs.materialKolor)
 
@@ -353,6 +357,7 @@ dependencies {
     implementation(libs.ucrop)
 
     implementation(libs.shimmer)
+    implementation(libs.aboutlibraries_compose)
 
     implementation(libs.media3)
     implementation(libs.media3.session)
@@ -385,8 +390,12 @@ dependencies {
 
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.okhttp)
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.serialization.json)
+    implementation(libs.ktor.serialization.protobuf)
+    implementation(libs.kotlinx.serialization.protobuf)
+    implementation(libs.brotli)
 
     // Protobuf for message serialization (lite version for Android)
     implementation(libs.protobuf.javalite)
@@ -395,6 +404,7 @@ dependencies {
     coreLibraryDesugaring(libs.desugaring)
 
     implementation(libs.timber)
+    implementation(libs.uri-kmp)
 
     implementation(libs.adaptive)
     implementation(libs.adaptive.layout)

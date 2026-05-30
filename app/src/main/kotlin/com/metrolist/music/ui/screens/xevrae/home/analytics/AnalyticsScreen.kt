@@ -64,10 +64,10 @@ import com.metrolist.music.domain.mediaservice.handler.QueueData
 import com.metrolist.music.domain.utils.LocalResource
 import com.metrolist.music.domain.utils.connectArtists
 import com.metrolist.music.domain.utils.toArrayListTrack
-import com.metrolist.music.domain.utils.toTrack
-import com.metrolist.music.logger.Logger
-import com.metrolist.music.extension.getScreenSizeInfo
-import com.metrolist.music.extension.getStringBlocking
+import com.metrolist.music.models.xevrae.toTrack
+import com.metrolist.music.utils.Logger
+import com.metrolist.music.extensions.getScreenSizeInfo
+import com.metrolist.music.extensions.getStringBlocking
 import com.metrolist.music.ui.component.CenterLoadingBox
 import com.metrolist.music.ui.component.EndOfPage
 import com.metrolist.music.ui.component.FiveImagesComponent

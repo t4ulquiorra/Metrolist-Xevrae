@@ -30,7 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.metrolist.music.common.Config
-import com.metrolist.music.logger.Logger
+import com.metrolist.music.utils.Logger
 import com.metrolist.music.ui.utils.PlatformWebView
 import com.metrolist.music.ui.utils.createWebViewCookieManager
 import com.metrolist.music.ui.utils.rememberWebViewState

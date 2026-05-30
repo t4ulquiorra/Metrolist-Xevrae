@@ -12,7 +12,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.metrolist.music.ui.theme.xevrae.typo
-import com.metrolist.music.utils.VersionManager
+import com.metrolist.music.models.xevrae.VersionManager
 import androidx.compose.ui.res.stringResource
 import com.metrolist.music.R
 import java.time.LocalDateTime

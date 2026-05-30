@@ -65,10 +65,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.metrolist.music.ui.utils.Logger
+import com.metrolist.music.utils.Logger
 import com.metrolist.music.ui.utils.PlatformBackdrop
 import com.metrolist.music.ui.utils.drawBackdropCustomShape
-import com.metrolist.music.extension.greyScale
+import com.metrolist.music.extensions.greyScale
 import com.metrolist.music.ui.navigation.xevrae.destination.home.HomeDestination
 import com.metrolist.music.ui.navigation.xevrae.destination.library.LibraryDestination
 import com.metrolist.music.ui.navigation.xevrae.destination.search.SearchDestination

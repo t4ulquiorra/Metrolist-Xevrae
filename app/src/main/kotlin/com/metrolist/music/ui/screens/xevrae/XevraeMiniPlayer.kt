@@ -98,7 +98,7 @@ import com.kmpalette.rememberPaletteState
 import com.metrolist.music.db.entities.SongEntity
 import com.metrolist.music.domain.manager.DataStoreManager
 import com.metrolist.music.domain.utils.connectArtists
-import com.metrolist.music.logger.Logger
+import com.metrolist.music.utils.Logger
 import com.metrolist.music.Platform
 import com.metrolist.music.utils.toggleMiniPlayer
 import com.metrolist.music.ui.utils.PlatformBackdrop
@@ -135,7 +135,7 @@ private const val TAG = "MiniPlayer"
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun MiniPlayer(
+fun XevraeMiniPlayer(
     modifier: Modifier,
     backdrop: PlatformBackdrop,
     cornerRadius: androidx.compose.ui.unit.Dp = 10.dp,

@@ -18,7 +18,3 @@ data class MoodContent(
     val thumbnails: List<Thumbnail>?,
     val playlistBrowseId: String,
 )
-
-data class Thumbnail(
-    val url: String,
-)

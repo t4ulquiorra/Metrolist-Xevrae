@@ -19,6 +19,151 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.shimmer
 
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+
+@Composable
+fun HomeItemShimmer() {
+    val shimmerBackground = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+    Column {
+        Box(
+            Modifier
+                .width(150.dp)
+                .height(36.dp)
+                .padding(vertical = 8.dp)
+                .background(
+                    color = shimmerBackground,
+                ).clip(RoundedCornerShape(10))
+                .shimmer(),
+        )
+        LazyRow(userScrollEnabled = false) {
+            items(10) {
+                PlaylistShimmer()
+            }
+        }
+    }
+}
+
+@Composable
+fun PlaylistShimmer() {
+    val shimmerBackground = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+    Column(
+        Modifier
+            .height(270.dp)
+            .padding(10.dp),
+    ) {
+        Box(
+            Modifier
+                .size(160.dp)
+                .clip(
+                    RoundedCornerShape(10.dp),
+                ).background(
+                    color = shimmerBackground,
+                ).shimmer(),
+        )
+        Spacer(modifier = Modifier.size(10.dp))
+        Box(
+            Modifier
+                .width(130.dp)
+                .height(18.dp)
+                .clip(
+                    RoundedCornerShape(10.dp),
+                ).background(
+                    color = shimmerBackground,
+                ).shimmer(),
+        )
+        Spacer(modifier = Modifier.size(10.dp))
+        Box(
+            Modifier
+                .width(130.dp)
+                .height(18.dp)
+                .clip(
+                    RoundedCornerShape(10.dp),
+                ).background(
+                    color = shimmerBackground,
+                ).shimmer(),
+        )
+    }
+}
+
+@Composable
+fun QuickPicksShimmerItem() {
+    val shimmerBackground = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+    Row(
+        Modifier
+            .height(70.dp)
+            .padding(10.dp),
+    ) {
+        Box(
+            Modifier
+                .size(50.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(shimmerBackground)
+                .shimmer(),
+        )
+        Column(
+            Modifier
+                .padding(start = 10.dp)
+                .wrapContentHeight(align = Alignment.CenterVertically)
+                .align(Alignment.CenterVertically),
+        ) {
+            Box(
+                Modifier
+                    .width(300.dp)
+                    .height(21.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(shimmerBackground)
+                    .shimmer(),
+            )
+            Spacer(modifier = Modifier.height(3.dp))
+            Box(
+                Modifier
+                    .width(260.dp)
+                    .height(21.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(shimmerBackground)
+                    .shimmer(),
+            )
+        }
+    }
+}
+
+@Composable
+fun QuickPicksShimmer() {
+    val shimmerBackground = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.1f)
+    Column {
+        Box(
+            Modifier
+                .width(150.dp)
+                .height(36.dp)
+                .padding(vertical = 8.dp)
+                .background(
+                    color = shimmerBackground,
+                ).clip(RoundedCornerShape(10.dp))
+                .shimmer(),
+        )
+        LazyColumn(userScrollEnabled = false) {
+            items(4) {
+                QuickPicksShimmerItem()
+            }
+        }
+    }
+}
+
+@Composable
+fun HomeShimmer() {
+    Column(
+        Modifier.padding(horizontal = 15.dp),
+    ) {
+        QuickPicksShimmer()
+        LazyColumn(userScrollEnabled = false) {
+            items(10) {
+                HomeItemShimmer()
+            }
+        }
+    }
+}
+
 @Composable
 fun ShimmerSearchItem() {
     Row(

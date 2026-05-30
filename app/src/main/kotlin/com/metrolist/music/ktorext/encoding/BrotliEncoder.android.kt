@@ -27,4 +27,4 @@ object BrotliEncoder : ContentEncoder {
     ): ByteWriteChannel = throw UnsupportedOperationException("Encode not implemented by the library yet.")
 }
 
-actual fun createBrotliEncoder(): ContentEncoder = BrotliEncoder
+fun createBrotliEncoder(): ContentEncoder = BrotliEncoder

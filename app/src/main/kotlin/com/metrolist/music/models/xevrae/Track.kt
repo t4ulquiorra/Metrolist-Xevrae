@@ -20,9 +20,3 @@ data class Track(
     val resultType: String?,
     val year: String? = null,
 )
-
-@Serializable
-data class FeedbackTokens(
-    val add: String?,
-    val remove: String?,
-)

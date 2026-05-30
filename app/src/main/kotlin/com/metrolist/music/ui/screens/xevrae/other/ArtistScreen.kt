@@ -52,17 +52,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.metrolist.music.common.Config
-import com.metrolist.music.domain.data.model.browse.album.Track
-import com.metrolist.music.domain.data.model.home.Content
-import com.metrolist.music.domain.data.model.searchResult.songs.Artist
+import com.metrolist.music.models.xevrae.Track
+import com.metrolist.music.models.xevrae.Content
+import com.metrolist.music.models.xevrae.Artist
 import com.metrolist.music.domain.mediaservice.handler.PlaylistType
 import com.metrolist.music.domain.mediaservice.handler.QueueData
-import com.metrolist.music.domain.utils.toSongEntity
-import com.metrolist.music.domain.utils.toTrack
+import com.metrolist.music.models.xevrae.toSongEntity
+import com.metrolist.music.models.xevrae.toTrack
 import com.metrolist.music.expect.pressClickable
 import com.metrolist.music.expect.ui.MediaPlayerView
-import com.metrolist.music.extension.getStringBlocking
-import com.metrolist.music.extension.rgbFactor
+import com.metrolist.music.extensions.getStringBlocking
+import com.metrolist.music.extensions.rgbFactor
 import com.metrolist.music.ui.component.CenterLoadingBox
 import com.metrolist.music.ui.component.CollapsingToolbarParallaxEffect
 import com.metrolist.music.ui.component.DescriptionView
@@ -85,15 +85,19 @@ import com.metrolist.music.viewmodels.xevrae.SharedViewModel
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.runBlocking
 import androidx.compose.ui.res.stringResource
+import com.metrolist.music.extensions.getScreenSizeInfo
+import androidx.activity.ComponentActivity
+import com.metrolist.music.LocalActivity
 
 @Composable
 @ExperimentalMaterial3Api
 fun ArtistScreen(
     channelId: String,
     viewModel: ArtistViewModel = hiltViewModel(),
-    sharedViewModel: SharedViewModel = hiltViewModel(),
+    sharedViewModel: SharedViewModel = hiltViewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity),
     navController: NavController,
 ) {
+    val screenInfo = getScreenSizeInfo()
     val artistScreenState by viewModel.artistScreenState.collectAsStateWithLifecycle()
     val isFollowed by viewModel.followed.collectAsStateWithLifecycle()
     val canvasUrl by viewModel.canvasUrl.collectAsStateWithLifecycle()
@@ -176,6 +180,7 @@ fun ArtistScreen(
                                         ) {
                                             MediaPlayerView(
                                                 url = canvas.first,
+                                                screenSize = screenInfo,
                                                 modifier =
                                                     Modifier
                                                         .width(28.dp)

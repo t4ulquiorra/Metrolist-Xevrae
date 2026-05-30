@@ -12,7 +12,7 @@ import com.metrolist.music.common.EXOPLAYER_DB_NAME
 import com.metrolist.music.common.SETTINGS_FILENAME
 import com.metrolist.music.domain.manager.DataStoreManager
 import com.metrolist.music.viewmodels.xevrae.CommonRepository
-import com.metrolist.music.logger.Logger
+import com.metrolist.music.utils.Logger
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
@@ -61,7 +61,7 @@ class AutoBackupWorker(
             val maxFiles = dataStoreManager.autoBackupMaxFiles.first()
 
             // Create temp backup file
-            val tempBackupFile = createBackupFile(backupDownloaded)
+            val tempBackupFile = createBackupFile(backupDownloaded, commonRepository)
 
             // Save to Downloads/Xevrae folder
             val success = saveToDownloads(tempBackupFile)
@@ -89,7 +89,10 @@ class AutoBackupWorker(
         }
     }
 
-    private suspend fun createBackupFile(backupDownloaded: Boolean): File {
+    private suspend fun createBackupFile(
+        backupDownloaded: Boolean,
+        commonRepository: CommonRepository,
+    ): File {
         val tempFile = File(context.cacheDir, "temp_backup.zip")
 
         FileOutputStream(tempFile).buffered().use { bufferedOutput ->

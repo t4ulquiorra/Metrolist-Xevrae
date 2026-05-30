@@ -103,11 +103,11 @@ import com.metrolist.music.models.xevrae.LocalPlaylistEntity
 import com.metrolist.music.models.xevrae.PairSongLocalPlaylist
 import com.metrolist.music.db.entities.SongEntity
 import com.metrolist.music.domain.utils.FilterState
-import com.metrolist.music.domain.utils.toTrack
-import com.metrolist.music.logger.Logger
-import com.metrolist.music.extension.angledGradientBackground
-import com.metrolist.music.extension.displayNameRes
-import com.metrolist.music.extension.getColorFromPalette
+import com.metrolist.music.models.xevrae.toTrack
+import com.metrolist.music.utils.Logger
+import com.metrolist.music.extensions.angledGradientBackground
+import com.metrolist.music.extensions.displayNameRes
+import com.metrolist.music.extensions.getColorFromPalette
 import com.metrolist.music.ui.component.CenterLoadingBox
 import com.metrolist.music.ui.component.DraggableItem
 import com.metrolist.music.ui.component.EndOfPage

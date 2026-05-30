@@ -3,10 +3,29 @@ package com.metrolist.music.models.xevrae
 import com.metrolist.music.db.entities.SongEntity
 import com.metrolist.innertube.models.SongItem
 import androidx.media3.common.MediaItem
+import kotlinx.serialization.Serializable
 
 /**
  * Xevrae Compatibility Models
  */
+
+@Serializable
+data class Thumbnail(
+    val url: String,
+)
+
+@Serializable
+data class FeedbackTokens(
+    val add: String? = null,
+    val remove: String? = null,
+)
+
+object DownloadState {
+    const val STATE_NOT_DOWNLOADED = 0
+    const val STATE_PREPARING = 1
+    const val STATE_DOWNLOADING = 2
+    const val STATE_DOWNLOADED = 3
+}
 
 data class NowPlayingTrackState(
     val mediaItem: MediaItem,
@@ -42,6 +61,14 @@ data class Line(
 data class XevraeLyrics(
     val id: String,
     val vote: Int,
+)
+
+data class TranslatedLyricsEntity(
+    val videoId: String,
+    val language: String = "en",
+    val error: Boolean,
+    val lines: List<Line>?,
+    val syncType: String?,
 )
 
 data class CanvasResult(
@@ -112,10 +139,6 @@ data class SongInfoEntity(
     val thumbnail: String?,
     val duration: Long,
 )
-
-object VersionManager {
-    fun getVersionName(): String = "1.0.0"
-}
 
 data class DownloadProgress(
     val audioDownloadProgress: Float = 0f, // 0.0 - 1.0

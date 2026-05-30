@@ -42,7 +42,7 @@ import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.metrolist.music.models.xevrae.NotificationEntity
-import com.metrolist.music.extension.formatTimeAgo
+import com.metrolist.music.extensions.formatTimeAgo
 import com.metrolist.music.ui.component.CenterLoadingBox
 import com.metrolist.music.ui.component.EndOfPage
 import com.metrolist.music.ui.component.RippleIconButton

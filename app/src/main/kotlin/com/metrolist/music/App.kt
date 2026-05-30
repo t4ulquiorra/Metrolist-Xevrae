@@ -64,6 +64,7 @@ class App :
 
     override fun onCreate() {
         super.onCreate()
+        instance = this
 
         // Install crash handler first
         CrashHandler.install(this)
@@ -298,6 +299,9 @@ class App :
     }
 
     companion object {
+        lateinit var instance: App
+            private set
+
         suspend fun forgetAccount(context: Context) {
             Timber.d("forgetAccount: Starting logout process")
 

@@ -32,7 +32,7 @@ import com.metrolist.music.db.entities.PlaylistEntity
 import com.metrolist.music.db.entities.SongEntity
 import com.metrolist.music.domain.mediaservice.handler.PlaylistType
 import com.metrolist.music.domain.mediaservice.handler.QueueData
-import com.metrolist.music.domain.utils.toTrack
+import com.metrolist.music.models.xevrae.toTrack
 import com.metrolist.music.ui.component.ArtistFullWidthItems
 import com.metrolist.music.ui.component.CenterLoadingBox
 import com.metrolist.music.ui.component.EndOfPage

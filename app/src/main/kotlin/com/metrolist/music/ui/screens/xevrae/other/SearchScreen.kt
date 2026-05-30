@@ -87,7 +87,7 @@ import com.metrolist.music.domain.mediaservice.handler.QueueData
 import com.metrolist.music.models.xevrae.connectArtists
 import com.metrolist.music.models.xevrae.toSongEntity
 import com.metrolist.music.models.xevrae.toTrack
-import com.metrolist.music.extension.getStringBlocking
+import com.metrolist.music.extensions.getStringBlocking
 import com.metrolist.music.ui.component.ArtistFullWidthItems
 import com.metrolist.music.ui.component.Chip
 import com.metrolist.music.ui.component.EndOfPage

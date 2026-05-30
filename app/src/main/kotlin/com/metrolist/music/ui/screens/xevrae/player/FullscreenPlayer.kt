@@ -76,8 +76,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.metrolist.music.common.Config.MAIN_PLAYER
 import com.metrolist.music.expect.ui.MediaPlayerViewWithSubtitle
-import com.metrolist.music.extension.formatDuration
-import com.metrolist.music.extension.rememberIsInPipMode
+import com.metrolist.music.extensions.formatDuration
+import com.metrolist.music.extensions.rememberIsInPipMode
 import com.metrolist.music.ui.component.NowPlayingBottomSheet
 import com.metrolist.music.ui.component.RippleIconButton
 import com.metrolist.music.ui.theme.xevrae.overlay
@@ -180,7 +180,7 @@ fun FullscreenPlayer(
 
     Box {
         MediaPlayerViewWithSubtitle(
-            playerName = MAIN_PLAYER,
+            player = sharedViewModel.playerConnection.player,
             modifier =
                 Modifier
                     .fillMaxSize(),
@@ -773,7 +773,7 @@ fun FullScreenRotationImmersive(
 
     androidx.compose.runtime.DisposableEffect(true) {
         onLaunch.invoke()
-        val activity = com.metrolist.music.extension.findActivity(context)
+        val activity = com.metrolist.music.extensions.findActivity(context)
         activity.requestedOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         val window = activity.window
         val insetsController = androidx.core.view.WindowCompat.getInsetsController(window, window.decorView)
@@ -798,7 +798,7 @@ fun FullScreenRotationImmersive(
     }
 
     androidx.compose.runtime.LaunchedEffect(true) {
-        val activity = com.metrolist.music.extension.findActivity(context)
+        val activity = com.metrolist.music.extensions.findActivity(context)
         val window = activity.window
 
         window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)

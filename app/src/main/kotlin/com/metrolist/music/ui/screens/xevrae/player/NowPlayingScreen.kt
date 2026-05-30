@@ -141,23 +141,23 @@ import com.kmpalette.rememberPaletteState
 import com.metrolist.music.common.Config.MAIN_PLAYER
 import com.metrolist.music.domain.mediaservice.handler.MediaPlayerHandler
 import com.metrolist.music.domain.mediaservice.handler.RepeatState
-import com.metrolist.music.logger.Logger
+import com.metrolist.music.utils.Logger
 import com.metrolist.music.Platform
 import com.metrolist.music.expect.toggleMiniPlayer
 import com.metrolist.music.expect.ui.MediaPlayerView
 import com.metrolist.music.expect.ui.MediaPlayerViewWithSubtitle
 import com.metrolist.music.expect.ui.toImageBitmap
-import com.metrolist.music.extension.GradientAngle
-import com.metrolist.music.extension.GradientOffset
-import com.metrolist.music.extension.KeepScreenOn
-import com.metrolist.music.extension.formatDuration
-import com.metrolist.music.extension.getColorFromPalette
-import com.metrolist.music.extension.getScreenSizeInfo
-import com.metrolist.music.extension.getStringBlocking
-import com.metrolist.music.extension.hsvToColor
-import com.metrolist.music.extension.isElementVisible
-import com.metrolist.music.extension.parseTimestampToMilliseconds
-import com.metrolist.music.extension.rememberIsInPipMode
+import com.metrolist.music.extensions.GradientAngle
+import com.metrolist.music.extensions.GradientOffset
+import com.metrolist.music.extensions.KeepScreenOn
+import com.metrolist.music.extensions.formatDuration
+import com.metrolist.music.extensions.getColorFromPalette
+import com.metrolist.music.extensions.getScreenSizeInfo
+import com.metrolist.music.extensions.getStringBlocking
+import com.metrolist.music.extensions.hsvToColor
+import com.metrolist.music.extensions.isElementVisible
+import com.metrolist.music.extensions.parseTimestampToMilliseconds
+import com.metrolist.music.extensions.rememberIsInPipMode
 import com.metrolist.music.getPlatform
 import com.metrolist.music.ui.component.AIBadge
 import com.metrolist.music.ui.component.AddToPlaylistModalBottomSheet
@@ -900,6 +900,7 @@ fun NowPlayingScreenContent(
                                     screenDataState.canvasData?.url?.let { url ->
                                         MediaPlayerView(
                                             url = url,
+                                            screenSize = screenInfo,
                                             modifier =
                                                 Modifier
                                                     .fillMaxHeight()
@@ -1065,7 +1066,7 @@ fun NowPlayingScreenContent(
                                             // Player
                                             Box(Modifier.fillMaxSize()) {
                                                 MediaPlayerViewWithSubtitle(
-                                                    playerName = MAIN_PLAYER,
+                                                    player = sharedViewModel.playerConnection.player,
                                                     modifier = Modifier.align(Alignment.Center),
                                                     shouldShowSubtitle = internalShowSubtitle,
                                                     shouldPip = false,

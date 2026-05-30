@@ -1,6 +1,6 @@
 package com.metrolist.music.ui.screens.xevrae.player
 
-import com.metrolist.music.domain.data.model.browse.album.Track
+import com.metrolist.music.models.xevrae.Track
 
 /**
  * Pure helpers for the Spotify-style artwork pager on [NowPlayingScreen].

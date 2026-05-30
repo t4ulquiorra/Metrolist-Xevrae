@@ -34,7 +34,7 @@ import com.metrolist.music.common.Config
 import com.metrolist.music.ui.utils.PlatformWebView
 import com.metrolist.music.ui.utils.createWebViewCookieManager
 import com.metrolist.music.ui.utils.rememberWebViewState
-import com.metrolist.music.extension.getStringBlocking
+import com.metrolist.music.extensions.getStringBlocking
 import com.metrolist.music.ui.component.DevCookieLogInBottomSheet
 import com.metrolist.music.ui.component.DevLogInBottomSheet
 import com.metrolist.music.ui.component.DevLogInType

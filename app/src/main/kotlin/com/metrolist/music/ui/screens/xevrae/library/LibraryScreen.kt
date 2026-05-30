@@ -64,9 +64,9 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.metrolist.music.common.LibraryChipType
 import com.metrolist.music.domain.utils.LocalResource
-import com.metrolist.music.logger.Logger
-import com.metrolist.music.extension.copy
-import com.metrolist.music.extension.isScrollingUp
+import com.metrolist.music.utils.Logger
+import com.metrolist.music.extensions.copy
+import com.metrolist.music.extensions.isScrollingUp
 import com.metrolist.music.ui.component.Chip
 import com.metrolist.music.ui.component.EndOfPage
 import com.metrolist.music.ui.component.GridLibraryPlaylist

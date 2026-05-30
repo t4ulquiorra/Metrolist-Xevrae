@@ -67,11 +67,11 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.toBitmap
 import com.kmpalette.rememberPaletteState
-import com.metrolist.music.domain.data.model.browse.album.Track
-import com.metrolist.music.domain.utils.toSongEntity
-import com.metrolist.music.domain.utils.toTrack
-import com.metrolist.music.extension.angledGradientBackground
-import com.metrolist.music.extension.getColorFromPalette
+import com.metrolist.music.models.xevrae.Track
+import com.metrolist.music.models.xevrae.toSongEntity
+import com.metrolist.music.models.xevrae.toTrack
+import com.metrolist.music.extensions.angledGradientBackground
+import com.metrolist.music.extensions.getColorFromPalette
 import com.metrolist.music.ui.component.CenterLoadingBox
 import com.metrolist.music.ui.component.DescriptionView
 import com.metrolist.music.ui.component.EndOfPage

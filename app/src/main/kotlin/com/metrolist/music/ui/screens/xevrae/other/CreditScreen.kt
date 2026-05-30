@@ -38,7 +38,7 @@ import androidx.navigation.NavController
 import com.metrolist.music.expect.openUrl
 import com.metrolist.music.ui.component.RippleIconButton
 import com.metrolist.music.ui.theme.xevrae.typo
-import com.metrolist.music.utils.VersionManager
+import com.metrolist.music.models.xevrae.VersionManager
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi

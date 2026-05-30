@@ -70,7 +70,6 @@ class DataStoreManager @Inject constructor(
     val saveStateOfPlayback: Flow<Boolean> = flowOf(false)
     val saveRecentSongAndQueue: Flow<Boolean> = flowOf(false)
     val maxSongCacheSize: Flow<Int> = flowOf(1024)
-    val quality: Flow<String> = flowOf("high")
     val videoQuality: Flow<String> = flowOf("high")
     val sponsorBlockEnabled: Flow<Boolean> = flowOf(false)
     val crossfadeEnabled: Flow<Boolean> = flowOf(false)
@@ -148,7 +147,6 @@ class DataStoreManager @Inject constructor(
     suspend fun setSaveStateOfPlayback(save: Boolean) {}
     suspend fun setMaxSongCacheSize(size: Int) {}
     suspend fun setKillServiceOnExit(kill: Boolean) {}
-    suspend fun setKeepServiceAlive(keep: Boolean) {}
     suspend fun setSpdc(spdc: String) {}
     suspend fun setSpotifyCanvas(enabled: Boolean) {}
 
@@ -169,5 +167,9 @@ class DataStoreManager @Inject constructor(
         const val LRCLIB = "LrcLib"
         const val YOUTUBE = "YouTube"
         const val BETTER_LYRICS = "BetterLyrics"
+
+        const val AUTO_BACKUP_FREQUENCY_DAILY = "daily"
+        const val AUTO_BACKUP_FREQUENCY_WEEKLY = "weekly"
+        const val AUTO_BACKUP_FREQUENCY_MONTHLY = "monthly"
     }
 }

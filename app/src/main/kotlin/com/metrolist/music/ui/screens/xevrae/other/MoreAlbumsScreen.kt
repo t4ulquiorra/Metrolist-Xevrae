@@ -30,7 +30,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.metrolist.music.logger.Logger
+import com.metrolist.music.utils.Logger
 import com.metrolist.music.ui.component.CenterLoadingBox
 import com.metrolist.music.ui.component.EndOfPage
 import com.metrolist.music.ui.component.HomeItemContentPlaylist

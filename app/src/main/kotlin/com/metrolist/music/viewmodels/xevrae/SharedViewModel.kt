@@ -49,7 +49,7 @@ import com.metrolist.music.Platform
 import com.metrolist.music.utils.getDownloadFolderPath
 import com.metrolist.music.ui.utils.toByteArray
 import com.metrolist.music.getPlatform
-import com.metrolist.music.utils.VersionManager
+import com.metrolist.music.models.xevrae.VersionManager
 import com.metrolist.music.viewmodels.xevrae.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

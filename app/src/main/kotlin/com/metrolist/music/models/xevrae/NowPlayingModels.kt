@@ -2,20 +2,6 @@ package com.metrolist.music.models.xevrae
 
 import com.metrolist.music.db.entities.SongEntity
 
-object DownloadState {
-    const val STATE_NOT_DOWNLOADED = 0
-    const val STATE_PREPARING = 1
-    const val STATE_DOWNLOADING = 2
-    const val STATE_DOWNLOADED = 3
-}
-
-data class LocalPlaylistEntity(
-    val id: Long,
-    val title: String,
-    val thumbnail: String? = null,
-    val tracks: List<String>? = null,
-)
-
 data class SleepTimerState(
     val isActive: Boolean,
     val timeRemaining: Int,
