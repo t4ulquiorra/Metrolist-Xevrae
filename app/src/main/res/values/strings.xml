@@ -354,8 +354,6 @@
     <string name="year_and_category">%1$s • %2$s</string>
     <string name="album_length">%1$s tracks  %2$s</string>
     <string name="view_count">%1$s views</string>
-    <string name="liked">Liked</string>
-    <string name="like">Like</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="download">Download</string>
     <string name="downloaded">Downloaded</string>
@@ -403,9 +401,6 @@
     <string name="no_description">No description</string>
     <string name="in_search">in Search</string>
     <string name="clear_player_cache">Clear Player Cache</string>
-    <string name="cancel">Cancel</string>
-    <string name="clear">Clear</string>
-    <string name="change">Change</string>
     <string name="quality">Quality</string>
     <string name="prefer_320kbps_stream">Prefer 320kbps stream</string>
     <string name="prefer_320kbps_stream_description">Automatically search for 320kbps audio stream when available on the internet. Falls back to default quality if not found.</string>
@@ -414,7 +409,6 @@
     <string name="clear_downloaded_cache">Clear Downloaded Cache</string>
     <string name="clear_thumbnail_cache">Clear Thumbnail Cache</string>
     <string name="add">Add</string>
-    <string name="create">Create</string>
     <string name="edit_title">Edit title</string>
     <string name="edit_thumbnail">Edit thumbnail</string>
     <string name="delete_playlist">Delete playlist</string>
@@ -435,7 +429,6 @@
     <string name="top_tracks">Top tracks</string>
     <string name="top_artists">Top artists</string>
     <string name="your_playlist">Your Playlist</string>
-    <string name="lyrics">Lyrics</string>
     <string name="all">All</string>
     <string name="videos">Videos</string>
     <string name="player_cache">Player Cache</string>
@@ -457,7 +450,6 @@
     <string name="album">Album</string>
     <string name="youtube_url">YouTube URL</string>
     <string name="download_url">Download URL</string>
-    <string name="now_playing">Now Playing</string>
     <string name="recently">Recently</string>
     <string name="now_playing_upper">NOW PLAYING</string>
     <string name="language">Language</string>
@@ -486,14 +478,11 @@
     <string name="no_equalizer">Your device doesn't have equalizer</string>
     <string name="open_system_equalizer">Open system equalizer</string>
     <string name="use_your_system_equalizer">Use your system equalizer</string>
-    <string name="version_format">v%1$s</string>
     <string name="streaming_data_provider_piped">Streaming data provider (Piped)</string>
     <string name="itag">Itag</string>
     <string name="warning">Warning</string>
     <string name="change_language_warning">Changing language will close your app. Are you sure?</string>
     <string name="this_link_is_not_supported">This link is not supported</string>
-    <string name="added_to_playlist">Added to playlist</string>
-    <string name="description">Description</string>
     <string name="playback">Playback</string>
     <string name="save_playback_state">Save Playback State</string>
     <string name="save_shuffle_and_repeat_mode">Save shuffle and repeat mode</string>
@@ -572,7 +561,6 @@
     <string name="translation_language">Translation Language</string>
     <string name="follow_app_language">Follow app language</string>
     <string name="email">Email</string>
-    <string name="password">Password</string>
     <string name="please_enter_your_email_and_password">Please enter your email and password</string>
     <string name="translation_language_message">Type language code (Eg: en) (2 letters). If you want to set same with Xevrae's language, please make edit box empty.</string>
     <string name="invalid_language_code">Invalid language code</string>
@@ -617,7 +605,6 @@
     <string name="guest">Guest</string>
     <string name="log_out_warning">Log out from all account?</string>
     <string name="codec">Codec</string>
-    <string name="plays">Play/View Count</string>
     <string name="like_and_dislike">%1$d like(s), %2$d dislike(s)</string>
     <string name="published_at">Published on %1$s</string>
     <string name="less">Less</string>
@@ -640,7 +627,6 @@
     <string name="guide_liked_title">Add to YouTube Liked Playlist</string>
     <string name="log_out_from_spotify">Log out from Spotify</string>
     <string name="top_videos">Top videos</string>
-    <string name="trending">Trending</string>
     <string name="new_singles">New singles</string>
     <string name="new_albums">New albums</string>
     <string name="notification">Notification</string>
@@ -677,7 +663,6 @@
     <string name="log_in_warning">YouTube Music now requires you to log in to stream music, Piped Instance sometime can't work too. You should log in to YouTube to get better experience with Xevrae.</string>
     <string name="spotify_canvas_cache">Spotify Canvas Cache</string>
     <string name="clear_canvas_cache">Clear canvas cache</string>
-    <string name="proxy">Proxy</string>
     <string name="proxy_description">Using Proxy to bypass country content blocking</string>
     <string name="http">HTTP</string>
     <string name="socks">Socks</string>
@@ -687,8 +672,6 @@
     <string name="invalid_port">Invalid port</string>
     <string name="proxy_host_message">Please enter your Proxy host</string>
     <string name="proxy_port_message">Please enter your Proxy port</string>
-    <string name="proxy_username">Proxy username</string>
-    <string name="proxy_password">Proxy password</string>
     <string name="proxy_username_message">Please enter your Proxy username (optional)</string>
     <string name="proxy_password_message">Please enter your Proxy password (optional)</string>
     <string name="five_seconds">Five seconds</string>
@@ -733,11 +716,9 @@
     <string name="data_sync_id_retrieved">DataSyncId retrieved</string>
     <string name="retrieve_youtube_data">Retrieve YouTube Data</string>
     <string name="ai">AI</string>
-    <string name="ai_provider">AI provider</string>
     <string name="openai">OpenAI</string>
     <string name="gemini">Gemini</string>
     <string name="openai_api_compatible">Custom OpenAI Compatible</string>
-    <string name="ai_api_key">Your AI API Key</string>
     <string name="invalid_api_key">Invalid API key</string>
     <string name="custom_ai_model_id">Custom AI model ID</string>
     <string name="default_models">Default models are "gemini-2.0-flash" and "gpt-4o"</string>
@@ -749,17 +730,14 @@
     <string name="your_youtube_cookie">Your YouTube Cookie</string>
     <string name="your_discord_token">Your Discord token</string>
     <string name="can_not_be_empty">Can not be empty</string>
-    <string name="processing">Processing</string>
     <string name="website">Website</string>
     <string name="download_this_song_video_file_to_your_device">Download this song/video file to your device</string>
     <string name="kill_service_on_exit">Kill service on exit</string>
     <string name="kill_service_on_exit_description">Stop background music player when exiting app</string>
     <string name="desktop_player">Desktop player</string>
-    <string name="crossfade">Crossfade (BETA)</string>
     <string name="crossfade_description">Smoothly transition between songs by fading out the current track while fading in the next one.</string>
     <string name="crossfade_enabled">Enabled (%1$ds)</string>
     <string name="crossfade_disabled">Disabled</string>
-    <string name="crossfade_duration">Crossfade Duration</string>
     <string name="set_crossfade_duration">Set crossfade duration in seconds (%1$ds)</string>
     <string name="crossfade_auto">Auto</string>
     <string name="crossfade_auto_description">Automatically calculate duration based on BPM (requires 320kbps stream with BPM data)</string>
@@ -791,7 +769,6 @@
     <string name="auto_backup_failed">Auto backup failed</string>
     <string name="no_playlist_found">No local playlists found, please create one first</string>
     <string name="list_all_cookies_of_this_page">List all cookies of this page</string>
-    <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="update_channel">Update channel</string>
     <string name="enable_liquid_glass_effect">Enable liquid glass (BETA)</string>
     <string name="enable_liquid_glass_effect_description">Enable iOS's liquid glass effect in some position (Android 13+)</string>
@@ -823,7 +800,6 @@
     <string name="top_song">Top song</string>
     <string name="songs_played">Songs played</string>
     <string name="total_listened_time">Total listened time</string>
-    <string name="seconds">seconds</string>
     <string name="your_recently_played">Your recently played</string>
     <string name="your_top_artists">Your top artists</string>
     <string name="your_top_albums">Your top albums</string>
