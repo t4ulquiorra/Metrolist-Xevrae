@@ -52,6 +52,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import android.widget.Toast
+import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -1690,7 +1691,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
                         entry.name == "$SETTINGS_FILENAME.preferences_pb" -> {
                             val datastoreFile = File(context.filesDir, "datastore/$SETTINGS_FILENAME.preferences_pb")
                             datastoreFile.parentFile?.mkdirs()
-                            datastoreFile.outputStream().use { outputStream ->
+                            FileOutputStream(datastoreFile).use { outputStream ->
                                 inputStream.copyTo(outputStream)
                             }
                         }
@@ -1777,37 +1778,39 @@ class SettingsViewModel @javax.inject.Inject constructor(
         uri: Uri,
         backupDownloaded: Boolean,
     ) {
-        context.applicationContext.contentResolver.openOutputStream(uri.toAndroidUri())?.use {
-            it.buffered().zipOutputStream().use { outputStream ->
-                val settingsFile = File(context.filesDir, "datastore/$SETTINGS_FILENAME.preferences_pb")
-                if (settingsFile.exists()) {
-                    settingsFile.inputStream().buffered().use { inputStream ->
-                        outputStream.putNextEntry(ZipEntry("$SETTINGS_FILENAME.preferences_pb"))
-                        inputStream.copyTo(outputStream)
-                    }
-                }
-
-                runBlocking(Dispatchers.IO) {
-                    commonRepository.databaseDaoCheckpoint()
-                }
-                val dbPath = commonRepository.getDatabasePath()
-                if (dbPath != null) {
-                    FileInputStream(dbPath).use { inputStream ->
-                        outputStream.putNextEntry(ZipEntry(DB_NAME))
-                        inputStream.copyTo(outputStream)
-                    }
-                }
-
-                if (backupDownloaded) {
-                    val exoDb = context.getDatabasePath(EXOPLAYER_DB_NAME)
-                    if (exoDb.exists()) {
-                        exoDb.inputStream().buffered().use { inputStream ->
-                            outputStream.putNextEntry(ZipEntry(EXOPLAYER_DB_NAME))
+        context.applicationContext.contentResolver.openOutputStream(uri.toAndroidUri())?.use { output ->
+            BufferedOutputStream(output).use { bufferedOutput ->
+                ZipOutputStream(bufferedOutput).use { outputStream ->
+                    val settingsFile = File(context.filesDir, "datastore/$SETTINGS_FILENAME.preferences_pb")
+                    if (settingsFile.exists()) {
+                        settingsFile.inputStream().buffered().use { inputStream ->
+                            outputStream.putNextEntry(ZipEntry("$SETTINGS_FILENAME.preferences_pb"))
                             inputStream.copyTo(outputStream)
                         }
                     }
-                    val downloadFolder = File(context.filesDir, DOWNLOAD_EXOPLAYER_FOLDER)
-                    backupFolder(downloadFolder, DOWNLOAD_EXOPLAYER_FOLDER, outputStream)
+
+                    runBlocking(Dispatchers.IO) {
+                        commonRepository.databaseDaoCheckpoint()
+                    }
+                    val dbPath = commonRepository.getDatabasePath()
+                    if (dbPath != null) {
+                        FileInputStream(dbPath).use { inputStream ->
+                            outputStream.putNextEntry(ZipEntry(DB_NAME))
+                            inputStream.copyTo(outputStream)
+                        }
+                    }
+
+                    if (backupDownloaded) {
+                        val exoDb = context.getDatabasePath(EXOPLAYER_DB_NAME)
+                        if (exoDb.exists()) {
+                            exoDb.inputStream().buffered().use { inputStream ->
+                                outputStream.putNextEntry(ZipEntry(EXOPLAYER_DB_NAME))
+                                inputStream.copyTo(outputStream)
+                            }
+                        }
+                        val downloadFolder = File(context.filesDir, DOWNLOAD_EXOPLAYER_FOLDER)
+                        backupFolder(downloadFolder, DOWNLOAD_EXOPLAYER_FOLDER, outputStream)
+                    }
                 }
             }
         }

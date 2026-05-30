@@ -1555,7 +1555,7 @@ class SharedViewModel @Inject constructor(
                     songRepository
                         .addToYouTubeLiked(
                             videoId,
-                        ).collect<Int> { response ->
+                        ).collect { response ->
                             if (response == 200) {
                                 makeToast(getString(R.string.added_to_youtube_liked))
                                 getLikeStatus(videoId as? String)
@@ -1567,7 +1567,7 @@ class SharedViewModel @Inject constructor(
                     songRepository
                         .removeFromYouTubeLiked(
                             videoId,
-                        ).collect<Int> {
+                        ).collect {
                             if (it == 200) {
                                 makeToast(getString(R.string.removed_from_youtube_liked))
                                 getLikeStatus(videoId as? String)
