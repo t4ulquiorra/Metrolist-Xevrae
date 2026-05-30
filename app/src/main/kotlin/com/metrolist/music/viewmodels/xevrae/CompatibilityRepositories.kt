@@ -265,8 +265,16 @@ class LyricsCanvasRepository @Inject constructor(
     fun voteXevraeLyrics(lyricsId: String, vote: Boolean): Flow<Resource<Boolean>> =
         flow { emit(Resource.Success(true)) }
 
-    fun getAITranslationLyrics(videoId: String, lyrics: Lyrics, lang: String, mode: String): Flow<Resource<Lyrics>> =
-        flow { emit(Resource.Loading()) }
+    fun getSavedTranslatedLyrics(videoId: String, language: String): Flow<TranslatedLyricsEntity?> =
+        flow { emit(null) }
+
+    fun getAITranslationLyrics(
+        videoId: String,
+        error: Boolean,
+        lines: List<TimeLine>?,
+        syncType: String,
+        language: String
+    ): Flow<Resource<Lyrics>> = flow { emit(Resource.Loading()) }
 
     fun getXevraeLyrics(videoId: String): Flow<Resource<Lyrics>> =
         flow { emit(Resource.Loading()) }

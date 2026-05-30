@@ -2,6 +2,7 @@ package com.metrolist.music.viewmodels.xevrae
 
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.viewModelScope
+import com.metrolist.music.R
 import com.metrolist.music.common.Config.ALBUM_CLICK
 import com.metrolist.music.common.Config.DOWNLOAD_CACHE
 import com.metrolist.music.common.Config.PLAYLIST_CLICK
@@ -947,8 +948,8 @@ class SharedViewModel @Inject constructor(
         if (isTranslatedLyrics) {
             val originalLyrics = _nowPlayingScreenData.value.lyricsData?.lyrics
             val originalLines = originalLyrics?.lines
-            val lyricsLines = lyrics.lines
-            if (originalLyrics != null && originalLines != null && lyricsLines != null) {
+            val lyricsLines = lyrics.lines ?: emptyList()
+            if (originalLyrics != null && originalLines != null) {
                 var outOfSyncCount = 0
 
                 originalLines.forEach { originalLine ->
@@ -986,7 +987,7 @@ class SharedViewModel @Inject constructor(
                     viewModelScope.launch {
                         lyricsCanvasRepository.removeTranslatedLyrics(
                             videoId,
-                            dataStoreManager.translationLanguage.first(),
+                            dataStoreManager.translationLanguage.first() ?: "",
                         )
                         log("Removed out-of-sync translated lyrics for $videoId")
                         val simpMusicLyricsId = lyrics.simpMusicLyrics?.id
@@ -1095,10 +1096,9 @@ class SharedViewModel @Inject constructor(
                     viewModelScope.launch {
                         lyricsCanvasRepository.insertLyrics(
                             LyricsEntity(
-                                videoId = videoId,
-                                error = false,
-                                lines = lyrics.lines,
-                                syncType = lyrics.syncType,
+                                id = videoId,
+                                lyrics = lyrics.lines?.joinToString("\n") { it.words } ?: "",
+                                provider = lyricsProvider.name
                             ),
                         )
                     }
@@ -1158,7 +1158,7 @@ class SharedViewModel @Inject constructor(
                     getXevraeLyrics(
                         videoId,
                         song,
-                        artist,
+                        artist ?: "",
                         duration,
                     )
                 }
@@ -1166,7 +1166,7 @@ class SharedViewModel @Inject constructor(
                 DataStoreManager.LRCLIB -> {
                     getLrclibLyrics(
                         song,
-                        artist,
+                        artist ?: "",
                         duration,
                     )
                 }
@@ -1434,8 +1434,11 @@ class SharedViewModel @Inject constructor(
             } else {
                 lyricsCanvasRepository
                     .getAITranslationLyrics(
-                        lyrics,
-                        dataStoreManager.translationLanguage.first(),
+                        videoId = videoId,
+                        error = false,
+                        lines = lyrics.lines,
+                        syncType = lyrics.syncType,
+                        language = dataStoreManager.translationLanguage.first() ?: "",
                     ).cancellable()
                     .collectLatest {
                         val data = it.data
@@ -1445,7 +1448,7 @@ class SharedViewModel @Inject constructor(
                                 lyricsCanvasRepository.insertTranslatedLyrics(
                                     TranslatedLyricsEntity(
                                         videoId = videoId,
-                                        language = dataStoreManager.translationLanguage.first(),
+                                        language = dataStoreManager.translationLanguage.first() ?: "",
                                         error = false,
                                         lines = data.lines,
                                         syncType = data.syncType,
@@ -1744,7 +1747,7 @@ class SharedViewModel @Inject constructor(
             lyricsCanvasRepository
                 .voteXevraeTranslatedLyrics(
                     translatedLyricsId = simpMusicLyricsId,
-                    upvote = upvote,
+                    vote = upvote,
                 ).collectLatest { result ->
                     when (result) {
                         is Resource.Error -> {
