@@ -402,7 +402,6 @@ dependencies {
 
     implementation(libs.haze)
     implementation(libs.liquid.glass)
-    implementation(libs.liquid.glass.shape)
     implementation(libs.kmpalette.core)
     implementation(libs.kmpalette.network)
     implementation(libs.compottie)
