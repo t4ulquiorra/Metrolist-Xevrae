@@ -1145,10 +1145,9 @@ class SharedViewModel @Inject constructor(
                 ) {
                     artistName.firstOrNull() ?: ""
                 } else {
-                    playerConnection.nowPlaying
-                        .first()
-                        ?.metadata
-                        ?.artist
+                    playerConnection.mediaMetadata
+                        .first<androidx.media3.common.MediaMetadata?>()
+                        ?.artist?.toString()
                         ?: ""
                 }
             resetLyricsVoteState()
@@ -1549,17 +1548,17 @@ class SharedViewModel @Inject constructor(
 
     fun addToYouTubeLiked() {
         viewModelScope.launch {
-            val videoId = playerConnection.nowPlaying.first()?.mediaId
+            val videoId = playerConnection.currentSong.first<SongEntity?>()?.id
             if (videoId != null) {
                 val like = likeStatus.value
                 if (!like) {
                     songRepository
                         .addToYouTubeLiked(
-                            playerConnection.nowPlaying.first()?.mediaId,
-                        ).collect { response ->
+                            videoId,
+                        ).collect<Int> { response ->
                             if (response == 200) {
                                 makeToast(getString(R.string.added_to_youtube_liked))
-                                getLikeStatus(videoId)
+                                getLikeStatus(videoId as? String)
                             } else {
                                 makeToast(getString(R.string.error))
                             }
@@ -1567,11 +1566,11 @@ class SharedViewModel @Inject constructor(
                 } else {
                     songRepository
                         .removeFromYouTubeLiked(
-                            playerConnection.nowPlaying.first()?.mediaId,
-                        ).collect {
+                            videoId,
+                        ).collect<Int> {
                             if (it == 200) {
                                 makeToast(getString(R.string.removed_from_youtube_liked))
-                                getLikeStatus(videoId)
+                                getLikeStatus(videoId as? String)
                             } else {
                                 makeToast(getString(R.string.error))
                             }
