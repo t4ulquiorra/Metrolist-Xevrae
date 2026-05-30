@@ -1540,7 +1540,7 @@ class SharedViewModel @Inject constructor(
                 playerConnection.playNext(listTrack.first().toMediaItem())
                 makeToast(getString(R.string.play_next))
             } else {
-                playerConnection.addToQueue(listTrack.map { track -> track.toMediaItem() })
+                playerConnection.addToQueue(listTrack.map<Track, androidx.media3.common.MediaItem> { track -> track.toMediaItem() })
                 makeToast(getString(R.string.added_to_queue))
             }
         }
