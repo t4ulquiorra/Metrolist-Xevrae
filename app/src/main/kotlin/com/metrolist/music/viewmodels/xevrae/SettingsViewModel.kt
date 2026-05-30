@@ -55,8 +55,7 @@ import kotlinx.coroutines.flow.singleOrNull
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import network.chaintech.cmptoast.ToastGravity
-import network.chaintech.cmptoast.showToast
+import android.widget.Toast
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -1751,7 +1750,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
         }
 
         withContext(Dispatchers.Main) {
-            showToast(context.getString(com.metrolist.music.R.string.restore_success), ToastGravity.Bottom)
+            Toast.makeText(context, context.getString(com.metrolist.music.R.string.restore_success), Toast.LENGTH_SHORT).show()
             // Stop service and restart logic here if needed
             getData()
             val pm: PackageManager = context.packageManager

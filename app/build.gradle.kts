@@ -405,6 +405,5 @@ dependencies {
     implementation(libs.kmpalette.core)
     implementation(libs.kmpalette.network)
     implementation(libs.compottie)
-    implementation(libs.cmptoast)
     implementation(libs.calf.file.picker)
 }

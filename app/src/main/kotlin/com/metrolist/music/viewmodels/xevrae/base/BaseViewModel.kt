@@ -12,9 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
-import multiplatform.network.cmptoast.ToastDuration
-import multiplatform.network.cmptoast.ToastGravity
-import multiplatform.network.cmptoast.showToast
+import android.widget.Toast
 import com.metrolist.music.domain.mediaservice.handler.QueueData
 import com.metrolist.music.extensions.toMediaItem
 import com.metrolist.music.playback.queues.ListQueue
@@ -70,11 +68,7 @@ abstract class BaseViewModel(
     }
 
     fun makeToast(message: String?) {
-        showToast(
-            message = message ?: "NO MESSAGE",
-            duration = ToastDuration.Short,
-            gravity = ToastGravity.Bottom,
-        )
+        Toast.makeText(context, message ?: "NO MESSAGE", Toast.LENGTH_SHORT).show()
     }
 
     protected fun getString(resId: Int): String = context.getString(resId)

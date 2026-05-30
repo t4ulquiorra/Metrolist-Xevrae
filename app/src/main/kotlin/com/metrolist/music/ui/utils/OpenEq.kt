@@ -8,8 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import com.metrolist.music.logger.Logger
 import kotlinx.coroutines.runBlocking
-import network.chaintech.cmptoast.ToastGravity
-import network.chaintech.cmptoast.showToast
+import android.widget.Toast
 
 interface OpenEqLauncher {
     fun launch()
@@ -29,7 +28,7 @@ fun openEqResult(audioSessionId: Int): OpenEqLauncher {
             val resolveInfo: List<*> = packageManager.queryIntentActivities(eqIntent, 0)
             Logger.d("EQ", resolveInfo.toString())
             if (resolveInfo.isEmpty()) {
-                showToast(context.getString(com.metrolist.music.R.string.no_equalizer), ToastGravity.Bottom)
+                Toast.makeText(context, context.getString(com.metrolist.music.R.string.no_equalizer), Toast.LENGTH_SHORT).show()
             } else {
                 resultLauncher.launch(eqIntent)
             }

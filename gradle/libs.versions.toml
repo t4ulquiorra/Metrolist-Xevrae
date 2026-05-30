@@ -39,7 +39,6 @@ haze = "1.5.1"
 liquidGlass = "2.0.0-alpha03"
 kmpalette = "3.1.0"
 compottie = "2.0.0"
-cmptoast = "0.5.0"
 calfFilePicker = "0.6.1"
 adaptive = "1.1.0"
 
@@ -126,7 +125,6 @@ liquid-glass = { module = "io.github.kyant0:backdrop", version.ref = "liquidGlas
 kmpalette-core = { group = "com.kmpalette", name = "kmpalette-core", version.ref = "kmpalette" }
 kmpalette-network = { group = "com.kmpalette", name = "extensions-network", version.ref = "kmpalette" }
 compottie = { group = "io.github.alexzhirkevich", name = "compottie", version.ref = "compottie" }
-cmptoast = { group = "network.chaintech", name = "cmptoast", version.ref = "cmptoast" }
 calf-file-picker = { group = "com.mohamedrejeb.calf", name = "calf-file-picker", version.ref = "calfFilePicker" }
 adaptive = { group = "androidx.compose.material3.adaptive", name = "adaptive", version.ref = "adaptive" }
 adaptive-layout = { group = "androidx.compose.material3.adaptive", name = "adaptive-layout", version.ref = "adaptive" }
