@@ -1566,6 +1566,10 @@ interface DatabaseDao {
     fun clearPlaylist(playlistId: String)
 
     @Transaction
+    @Query("DELETE FROM playlist_song_map WHERE playlistId = :playlistId AND songId = :songId")
+    fun deletePlaylistSongMap(playlistId: String, songId: String)
+
+    @Transaction
     @Query("SELECT * FROM artist WHERE name = :name")
     fun artistByName(name: String): ArtistEntity?
 

@@ -1,0 +1,82 @@
+package com.metrolist.music.models.xevrae
+
+import com.metrolist.music.db.entities.SongEntity
+
+fun SongsResult.toTrack(): Track =
+    Track(
+        album = this.album,
+        artists = this.artists,
+        duration = this.duration ?: "",
+        durationSeconds = this.durationSeconds ?: 0,
+        isAvailable = true,
+        isExplicit = this.isExplicit ?: false,
+        likeStatus = "",
+        thumbnails = this.thumbnails,
+        title = this.title ?: "",
+        videoId = this.videoId,
+        videoType = this.videoType ?: "",
+        category = this.category,
+        feedbackTokens = this.feedbackTokens,
+        resultType = this.resultType,
+        year = "",
+    )
+
+fun VideosResult.toTrack(): Track {
+    val thumb = Thumbnail("http://i.ytimg.com/vi/${this.videoId}/maxresdefault.jpg")
+    val thumbList = this.thumbnails ?: listOf(thumb)
+    return Track(
+        album = null,
+        artists = this.artists,
+        duration = this.duration ?: "",
+        durationSeconds = this.durationSeconds ?: 0,
+        isAvailable = true,
+        isExplicit = false,
+        likeStatus = "INDIFFERENT",
+        thumbnails = thumbList,
+        title = this.title,
+        videoId = this.videoId,
+        videoType = this.videoType ?: "",
+        category = this.category,
+        feedbackTokens = null,
+        resultType = this.resultType,
+        year = "",
+    )
+}
+
+fun Track.toSongEntity(): SongEntity {
+    return SongEntity(
+        id = this.videoId,
+        title = this.title,
+        duration = this.durationSeconds ?: -1,
+        thumbnailUrl = this.thumbnails?.lastOrNull()?.url,
+        albumId = this.album?.id,
+        albumName = this.album?.name,
+        explicit = this.isExplicit,
+    )
+}
+
+fun SongEntity.toTrack(): Track {
+    // Note: Metrolist SongEntity doesn't have artists directly.
+    // This is a simplified conversion for compatibility.
+    return Track(
+        album = albumId?.let { albumName?.let { name -> Album(name, it) } },
+        artists = emptyList(), // Artists are handled via SongArtistMap in Metrolist
+        duration = "", // Could be formatted if needed
+        durationSeconds = duration,
+        isAvailable = true,
+        isExplicit = explicit,
+        likeStatus = if (liked) "LIKE" else "INDIFFERENT",
+        thumbnails = thumbnailUrl?.let { listOf(Thumbnail(it)) },
+        title = title,
+        videoId = id,
+        videoType = if (isVideo) "VIDEO" else "MUSIC",
+        category = null,
+        feedbackTokens = null,
+        resultType = null,
+        year = year?.toString(),
+    )
+}
+
+fun List<String>.connectArtists(): String {
+    return joinToString(", ")
+}

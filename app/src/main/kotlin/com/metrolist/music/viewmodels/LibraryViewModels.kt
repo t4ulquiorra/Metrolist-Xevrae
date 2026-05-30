@@ -10,12 +10,17 @@ package com.metrolist.music.viewmodels
 import android.content.Context
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.metrolist.innertube.YouTube
+import com.metrolist.innertube.models.Artist
 import com.metrolist.innertube.models.ArtistItem
+import com.metrolist.innertube.models.PlaylistItem
 import com.metrolist.innertube.utils.completed
+import com.metrolist.music.common.LibraryChipType
 import com.metrolist.music.constants.AlbumFilter
 import com.metrolist.music.constants.AlbumFilterKey
 import com.metrolist.music.constants.AlbumSortDescendingKey
@@ -43,6 +48,13 @@ import com.metrolist.music.constants.SongSortType
 import com.metrolist.music.constants.SongSortTypeKey
 import com.metrolist.music.constants.TopSize
 import com.metrolist.music.db.MusicDatabase
+import com.metrolist.music.db.entities.AlbumEntity
+import com.metrolist.music.db.entities.ArtistEntity
+import com.metrolist.music.db.entities.PlaylistEntity
+import com.metrolist.music.db.entities.SongEntity
+import com.metrolist.music.domain.mediaservice.handler.PlaylistType as MetrolistPlaylistType
+import com.metrolist.music.domain.mediaservice.handler.QueueData
+import com.metrolist.music.domain.utils.LocalResource
 import com.metrolist.music.extensions.filterExplicit
 import com.metrolist.music.extensions.filterExplicitAlbums
 import com.metrolist.music.extensions.filterVideoSongs
@@ -50,25 +62,43 @@ import com.metrolist.music.extensions.filterYoutubeShorts
 import com.metrolist.music.extensions.matchesNormalizedQuery
 import com.metrolist.music.extensions.normalizeForSearch
 import com.metrolist.music.extensions.toEnum
+import com.metrolist.music.models.toMediaMetadata
+import com.metrolist.music.models.xevrae.ChartItem
+import com.metrolist.music.models.xevrae.PlaylistType
+import com.metrolist.music.models.xevrae.PlaylistsResult
+import com.metrolist.music.models.xevrae.RecentlyType
+import com.metrolist.music.models.xevrae.Thumbnail
+import com.metrolist.music.models.xevrae.XevraePlaylist
+import com.metrolist.music.models.xevrae.XevraeRecently
 import com.metrolist.music.playback.DownloadUtil
+import com.metrolist.music.ui.screens.xevrae.library.LibraryDynamicPlaylistType
 import com.metrolist.music.utils.PodcastRefreshTrigger
+import com.metrolist.music.utils.Resource
 import com.metrolist.music.utils.SyncUtils
 import com.metrolist.music.utils.dataStore
 import com.metrolist.music.utils.reportException
+import com.metrolist.music.viewmodels.xevrae.ListState
+import com.metrolist.music.viewmodels.xevrae.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.LocalDateTime
@@ -603,9 +633,313 @@ constructor(
 }
 
 @HiltViewModel
-class LibraryViewModel
-@Inject
-constructor() : ViewModel() {
+class LibraryViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val database: MusicDatabase,
+) : BaseViewModel(context) {
+    private val dataStore = context.dataStore
+    private val libraryCurrentScreenKey = stringPreferencesKey("library_current_screen")
+
     private val curScreen = mutableStateOf(LibraryFilter.LIBRARY)
     val filter: MutableState<LibraryFilter> = curScreen
+
+    private val _currentScreen: MutableStateFlow<LibraryChipType> = MutableStateFlow(LibraryChipType.YOUR_LIBRARY)
+    val currentScreen: StateFlow<LibraryChipType> get() = _currentScreen.asStateFlow()
+
+    private val _recentlyAdded: MutableStateFlow<LocalResource<List<RecentlyType>>> =
+        MutableStateFlow(LocalResource.Loading())
+    val recentlyAdded: StateFlow<LocalResource<List<RecentlyType>>> get() = _recentlyAdded.asStateFlow()
+
+    private val _yourLocalPlaylist: MutableStateFlow<LocalResource<List<PlaylistEntity>>> =
+        MutableStateFlow(LocalResource.Loading())
+    val yourLocalPlaylist: StateFlow<LocalResource<List<PlaylistEntity>>> get() = _yourLocalPlaylist.asStateFlow()
+
+    private val _youTubePlaylist: MutableStateFlow<LocalResource<List<PlaylistsResult>>> =
+        MutableStateFlow(LocalResource.Loading())
+    val youTubePlaylist: StateFlow<LocalResource<List<PlaylistsResult>>> get() = _youTubePlaylist.asStateFlow()
+
+    private val _youTubeMixForYou: MutableStateFlow<LocalResource<List<PlaylistsResult>>> =
+        MutableStateFlow(LocalResource.Loading())
+    val youTubeMixForYou: StateFlow<LocalResource<List<PlaylistsResult>>> get() = _youTubeMixForYou.asStateFlow()
+
+    private val _favoritePlaylist: MutableStateFlow<LocalResource<List<PlaylistType>>> =
+        MutableStateFlow(LocalResource.Loading())
+    val favoritePlaylist: StateFlow<LocalResource<List<PlaylistType>>> get() = _favoritePlaylist.asStateFlow()
+
+    private val _favoritePodcasts: MutableStateFlow<LocalResource<List<PlaylistType>>> =
+        MutableStateFlow(LocalResource.Loading())
+    val favoritePodcasts: StateFlow<LocalResource<List<PlaylistType>>> get() = _favoritePodcasts.asStateFlow()
+
+    private val _downloadedPlaylist: MutableStateFlow<LocalResource<List<PlaylistType>>> =
+        MutableStateFlow(LocalResource.Loading())
+    val downloadedPlaylist: StateFlow<LocalResource<List<PlaylistType>>> get() = _downloadedPlaylist.asStateFlow()
+
+    private val _chartPlaylists: MutableStateFlow<LocalResource<List<ChartItem>>> =
+        MutableStateFlow(LocalResource.Loading())
+    val chartPlaylists: StateFlow<LocalResource<List<ChartItem>>> get() = _chartPlaylists.asStateFlow()
+
+    private val _listCanvasSong: MutableStateFlow<LocalResource<List<SongEntity>>> =
+        MutableStateFlow(LocalResource.Loading())
+    val listCanvasSong: StateFlow<LocalResource<List<SongEntity>>> get() = _listCanvasSong.asStateFlow()
+
+    private val _accountThumbnail: MutableStateFlow<String?> = MutableStateFlow(null)
+    val accountThumbnail: StateFlow<String?> get() = _accountThumbnail.asStateFlow()
+
+    val youtubeLoggedIn = flow {
+        emit(YouTube.cookie != null)
+    }.stateIn(viewModelScope, SharingStarted.Lazily, false)
+
+    init {
+        viewModelScope.launch {
+            dataStore.data.first()[libraryCurrentScreenKey]?.let { chipType ->
+                LibraryChipType.fromStringValue(chipType)?.let {
+                    _currentScreen.value = it
+                }
+            }
+        }
+    }
+
+    fun setCurrentScreen(chipType: LibraryChipType) {
+        _currentScreen.value = chipType
+        viewModelScope.launch {
+            dataStore.edit { it[libraryCurrentScreenKey] = chipType.toStringValue() }
+        }
+    }
+
+    fun getRecentlyAdded() {
+        viewModelScope.launch {
+            database.events().collectLatest { events ->
+                val songs = events.map { it.song }.distinctBy { it.id }.take(20)
+                val temp = songs.map { 
+                    XevraeRecently(song = it, type = RecentlyType.Type.SONG) 
+                }
+                _recentlyAdded.value = LocalResource.Success(temp.toImmutableList())
+            }
+        }
+    }
+
+    fun getYouTubePlaylist() {
+        _youTubePlaylist.value = LocalResource.Loading()
+        viewModelScope.launch {
+            YouTube.library().onSuccess { page ->
+                val playlists = page.items.filterIsInstance<PlaylistItem>().map {
+                    PlaylistsResult(
+                        browseId = it.id,
+                        title = it.title,
+                        thumbnails = it.thumbnails?.map { t -> Thumbnail(t.url) }
+                    )
+                }
+                _youTubePlaylist.value = LocalResource.Success(playlists)
+            }.onFailure {
+                _youTubePlaylist.value = LocalResource.Error(it.message)
+            }
+        }
+    }
+
+    fun getYouTubeMixedForYou() {
+        _youTubeMixForYou.value = LocalResource.Loading()
+        viewModelScope.launch {
+            YouTube.home().onSuccess { page ->
+                val mixedForYou = page.sections.find { it.title?.contains("Mixed for you", ignoreCase = true) == true }
+                    ?.items?.filterIsInstance<PlaylistItem>()?.map {
+                        PlaylistsResult(
+                            browseId = it.id,
+                            title = it.title,
+                            thumbnails = it.thumbnails?.map { t -> Thumbnail(t.url) }
+                        )
+                    } ?: emptyList()
+                _youTubeMixForYou.value = LocalResource.Success(mixedForYou)
+            }.onFailure {
+                _youTubeMixForYou.value = LocalResource.Error(it.message)
+            }
+        }
+    }
+
+    fun getPlaylistFavorite() {
+        viewModelScope.launch {
+            combine(
+                database.albumsLikedByNameAsc(),
+                database.playlistsByNameAsc()
+            ) { albums, playlists ->
+                val temp = mutableListOf<PlaylistType>()
+                temp.addAll(albums.map { XevraePlaylist(albumEntity = it, type = PlaylistType.Type.ALBUM) })
+                temp.addAll(playlists.filter { !it.isEditable }.map { XevraePlaylist(entity = it, type = PlaylistType.Type.YOUTUBE_PLAYLIST) })
+                temp
+            }.collectLatest {
+                _favoritePlaylist.value = LocalResource.Success(it)
+            }
+        }
+    }
+
+    fun getFavoritePodcasts() {
+        viewModelScope.launch {
+            database.podcasts().collectLatest { podcasts ->
+                // Map podcast entities to XevraePlaylist if applicable
+                _favoritePodcasts.value = LocalResource.Success(emptyList())
+            }
+        }
+    }
+
+    fun getCanvasSong() {
+        _listCanvasSong.value = LocalResource.Loading()
+        viewModelScope.launch {
+            database.likedSongs(SongSortType.CREATE_DATE, true).collectLatest { songs ->
+                _listCanvasSong.value = LocalResource.Success(songs.take(5))
+            }
+        }
+    }
+
+    fun getLocalPlaylist() {
+        _yourLocalPlaylist.value = LocalResource.Loading()
+        viewModelScope.launch {
+            database.editablePlaylistsByNameAsc().collectLatest { values ->
+                _yourLocalPlaylist.value = LocalResource.Success(values)
+            }
+        }
+    }
+
+    fun getDownloadedPlaylist() {
+        viewModelScope.launch {
+            database.playlistsByNameAsc().collectLatest { playlists ->
+                val downloaded = playlists.filter { it.id == PlaylistEntity.DOWNLOADED_PLAYLIST_ID }
+                    .map { XevraePlaylist(entity = it, type = PlaylistType.Type.LOCAL) }
+                _downloadedPlaylist.value = LocalResource.Success(downloaded)
+            }
+        }
+    }
+
+    fun getChartPlaylists() {
+        _chartPlaylists.value = LocalResource.Success(emptyList())
+    }
+
+    fun createPlaylist(title: String) {
+        viewModelScope.launch {
+            val playlist = PlaylistEntity(
+                name = title,
+                isEditable = true
+            )
+            database.insert(playlist)
+            getLocalPlaylist()
+        }
+    }
+
+    fun deleteSong(videoId: String) {
+        _recentlyAdded.value = LocalResource.Loading()
+        viewModelScope.launch {
+            database.getSongById(videoId)?.let { song ->
+                database.update(song.copy(inLibrary = null))
+            }
+            delay(500)
+            getRecentlyAdded()
+        }
+    }
+}
+
+@HiltViewModel
+class LibraryDynamicPlaylistViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val database: MusicDatabase,
+) : BaseViewModel(context) {
+    private val _listFavoriteSong: MutableStateFlow<List<SongEntity>> = MutableStateFlow(emptyList())
+    val listFavoriteSong: StateFlow<List<SongEntity>> get() = _listFavoriteSong
+
+    private val _listFollowedArtist: MutableStateFlow<List<ArtistEntity>> = MutableStateFlow(emptyList())
+    val listFollowedArtist: StateFlow<List<ArtistEntity>> get() = _listFollowedArtist
+
+    private val _listMostPlayedSong: MutableStateFlow<List<SongEntity>> = MutableStateFlow(emptyList())
+    val listMostPlayedSong: StateFlow<List<SongEntity>> get() = _listMostPlayedSong
+
+    private val _listDownloadedSong: MutableStateFlow<List<SongEntity>> = MutableStateFlow(emptyList())
+    val listDownloadedSong: StateFlow<List<SongEntity>> get() = _listDownloadedSong
+
+    init {
+        getFavoriteSong()
+        getFollowedArtist()
+        getMostPlayedSong()
+        getDownloadedSong()
+    }
+
+    private fun getFavoriteSong() {
+        viewModelScope.launch {
+            database.likedSongsByCreateDateAsc().collectLatest { likedSong ->
+                _listFavoriteSong.value = likedSong.map { it.song }.reversed()
+            }
+        }
+    }
+
+    private fun getFollowedArtist() {
+        viewModelScope.launch {
+            database.artistsBookmarkedByNameAsc().collectLatest { followedArtist ->
+                _listFollowedArtist.value = followedArtist
+            }
+        }
+    }
+
+    private fun getMostPlayedSong() {
+        viewModelScope.launch {
+            database.mostPlayedSongs().collectLatest { mostPlayedSong ->
+                _listMostPlayedSong.value = mostPlayedSong.map { it.song }
+            }
+        }
+    }
+
+    private fun getDownloadedSong() {
+        viewModelScope.launch {
+            database.downloadedSongsByCreateDateAsc().collectLatest { downloadedSong ->
+                _listDownloadedSong.value = downloadedSong.map { it.song }.reversed()
+            }
+        }
+    }
+
+    fun playSong(
+        videoId: String,
+        type: LibraryDynamicPlaylistType,
+    ) {
+        val targetList = getSongList(type)
+        if (targetList.isEmpty()) return
+
+        viewModelScope.launch {
+            val metadataList = targetList.map { song ->
+                database.getSongByIdBlocking(song.id)?.toMediaMetadata()
+            }.filterNotNull()
+
+            val startIndex = metadataList.indexOfFirst { it.id == videoId }.coerceAtLeast(0)
+            playerConnection.play(metadataList, startIndex)
+        }
+    }
+
+    private fun getSongList(type: LibraryDynamicPlaylistType): List<SongEntity> =
+        when (type) {
+            LibraryDynamicPlaylistType.Favorite -> listFavoriteSong.value
+            LibraryDynamicPlaylistType.Downloaded -> listDownloadedSong.value
+            LibraryDynamicPlaylistType.MostPlayed -> listMostPlayedSong.value
+            else -> emptyList()
+        }
+
+    fun playAll(type: LibraryDynamicPlaylistType) {
+        val targetList = getSongList(type)
+        if (targetList.isEmpty()) return
+        
+        viewModelScope.launch {
+            val metadataList = targetList.map { song ->
+                database.getSongByIdBlocking(song.id)?.toMediaMetadata()
+            }.filterNotNull()
+            
+            playerConnection.play(metadataList)
+        }
+    }
+
+    fun shuffle(type: LibraryDynamicPlaylistType) {
+        val targetList = getSongList(type)
+        if (targetList.isEmpty()) return
+        
+        viewModelScope.launch {
+            val metadataList = targetList.shuffled().map { song ->
+                database.getSongByIdBlocking(song.id)?.toMediaMetadata()
+            }.filterNotNull()
+            
+            playerConnection.play(metadataList)
+            playerConnection.player.shuffleModeEnabled = true
+        }
+    }
 }

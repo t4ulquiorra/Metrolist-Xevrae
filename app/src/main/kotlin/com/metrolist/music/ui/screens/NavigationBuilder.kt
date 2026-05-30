@@ -62,9 +62,14 @@ import com.metrolist.music.ui.screens.settings.integrations.IntegrationScreen
 import com.metrolist.music.ui.screens.settings.integrations.LastFMSettings
 import com.metrolist.music.ui.screens.settings.integrations.ListenTogetherSettings
 
-import com.metrolist.music.ui.screens.wrapped.WrappedScreen
+import com.metrolist.music.ui.screens.xevrae.wrapped.WrappedScreen
 import com.metrolist.music.utils.rememberEnumPreference
 import com.metrolist.music.utils.rememberPreference
+import androidx.compose.foundation.layout.PaddingValues
+import com.metrolist.music.ui.navigation.xevrae.graph.homeScreenGraph
+import com.metrolist.music.ui.navigation.xevrae.graph.libraryScreenGraph
+import com.metrolist.music.ui.navigation.xevrae.graph.listScreenGraph
+import com.metrolist.music.ui.navigation.xevrae.graph.loginScreenGraph
 
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.navigationBuilder(
@@ -452,4 +457,12 @@ fun NavGraphBuilder.navigationBuilder(
     composable("settings/android_auto") {
         AndroidAutoSettings(navController, scrollBehavior)
     }
+
+    // Xevrae Graphs
+    val xevraePadding = PaddingValues(0.dp)
+    homeScreenGraph(xevraePadding, navController, latestVersionName)
+    libraryScreenGraph(xevraePadding, navController)
+    listScreenGraph(xevraePadding, navController)
+    loginScreenGraph(xevraePadding, navController, {}, {})
 }
+

@@ -397,4 +397,19 @@ dependencies {
     coreLibraryDesugaring(libs.desugaring)
 
     implementation(libs.timber)
+
+    implementation(libs.adaptive)
+    implementation(libs.adaptive.layout)
+
+    implementation(libs.haze)
+    implementation(libs.haze.material)
+    implementation(libs.liquid.glass)
+    implementation(libs.liquid.glass.shape)
+    implementation(libs.kmpalette.core)
+    implementation(libs.kmpalette.network)
+    implementation(libs.compottie)
+    implementation(libs.cmptoast)
+    implementation(libs.calf.file.picker)
+    implementation(libs.adaptive)
+    implementation(libs.adaptive.layout)
 }

@@ -205,6 +205,7 @@ fun BottomSheetPlayer(
     navController: NavController,
     modifier: Modifier = Modifier,
     pureBlack: Boolean,
+    onMiniPlayerClick: (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
     val clipboardManager = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -914,7 +915,7 @@ fun BottomSheetPlayer(
             MiniPlayer(
                 positionState = positionState,
                 durationState = durationState,
-                onClick = { state.expandSoft() },
+                onClick = onMiniPlayerClick ?: { state.expandSoft() },
             )
         },
     ) {

@@ -42,13 +42,13 @@ import com.metrolist.music.ui.component.NavigationTitle
 import com.metrolist.music.ui.component.shimmer.ListItemPlaceHolder
 import com.metrolist.music.ui.component.shimmer.ShimmerHost
 import com.metrolist.music.ui.utils.backToMain
-import com.metrolist.music.viewmodels.MoodAndGenresViewModel
+import com.metrolist.music.viewmodels.MoodViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoodAndGenresScreen(
     navController: NavController,
-    viewModel: MoodAndGenresViewModel = hiltViewModel(),
+    viewModel: MoodViewModel = hiltViewModel(),
 ) {
     val localConfiguration = LocalConfiguration.current
     val itemsPerRow = if (localConfiguration.orientation == ORIENTATION_LANDSCAPE) 3 else 2

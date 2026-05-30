@@ -165,6 +165,7 @@ import com.metrolist.music.playback.MusicService.MusicBinder
 import com.metrolist.music.playback.PlayerConnection
 import com.metrolist.music.playback.queues.YouTubeQueue
 import com.metrolist.music.ui.component.AccountSettingsDialog
+import com.metrolist.music.ui.component.AdaptiveScaffold
 import com.metrolist.music.ui.component.AppNavigationBar
 import com.metrolist.music.ui.component.AppNavigationRail
 import com.metrolist.music.ui.component.BottomSheetMenu
@@ -195,6 +196,8 @@ import com.metrolist.music.utils.rememberPreference
 import com.metrolist.music.utils.reportException
 import com.metrolist.music.utils.setAppLocale
 import com.metrolist.music.viewmodels.HomeViewModel
+import com.metrolist.music.viewmodels.xevrae.SharedViewModel
+import com.metrolist.music.models.xevrae.GenericIntent
 import com.metrolist.music.widget.PlaylistWidgetReceiver
 import com.valentinilk.shimmer.LocalShimmerTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -211,6 +214,10 @@ import java.net.URLDecoder
 import java.net.URLEncoder
 import java.util.Locale
 import javax.inject.Inject
+
+import com.metrolist.music.ui.navigation.xevrae.graph.AppNavigationGraph
+import com.metrolist.music.ui.navigation.xevrae.destination.home.HomeDestination
+import androidx.compose.foundation.ExperimentalFoundationApi
 
 @Suppress("DEPRECATION", "ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
 @AndroidEntryPoint
@@ -249,6 +256,7 @@ class MainActivity : ComponentActivity() {
     private var playerConnectionSnapshot by mutableStateOf<PlayerConnection?>(null)
 
     private var isServiceBound = false
+    private lateinit var sharedViewModel: SharedViewModel
 
     private val serviceConnection =
         object : ServiceConnection {
@@ -372,6 +380,14 @@ class MainActivity : ComponentActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        if (::sharedViewModel.isInitialized) {
+            sharedViewModel.setIntent(
+                GenericIntent(
+                    action = intent.action ?: "",
+                    data = (intent.data ?: intent.getStringExtra(Intent.EXTRA_TEXT)?.toUri())?.toString()
+                )
+            )
+        }
         if (::navController.isInitialized) {
             handleWidgetTargetIntent(intent, navController)
             handleDeepLinkIntent(intent, navController)
@@ -386,6 +402,20 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         window.decorView.layoutDirection = View.LAYOUT_DIRECTION_LTR
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        sharedViewModel = androidx.lifecycle.ViewModelProvider(this)[SharedViewModel::class.java]
+        sharedViewModel.getLocation()
+        sharedViewModel.checkIsRestoring()
+
+        val data = (intent?.data ?: intent?.getStringExtra(Intent.EXTRA_TEXT)?.toUri())?.toString()
+        if (data != null) {
+            sharedViewModel.setIntent(
+                GenericIntent(
+                    action = intent.action ?: "",
+                    data = data
+                )
+            )
+        }
 
         // Initialize Listen Together manager
         listenTogetherManager.initialize()
@@ -453,14 +483,16 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            MetrolistApp(
-                latestVersionName = latestVersionName,
-                onLatestVersionNameChange = { latestVersionName = it },
-                playerConnection = playerConnectionSnapshot,
-                database = database,
-                downloadUtil = downloadUtil,
-                syncUtils = syncUtils,
-            )
+            CompositionLocalProvider(LocalActivity provides this) {
+                MetrolistApp(
+                    latestVersionName = latestVersionName,
+                    onLatestVersionNameChange = { latestVersionName = it },
+                    playerConnection = playerConnectionSnapshot,
+                    database = database,
+                    downloadUtil = downloadUtil,
+                    syncUtils = syncUtils,
+                )
+            }
         }
     }
 
@@ -577,6 +609,7 @@ class MainActivity : ComponentActivity() {
         val selectedThemeColor = Color(selectedThemeColorInt)
 
         val showChangelog = rememberSaveable { mutableStateOf(false) }
+        var isShowNowPlayingPanel by rememberSaveable { mutableStateOf(false) }
 
         var themeColor by rememberSaveable(stateSaver = ColorSaver) {
             mutableStateOf(selectedThemeColor)
@@ -977,7 +1010,7 @@ class MainActivity : ComponentActivity() {
                         snackbarHost = { SnackbarHost(snackbarHostState) },
                         topBar = {
                             AnimatedVisibility(
-                                visible = shouldShowTopBar,
+                                visible = shouldShowTopBar && shouldShowBottomBar,
                                 enter = fadeIn(animationSpec = tween(durationMillis = 300)),
                                 exit = fadeOut(animationSpec = tween(durationMillis = 200)),
                             ) {
@@ -1130,6 +1163,7 @@ class MainActivity : ComponentActivity() {
                                         state = playerBottomSheetState,
                                         navController = navController,
                                         pureBlack = pureBlack,
+                                        onMiniPlayerClick = if (showRail) { { isShowNowPlayingPanel = !isShowNowPlayingPanel } } else null
                                     )
 
                                     AppNavigationBar(
@@ -1150,7 +1184,7 @@ class MainActivity : ComponentActivity() {
                                                     val totalHeightPx = navBarTotalHeight.toPx()
 
                                                     translationY =
-                                                        if (navBarHeightPx == 0f) {
+                                                        if (navBarHeightPx == 0f || !shouldShowBottomBar) {
                                                             totalHeightPx
                                                         } else {
                                                             // Read progress only during draw phase
@@ -1189,6 +1223,7 @@ class MainActivity : ComponentActivity() {
                                         state = playerBottomSheetState,
                                         navController = navController,
                                         pureBlack = pureBlack,
+                                        onMiniPlayerClick = if (showRail) { { isShowNowPlayingPanel = !isShowNowPlayingPanel } } else null
                                     )
                                 }
 
@@ -1255,64 +1290,29 @@ class MainActivity : ComponentActivity() {
                                     onSearchLongClick = onRailSearchLongClick,
                                 )
                             }
+                            var shouldShowBottomBar by remember { mutableStateOf(true) }
                             Box(Modifier.weight(1f)) {
-                                // NavHost with animations (Material 3 Expressive style)
-                                NavHost(
+                                @OptIn(ExperimentalFoundationApi::class)
+                                AppNavigationGraph(
+                                    innerPadding = PaddingValues(0.dp),
                                     navController = navController,
-                                    startDestination =
-                                        when (tabOpenedFromShortcut ?: defaultOpenTab) {
-                                            NavigationTab.HOME -> Screens.Home
-                                            NavigationTab.LIBRARY -> Screens.Library
-                                            else -> Screens.Home
-                                        }.route,
-                                    enterTransition = {
-                                        val currentRouteIndex = routeIndexMap[targetState.destination.route] ?: -1
-                                        val previousRouteIndex = routeIndexMap[initialState.destination.route] ?: -1
+                                    startDestination = HomeDestination,
+                                    hideNavBar = { shouldShowBottomBar = false },
+                                    showNavBar = { shouldShowBottomBar = true }
+                                )
+                            }
 
-                                        if (currentRouteIndex == -1 || currentRouteIndex > previousRouteIndex) {
-                                            slideInHorizontally { it / 8 } + fadeIn(tween(200))
-                                        } else {
-                                            slideInHorizontally { -it / 8 } + fadeIn(tween(200))
-                                        }
-                                    },
-                                    exitTransition = {
-                                        val currentRouteIndex = routeIndexMap[initialState.destination.route] ?: -1
-                                        val targetRouteIndex = routeIndexMap[targetState.destination.route] ?: -1
-
-                                        if (targetRouteIndex == -1 || targetRouteIndex > currentRouteIndex) {
-                                            slideOutHorizontally { -it / 8 } + fadeOut(tween(200))
-                                        } else {
-                                            slideOutHorizontally { it / 8 } + fadeOut(tween(200))
-                                        }
-                                    },
-                                    popEnterTransition = {
-                                        val currentRouteIndex = routeIndexMap[targetState.destination.route] ?: -1
-                                        val previousRouteIndex = routeIndexMap[initialState.destination.route] ?: -1
-
-                                        if (previousRouteIndex != -1 && previousRouteIndex < currentRouteIndex) {
-                                            slideInHorizontally { it / 8 } + fadeIn(tween(200))
-                                        } else {
-                                            slideInHorizontally { -it / 8 } + fadeIn(tween(200))
-                                        }
-                                    },
-                                    popExitTransition = {
-                                        val currentRouteIndex = routeIndexMap[initialState.destination.route] ?: -1
-                                        val targetRouteIndex = routeIndexMap[targetState.destination.route] ?: -1
-
-                                        if (currentRouteIndex != -1 && currentRouteIndex < targetRouteIndex) {
-                                            slideOutHorizontally { -it / 8 } + fadeOut(tween(200))
-                                        } else {
-                                            slideOutHorizontally { it / 8 } + fadeOut(tween(200))
-                                        }
-                                    },
-                                    modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                            if (showRail && currentRoute != "wrapped") {
+                                AnimatedVisibility(
+                                    visible = isShowNowPlayingPanel,
+                                    enter = androidx.compose.animation.expandHorizontally() + fadeIn(),
+                                    exit = androidx.compose.animation.shrinkHorizontally() + fadeOut()
                                 ) {
-                                    navigationBuilder(
+                                    com.metrolist.music.ui.component.SidePlayerPanel(
+                                        modifier = Modifier.width(360.dp),
                                         navController = navController,
-                                        scrollBehavior = topAppBarScrollBehavior,
-                                        latestVersionName = latestVersionName,
-                                        activity = this@MainActivity,
-                                        snackbarHostState = snackbarHostState,
+                                        sharedViewModel = sharedViewModel,
+                                        onDismiss = { isShowNowPlayingPanel = false }
                                     )
                                 }
                             }
@@ -1556,6 +1556,7 @@ class MainActivity : ComponentActivity() {
 }
 
 val LocalDatabase = staticCompositionLocalOf<MusicDatabase> { error("No database provided") }
+val LocalActivity = staticCompositionLocalOf<androidx.activity.ComponentActivity> { error("No Activity provided") }
 val LocalPlayerConnection = staticCompositionLocalOf<PlayerConnection?> { error("No PlayerConnection provided") }
 val LocalPlayerAwareWindowInsets = compositionLocalOf<WindowInsets> { error("No WindowInsets provided") }
 val LocalDownloadUtil = staticCompositionLocalOf<DownloadUtil> { error("No DownloadUtil provided") }

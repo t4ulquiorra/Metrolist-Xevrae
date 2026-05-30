@@ -26,7 +26,16 @@ import com.materialkolor.dynamiccolor.ColorSpec
 import com.materialkolor.rememberDynamicColorScheme
 import com.materialkolor.score.Score
 
-val DefaultThemeColor = Color(0xFFED5564)
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.rememberHazeState
+
+import com.metrolist.music.ui.theme.xevrae.DarkColors
+
+val DefaultThemeColor = Color(0xFF70A3F4)
+
+val LocalHazeState = staticCompositionLocalOf<HazeState> { error("No HazeState provided") }
 
 @Composable
 fun MetrolistTheme(
@@ -35,25 +44,33 @@ fun MetrolistTheme(
     themeColor: Color = DefaultThemeColor,
     content: @Composable () -> Unit,
 ) {
+    val hazeState = rememberHazeState()
     val context = LocalContext.current
     // Determine if system dynamic colors should be used (Android S+ and default theme color)
-    val useSystemDynamicColor = (themeColor == DefaultThemeColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+    val useSystemDynamicColor = (themeColor == Color(0xFFED5564) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
 
     // Select the appropriate color scheme generation method
-    val baseColorScheme = if (useSystemDynamicColor) {
-        // Use standard Material 3 dynamic color functions for system wallpaper colors
-        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-    } else {
-        // Use materialKolor only when a specific seed color is provided
-        rememberDynamicColorScheme(
-            seedColor = themeColor, // themeColor is guaranteed non-default here
-            isDark = darkTheme,
-            specVersion = ColorSpec.SpecVersion.SPEC_2025,
-            style = PaletteStyle.TonalSpot // Keep existing style
-        )
+    val baseColorScheme = when {
+        useSystemDynamicColor -> {
+            // Use standard Material 3 dynamic color functions for system wallpaper colors
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        }
+        themeColor == DefaultThemeColor && darkTheme -> {
+            // Use Xevrae's static dark colors as the primary theme
+            DarkColors
+        }
+        else -> {
+            // Use materialKolor when a specific seed color is provided
+            rememberDynamicColorScheme(
+                seedColor = themeColor,
+                isDark = darkTheme,
+                specVersion = ColorSpec.SpecVersion.SPEC_2025,
+                style = PaletteStyle.TonalSpot
+            )
+        }
     }
 
-    // Apply pureBlack modification if needed, similar to original logic
+    // Apply pureBlack modification if needed
     val colorScheme = remember(baseColorScheme, pureBlack, darkTheme) {
         if (darkTheme && pureBlack) {
             baseColorScheme.pureBlack(true)
@@ -63,11 +80,13 @@ fun MetrolistTheme(
     }
 
     // Use standard MaterialTheme instead of MaterialExpressiveTheme
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = AppTypography, // Use the defined AppTypography
-        content = content
-    )
+    CompositionLocalProvider(LocalHazeState provides hazeState) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = AppTypography, // Use the defined AppTypography
+            content = content
+        )
+    }
 }
 
 fun Bitmap.extractThemeColor(): Color {

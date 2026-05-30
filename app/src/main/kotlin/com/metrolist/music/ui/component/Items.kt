@@ -1333,7 +1333,7 @@ fun ItemThumbnail(
                     .background(Color.Black.copy(alpha = 0.5f))
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.done),
+                    painter = painterResource(R.drawable.xev_done),
                     contentDescription = null
                 )
             }
