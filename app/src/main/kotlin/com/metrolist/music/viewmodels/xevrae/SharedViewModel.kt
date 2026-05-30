@@ -1548,7 +1548,7 @@ class SharedViewModel @Inject constructor(
 
     fun addToYouTubeLiked() {
         viewModelScope.launch {
-            val videoId = playerConnection.currentSong.first<SongEntity?>()?.id
+            val videoId = playerConnection.currentSong.first()?.id
             if (videoId != null) {
                 val like = likeStatus.value
                 if (!like) {
@@ -1558,7 +1558,7 @@ class SharedViewModel @Inject constructor(
                         ).collect { response ->
                             if (response == 200) {
                                 makeToast(getString(R.string.added_to_youtube_liked))
-                                getLikeStatus(videoId as? String)
+                                getLikeStatus(videoId)
                             } else {
                                 makeToast(getString(R.string.error))
                             }
@@ -1570,7 +1570,7 @@ class SharedViewModel @Inject constructor(
                         ).collect {
                             if (it == 200) {
                                 makeToast(getString(R.string.removed_from_youtube_liked))
-                                getLikeStatus(videoId as? String)
+                                getLikeStatus(videoId)
                             } else {
                                 makeToast(getString(R.string.error))
                             }
