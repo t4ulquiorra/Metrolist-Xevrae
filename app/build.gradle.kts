@@ -324,7 +324,6 @@ configurations.configureEach {
 dependencies {
     implementation(libs.guava)
     implementation(libs.coroutines.guava)
-    implementation(libs.concurrent.futures)
 
     implementation(libs.activity)
     implementation(libs.hilt.navigation)
