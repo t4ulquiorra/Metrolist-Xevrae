@@ -9,6 +9,7 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.process.ExecOperations
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.net.URL
+import java.net.URI
 import java.util.Properties
 import javax.inject.Inject
 
@@ -64,7 +65,7 @@ abstract class GenerateProtoTask : DefaultTask() {
             val url = protocUrl.get()
             logger.lifecycle("Downloading protoc ${url.substringAfterLast('/')} from $url")
             protocFile.parentFile.mkdirs()
-            URL(url).openStream().use { input ->
+            URI(url).toURL().openStream().use { input ->
                 protocFile.outputStream().use { output ->
                     input.copyTo(output)
                 }
@@ -276,7 +277,7 @@ val protoFile = protoDir.resolve("listentogether.proto")
 
 val generateProto = if (protoFile.exists()) {
     val protocUrl = getProtocUrl()
-    val protocFileName = URL(protocUrl).path.substringAfterLast('/')
+    val protocFileName = URI(protocUrl).toURL().path.substringAfterLast('/')
 
     tasks.register<GenerateProtoTask>("generateProto") {
         group = "build"
@@ -357,7 +358,7 @@ dependencies {
     implementation(libs.ucrop)
 
     implementation(libs.shimmer)
-    implementation(libs.aboutlibraries_compose)
+    implementation(libs.aboutlibraries.compose)
 
     implementation(libs.media3)
     implementation(libs.media3.session)
@@ -404,7 +405,7 @@ dependencies {
     coreLibraryDesugaring(libs.desugaring)
 
     implementation(libs.timber)
-    implementation(libs.uri-kmp)
+    implementation(libs.uriKmp)
 
     implementation(libs.adaptive)
     implementation(libs.adaptive.layout)
