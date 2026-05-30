@@ -16,29 +16,9 @@ data class LocalPlaylistEntity(
     val tracks: List<String>? = null,
 )
 
-data class PlaylistsResult(
-    val browseId: String,
-    val title: String,
-    val thumbnails: List<Thumbnail>? = null,
-)
-
-data class Artist(
-    val name: String,
-    val id: String,
-)
-
-data class Album(
-    val name: String,
-    val id: String,
-)
-
 data class SleepTimerState(
     val isActive: Boolean,
     val timeRemaining: Int,
-)
-
-data class Thumbnail(
-    val url: String,
 )
 
 data class PodcastBrowse(

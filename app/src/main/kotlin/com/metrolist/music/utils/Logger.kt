@@ -2,6 +2,13 @@ package com.metrolist.music.utils
 
 import timber.log.Timber
 
+enum class LogLevel {
+    DEBUG,
+    INFO,
+    WARN,
+    ERROR
+}
+
 object Logger {
     fun d(tag: String, message: String) {
         Timber.tag(tag).d(message)

@@ -52,7 +52,7 @@ class SearchViewModel @Inject constructor(
     private val _searchScreenState = MutableStateFlow(SearchScreenState())
     val searchScreenState: StateFlow<SearchScreenState> = _searchScreenState.asStateFlow()
 
-    private val _searchScreenUIState = MutableStateFlow<SearchScreenUIState>(SearchScreenUIState.EMPTY)
+    private val _searchScreenUIState = MutableStateFlow<SearchScreenUIState>(SearchScreenUIState.Empty)
     val searchScreenUIState: StateFlow<SearchScreenUIState> = _searchScreenUIState.asStateFlow()
 
     private val continuations = mutableMapOf<SearchType, String?>()
@@ -72,7 +72,7 @@ class SearchViewModel @Inject constructor(
     fun searchAll(query: String) {
         if (query.isBlank()) return
         
-        _searchScreenUIState.value = SearchScreenUIState.LOADING
+        _searchScreenUIState.value = SearchScreenUIState.Loading
         _searchScreenState.update { it.copy(searchType = SearchType.ALL) }
         
         viewModelScope.launch {
@@ -140,11 +140,11 @@ class SearchViewModel @Inject constructor(
                             searchPodcastsResult = podcasts
                         )
                     }
-                    _searchScreenUIState.value = SearchScreenUIState.SUCCESS
-                    saveSearchHistory(query)
+                    _searchScreenUIState.value = SearchScreenUIState.Success
+                    insertSearchHistory(query)
                 }
                 .onFailure {
-                    _searchScreenUIState.value = SearchScreenUIState.ERROR
+                    _searchScreenUIState.value = SearchScreenUIState.Error
                     reportException(it)
                 }
         }
@@ -161,7 +161,7 @@ class SearchViewModel @Inject constructor(
     private fun searchWithType(query: String, type: SearchType, filter: YouTube.SearchFilter) {
         if (query.isBlank()) return
         
-        _searchScreenUIState.value = SearchScreenUIState.LOADING
+        _searchScreenUIState.value = SearchScreenUIState.Loading
         _searchScreenState.update { it.copy(searchType = type) }
         
         viewModelScope.launch {
@@ -190,10 +190,10 @@ class SearchViewModel @Inject constructor(
                             else -> state
                         }
                     }
-                    _searchScreenUIState.value = SearchScreenUIState.SUCCESS
+                    _searchScreenUIState.value = SearchScreenUIState.Success
                 }
                 .onFailure {
-                    _searchScreenUIState.value = SearchScreenUIState.ERROR
+                    _searchScreenUIState.value = SearchScreenUIState.Error
                     reportException(it)
                 }
         }
@@ -236,6 +236,21 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    fun setSearchType(type: SearchType) {
+        _searchScreenState.update { it.copy(searchType = type) }
+        val query = savedStateHandle.get<String>("query") ?: return
+        when (type) {
+            SearchType.ALL -> searchAll(query)
+            SearchType.SONGS -> searchSongs(query)
+            SearchType.VIDEOS -> searchVideos(query)
+            SearchType.ALBUMS -> searchAlbums(query)
+            SearchType.ARTISTS -> searchArtists(query)
+            SearchType.PLAYLISTS -> searchPlaylists(query)
+            SearchType.FEATURED_PLAYLISTS -> searchFeaturedPlaylist(query)
+            SearchType.PODCASTS -> searchPodcast(query)
+        }
+    }
+
     fun suggestQuery(query: String) {
         if (query.isBlank()) {
             _searchScreenState.update { it.copy(suggestQueries = emptyList(), suggestYTItems = emptyList()) }
@@ -260,7 +275,7 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    private fun saveSearchHistory(query: String) {
+    fun insertSearchHistory(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
             database.insert(SearchHistory(query = query))
         }
@@ -343,10 +358,10 @@ data class SearchScreenState(
 )
 
 enum class SearchScreenUIState {
-    EMPTY,
-    LOADING,
-    SUCCESS,
-    ERROR
+    Empty,
+    Loading,
+    Success,
+    Error
 }
 
 enum class SearchType {

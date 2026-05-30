@@ -92,7 +92,6 @@ val PaletteColors = listOf(
     ThemePalette(R.string.palette_crimson, Color(0xFF70A3F4)), // Xevrae Primary (New Default)
     ThemePalette(R.string.palette_rose, Color(0xFFD81B60)),
     ThemePalette(R.string.palette_purple, Color(0xFF8E24AA)),
-)
     ThemePalette(R.string.palette_deep_purple, Color(0xFF5E35B1)),
     ThemePalette(R.string.palette_indigo, Color(0xFF3949AB)),
     ThemePalette(R.string.palette_blue, Color(0xFF1E88E5)),

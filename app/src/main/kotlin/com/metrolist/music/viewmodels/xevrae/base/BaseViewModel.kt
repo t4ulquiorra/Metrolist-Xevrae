@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.metrolist.music.playback.PlayerConnection
-import com.metrolist.music.logger.LogLevel
-import com.metrolist.music.logger.Logger
+import com.metrolist.music.utils.Logger
+import com.metrolist.music.utils.LogLevel
 import javax.inject.Inject
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow

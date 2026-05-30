@@ -31,7 +31,7 @@ interface RecentlyType : LibraryType {
     fun objectType(): Type
 }
 
-interface SearchResultType {
+sealed interface SearchResultType {
     enum class Type {
         SONG,
         VIDEO,
@@ -80,8 +80,6 @@ data class VideosResult(
     override fun objectType(): SearchResultType.Type = SearchResultType.Type.VIDEO
 }
 
-interface ArtistType
-
 @Serializable
 data class ArtistsResult(
     val artist: String,
@@ -91,9 +89,56 @@ data class ArtistsResult(
     val resultType: String? = null,
     val shuffleId: String? = null,
     val thumbnails: List<Thumbnail>? = null,
-) : ArtistType, SearchResultType {
+    val title: String? = null,
+) : SearchResultType {
     override fun objectType(): SearchResultType.Type = SearchResultType.Type.ARTIST
 }
+
+@Serializable
+data class AlbumsResult(
+    val browseId: String,
+    val thumbnails: List<Thumbnail>? = null,
+    val title: String,
+    val year: String? = null,
+    val playlistId: String? = null,
+) : SearchResultType {
+    override fun objectType(): SearchResultType.Type = SearchResultType.Type.ALBUM
+}
+
+@Serializable
+data class PlaylistsResult(
+    val browseId: String,
+    val title: String,
+    val thumbnails: List<Thumbnail>? = null,
+    val author: String? = null,
+    val trackCount: String? = null,
+    val resultType: String? = null,
+) : SearchResultType {
+    override fun objectType(): SearchResultType.Type = SearchResultType.Type.PLAYLIST
+}
+
+@Serializable
+data class Artist(
+    val name: String,
+    val id: String,
+)
+
+@Serializable
+data class Album(
+    val name: String,
+    val id: String,
+)
+
+@Serializable
+data class Thumbnail(
+    val url: String,
+)
+
+@Serializable
+data class FeedbackTokens(
+    val add: String? = null,
+    val remove: String? = null,
+)
 
 data class SearchSuggestions(
     val queries: List<String>,
@@ -156,13 +201,6 @@ enum class LibraryChipType {
             }
     }
 }
-
-// Extension properties for Metrolist entities to implement Xevrae interfaces
-// Since we can't easily make them implement interfaces without modifying them,
-// we might need to wrap them or just use type checks if possible, but 
-// the interfaces have methods like playlistType().
-
-// Actually, let's wrap them or use a data class that implements the interface.
 
 data class XevraePlaylist(
     val entity: PlaylistEntity? = null,

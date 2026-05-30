@@ -32,8 +32,8 @@ import com.metrolist.music.extensions.bytesToMB
 import com.metrolist.music.extensions.getSizeOfFile
 import com.metrolist.music.extensions.zipInputStream
 import com.metrolist.music.extensions.zipOutputStream
-import com.metrolist.music.logger.LogLevel
-import com.metrolist.music.logger.Logger
+import com.metrolist.music.utils.Logger
+import com.metrolist.music.utils.LogLevel
 import com.metrolist.music.Platform
 import com.metrolist.music.getPlatform
 import com.metrolist.music.viewmodels.xevrae.base.BaseViewModel

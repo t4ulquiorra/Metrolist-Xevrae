@@ -400,9 +400,12 @@ dependencies {
     implementation(libs.adaptive.layout)
 
     implementation(libs.haze)
+    implementation(libs.haze.materials)
     implementation(libs.liquid.glass)
     implementation(libs.kmpalette.core)
     implementation(libs.kmpalette.network)
     implementation(libs.compottie)
     implementation(libs.calf.file.picker)
+    implementation(libs.paging.common)
+    implementation(libs.paging.compose)
 }

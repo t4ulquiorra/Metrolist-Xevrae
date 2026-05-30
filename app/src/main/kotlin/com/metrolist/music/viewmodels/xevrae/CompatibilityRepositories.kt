@@ -262,11 +262,28 @@ class LyricsCanvasRepository @Inject constructor(
     fun voteXevraeTranslatedLyrics(translatedLyricsId: String, vote: Boolean): Flow<Resource<Boolean>> =
         flow { emit(Resource.Success(true)) }
 
+    fun voteXevraeLyrics(lyricsId: String, vote: Boolean): Flow<Resource<Boolean>> =
+        flow { emit(Resource.Success(true)) }
+
     fun getAITranslationLyrics(videoId: String, lyrics: Lyrics, lang: String, mode: String): Flow<Resource<Lyrics>> =
         flow { emit(Resource.Loading()) }
 
     fun getXevraeLyrics(videoId: String): Flow<Resource<Lyrics>> =
         flow { emit(Resource.Loading()) }
+
+    suspend fun insertXevraeLyrics(
+        dataStoreManager: DataStoreManager,
+        track: com.metrolist.innertube.models.SongItem,
+        duration: Int,
+        lyrics: Lyrics
+    ): Flow<Resource<Boolean>> = flow { emit(Resource.Success(true)) }
+
+    suspend fun insertXevraeTranslatedLyrics(
+        dataStoreManager: DataStoreManager,
+        track: com.metrolist.innertube.models.SongItem,
+        lyrics: Lyrics,
+        language: String
+    ): Flow<Resource<Boolean>> = flow { emit(Resource.Success(true)) }
 
     fun getSpotifyCanvas(videoId: String, duration: Int): Flow<Resource<CanvasResult>> =
         flow { emit(Resource.Loading()) }

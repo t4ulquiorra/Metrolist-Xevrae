@@ -42,8 +42,8 @@ import com.metrolist.music.playback.PlayerConnection
 import com.metrolist.music.extensions.toMediaItem
 import com.metrolist.music.extensions.toSongEntity
 import com.metrolist.music.extensions.metadata
-import com.metrolist.music.logger.LogLevel
-import com.metrolist.music.logger.Logger
+import com.metrolist.music.utils.Logger
+import com.metrolist.music.utils.LogLevel
 import com.metrolist.music.Platform
 import com.metrolist.music.utils.getDownloadFolderPath
 import com.metrolist.music.ui.utils.toByteArray
@@ -98,6 +98,12 @@ class SharedViewModel @Inject constructor(
     var isFirstMiniplayer: Boolean = false
     var isFirstSuggestions: Boolean = false
     var showedUpdateDialog: Boolean = false
+
+    val translationLanguage: StateFlow<String?> = dataStoreManager.translationLanguage.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = null
+    )
 
     private val _isCheckingUpdate = MutableStateFlow(false)
     val isCheckingUpdate: StateFlow<Boolean> = _isCheckingUpdate
