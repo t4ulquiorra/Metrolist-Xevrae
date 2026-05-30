@@ -126,7 +126,6 @@ tinypinyin = { module = "com.github.promeG:tinypinyin", version.ref = "tinypinyi
 protobuf-javalite = { module = "com.google.protobuf:protobuf-javalite", version.ref = "protobuf" }
 protobuf-kotlin-lite = { module = "com.google.protobuf:protobuf-kotlin-lite", version.ref = "protobuf" }
 haze = { group = "dev.chrisbanes.haze", name = "haze", version.ref = "haze" }
-haze-material = { group = "dev.chrisbanes.haze", name = "haze-jetpack-compose", version.ref = "haze" }
 liquid-glass = { module = "io.github.kyant0:backdrop", version.ref = "liquidGlass" }
 liquid-glass-shape = { module = "io.github.kyant0:shapes", version.ref = "liquidGlassShapes" }
 kmpalette-core = { group = "com.github.jordond.kmpalette", name = "kmpalette-core", version.ref = "kmpalette" }
