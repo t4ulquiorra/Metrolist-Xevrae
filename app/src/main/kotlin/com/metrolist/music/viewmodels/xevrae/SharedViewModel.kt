@@ -1692,7 +1692,7 @@ class SharedViewModel @Inject constructor(
             lyricsCanvasRepository
                 .voteXevraeLyrics(
                     lyricsId = simpMusicLyricsId,
-                    upvote = upvote,
+                    vote = upvote,
                 ).collectLatest { result ->
                     when (result) {
                         is Resource.Error -> {
@@ -1877,4 +1877,5 @@ sealed class VoteState {
     data class Error(
         val message: String,
     ) : VoteState()
+} ) : VoteState()
 }
