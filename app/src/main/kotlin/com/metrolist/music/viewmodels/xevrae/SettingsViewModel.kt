@@ -314,7 +314,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     private fun getLocalTrackingEnabled() {
         viewModelScope.launch {
             dataStoreManager.localTrackingEnabled.collect { enabled ->
-                _localTrackingEnabled.value = enabled == DataStoreManager.TRUE
+                _localTrackingEnabled.value = enabled == true
             }
         }
     }
@@ -369,7 +369,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     private fun getKeepYouTubePlaylistOffline() {
         viewModelScope.launch {
             dataStoreManager.keepYouTubePlaylistOffline.collect { keep ->
-                _keepYouTubePlaylistOffline.value = keep == DataStoreManager.TRUE
+                _keepYouTubePlaylistOffline.value = keep == true
             }
         }
     }
@@ -384,7 +384,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     private fun getCombineLocalAndYouTubeLiked() {
         viewModelScope.launch {
             dataStoreManager.combineLocalAndYouTubeLiked.collect { combine ->
-                _combineLocalAndYouTubeLiked.value = combine == DataStoreManager.TRUE
+                _combineLocalAndYouTubeLiked.value = combine == true
             }
         }
     }
@@ -399,7 +399,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     private fun getKeepServiceAlive() {
         viewModelScope.launch {
             dataStoreManager.keepServiceAlive.collect { keepServiceAlive ->
-                _keepServiceAlive.value = keepServiceAlive == DataStoreManager.TRUE
+                _keepServiceAlive.value = keepServiceAlive == true
             }
         }
     }
@@ -414,7 +414,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     private fun getCrossfadeEnabled() {
         viewModelScope.launch {
             dataStoreManager.crossfadeEnabled.collect { enabled ->
-                _crossfadeEnabled.value = enabled == DataStoreManager.TRUE
+                _crossfadeEnabled.value = enabled == true
             }
         }
     }
@@ -444,7 +444,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     private fun getCrossfadeDjMode() {
         viewModelScope.launch {
             dataStoreManager.crossfadeDjMode.collect { enabled ->
-                _crossfadeDjMode.value = enabled == DataStoreManager.TRUE
+                _crossfadeDjMode.value = enabled == true
             }
         }
     }
@@ -459,7 +459,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     private fun getPrefer320kbpsStream() {
         viewModelScope.launch {
             dataStoreManager.prefer320kbpsStream.collect { enabled ->
-                _prefer320kbpsStream.value = enabled == DataStoreManager.TRUE
+                _prefer320kbpsStream.value = enabled == true
             }
         }
     }
@@ -509,7 +509,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     private fun getDiscordRichPresenceEnabled() {
         viewModelScope.launch {
             dataStoreManager.richPresenceEnabled.collect { enabled ->
-                _richPresenceEnabled.value = enabled == DataStoreManager.TRUE
+                _richPresenceEnabled.value = enabled == true
             }
         }
     }
@@ -525,7 +525,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     private fun getExplicitContentEnabled() {
         viewModelScope.launch {
             dataStoreManager.explicitContentEnabled.collect { enabled ->
-                _explicitContentEnabled.value = enabled == DataStoreManager.TRUE
+                _explicitContentEnabled.value = enabled == true
             }
         }
     }
@@ -540,7 +540,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     private fun getEnableLiquidGlass() {
         viewModelScope.launch {
             dataStoreManager.enableLiquidGlass.collect { enableLiquidGlass ->
-                _enableLiquidGlass.value = enableLiquidGlass == DataStoreManager.TRUE
+                _enableLiquidGlass.value = enableLiquidGlass == true
             }
         }
     }
@@ -570,7 +570,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     private fun getBackupDownloaded() {
         viewModelScope.launch {
             dataStoreManager.backupDownloaded.collect { backupDownloaded ->
-                _backupDownloaded.value = backupDownloaded == DataStoreManager.TRUE
+                _backupDownloaded.value = backupDownloaded == true
             }
         }
     }
@@ -586,7 +586,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     private fun getAutoBackupEnabled() {
         viewModelScope.launch {
             dataStoreManager.autoBackupEnabled.collect { enabled ->
-                _autoBackupEnabled.value = enabled == DataStoreManager.TRUE
+                _autoBackupEnabled.value = enabled == true
             }
         }
     }
@@ -723,7 +723,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     private fun getAITranslation() {
         viewModelScope.launch {
             dataStoreManager.useAITranslation.collect { useAITranslation ->
-                _useAITranslation.value = useAITranslation == DataStoreManager.TRUE
+                _useAITranslation.value = useAITranslation == true
             }
         }
     }
@@ -758,7 +758,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     private fun getBlurFullscreenLyrics() {
         viewModelScope.launch {
             dataStoreManager.blurFullscreenLyrics.collect { blurFullscreenLyrics ->
-                _blurFullscreenLyrics.value = blurFullscreenLyrics == DataStoreManager.TRUE
+                _blurFullscreenLyrics.value = blurFullscreenLyrics == true
             }
         }
     }
@@ -773,7 +773,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     private fun getBlurPlayerBackground() {
         viewModelScope.launch {
             dataStoreManager.blurPlayerBackground.collect { blurPlayerBackground ->
-                _blurPlayerBackground.value = blurPlayerBackground == DataStoreManager.TRUE
+                _blurPlayerBackground.value = blurPlayerBackground == true
             }
         }
     }
@@ -788,7 +788,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     private fun getAutoCheckUpdate() {
         viewModelScope.launch {
             dataStoreManager.autoCheckForUpdates.collect { autoCheckUpdate ->
-                _autoCheckUpdate.value = autoCheckUpdate == DataStoreManager.TRUE
+                _autoCheckUpdate.value = autoCheckUpdate == true
             }
         }
     }
@@ -817,10 +817,10 @@ class SettingsViewModel @javax.inject.Inject constructor(
     private fun getUsingProxy() {
         viewModelScope.launch {
             dataStoreManager.usingProxy.collectLatest { usingProxy ->
-                if (usingProxy == DataStoreManager.TRUE) {
+                if (usingProxy == true) {
                     getProxy()
                 }
-                _usingProxy.value = usingProxy == DataStoreManager.TRUE
+                _usingProxy.value = usingProxy == true
             }
         }
     }
@@ -1295,7 +1295,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
                 if (!accounts.isNullOrEmpty()) {
                     _googleAccounts.emit(LocalResource.Success(accounts))
                 } else {
-                    if (loggedIn.value == DataStoreManager.TRUE) {
+                    if (loggedIn.value == true) {
                         accountRepository
                             .getAccountInfo(
                                 dataStoreManager.cookie.first(),
@@ -1349,7 +1349,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     ): Boolean {
         val currentCookie = dataStoreManager.cookie.first()
         val currentPageId = dataStoreManager.pageId.first()
-        val currentLoggedIn = dataStoreManager.loggedIn.first() == DataStoreManager.TRUE
+        val currentLoggedIn = dataStoreManager.loggedIn.first() == true
         try {
             runBlocking {
                 dataStoreManager.setCookie(cookie, "")
@@ -1539,7 +1539,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     fun getSpotifyLyrics() {
         viewModelScope.launch {
             dataStoreManager.spotifyLyrics.collect {
-                if (it == DataStoreManager.TRUE) {
+                if (it == true) {
                     _spotifyLyrics.emit(true)
                 } else {
                     _spotifyLyrics.emit(false)
@@ -1558,7 +1558,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     fun getSpotifyCanvas() {
         viewModelScope.launch {
             dataStoreManager.spotifyCanvas.collect {
-                if (it == DataStoreManager.TRUE) {
+                if (it == true) {
                     _spotifyCanvas.emit(true)
                 } else {
                     _spotifyCanvas.emit(false)
@@ -1609,7 +1609,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
     fun getHelpBuildLyricsDatabase() {
         viewModelScope.launch {
             dataStoreManager.helpBuildLyricsDatabase.collect { helpBuildLyricsDatabase ->
-                _helpBuildLyricsDatabase.emit(helpBuildLyricsDatabase == DataStoreManager.TRUE)
+                _helpBuildLyricsDatabase.emit(helpBuildLyricsDatabase == true)
             }
         }
     }

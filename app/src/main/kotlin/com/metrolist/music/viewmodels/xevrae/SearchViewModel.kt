@@ -364,6 +364,17 @@ enum class SearchScreenUIState {
     Error
 }
 
+fun SearchType.toStringRes(): Int = when (this) {
+    SearchType.ALL -> com.metrolist.music.R.string.all
+    SearchType.SONGS -> com.metrolist.music.R.string.song
+    SearchType.VIDEOS -> com.metrolist.music.R.string.videos
+    SearchType.ALBUMS -> com.metrolist.music.R.string.albums
+    SearchType.ARTISTS -> com.metrolist.music.R.string.artists
+    SearchType.PLAYLISTS -> com.metrolist.music.R.string.playlists
+    SearchType.FEATURED_PLAYLISTS -> com.metrolist.music.R.string.featured_playlists
+    SearchType.PODCASTS -> com.metrolist.music.R.string.podcasts
+}
+
 enum class SearchType {
     ALL,
     SONGS,

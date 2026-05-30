@@ -102,7 +102,6 @@ import com.metrolist.music.common.SponsorBlockType
 import com.metrolist.music.common.VIDEO_QUALITY
 import com.metrolist.music.domain.extension.now
 import com.metrolist.music.domain.manager.DataStoreManager
-import com.metrolist.music.domain.manager.DataStoreManager.Values.TRUE
 import com.metrolist.music.domain.utils.LocalResource
 import com.metrolist.music.logger.Logger
 import com.metrolist.music.Platform
@@ -220,7 +219,7 @@ fun SettingScreen(
     // Open equalizer
     val resultLauncher = openEqResult(viewModel.getAudioSessionId())
 
-    val enableTranslucentNavBar by viewModel.translucentBottomBar.map { it == TRUE }.collectAsStateWithLifecycle(initialValue = false)
+    val enableTranslucentNavBar by viewModel.translucentBottomBar.map { it == true }.collectAsStateWithLifecycle(initialValue = false)
     val language by viewModel.language.collectAsStateWithLifecycle()
     val location by viewModel.location.collectAsStateWithLifecycle()
     val quality by viewModel.quality.collectAsStateWithLifecycle()
@@ -231,20 +230,20 @@ fun SettingScreen(
     val keepYoutubePlaylistOffline by viewModel.keepYouTubePlaylistOffline.collectAsStateWithLifecycle()
     val localTrackingEnabled by viewModel.localTrackingEnabled.collectAsStateWithLifecycle(initialValue = false)
     val combineLocalAndYouTubeLiked by viewModel.combineLocalAndYouTubeLiked.collectAsStateWithLifecycle()
-    val playVideo by viewModel.playVideoInsteadOfAudio.map { it == TRUE }.collectAsStateWithLifecycle(initialValue = false)
+    val playVideo by viewModel.playVideoInsteadOfAudio.map { it == true }.collectAsStateWithLifecycle(initialValue = false)
     val videoQuality by viewModel.videoQuality.collectAsStateWithLifecycle()
-    val sendData by viewModel.sendBackToGoogle.map { it == TRUE }.collectAsStateWithLifecycle(initialValue = false)
-    val normalizeVolume by viewModel.normalizeVolume.map { it == TRUE }.collectAsStateWithLifecycle(initialValue = false)
-    val skipSilent by viewModel.skipSilent.map { it == TRUE }.collectAsStateWithLifecycle(initialValue = false)
-    val savePlaybackState by viewModel.savedPlaybackState.map { it == TRUE }.collectAsStateWithLifecycle(initialValue = false)
-    val saveLastPlayed by viewModel.saveRecentSongAndQueue.map { it == TRUE }.collectAsStateWithLifecycle(initialValue = false)
-    val killServiceOnExit by viewModel.killServiceOnExit.map { it == TRUE }.collectAsStateWithLifecycle(initialValue = true)
+    val sendData by viewModel.sendBackToGoogle.map { it == true }.collectAsStateWithLifecycle(initialValue = false)
+    val normalizeVolume by viewModel.normalizeVolume.map { it == true }.collectAsStateWithLifecycle(initialValue = false)
+    val skipSilent by viewModel.skipSilent.map { it == true }.collectAsStateWithLifecycle(initialValue = false)
+    val savePlaybackState by viewModel.savedPlaybackState.map { it == true }.collectAsStateWithLifecycle(initialValue = false)
+    val saveLastPlayed by viewModel.saveRecentSongAndQueue.map { it == true }.collectAsStateWithLifecycle(initialValue = false)
+    val killServiceOnExit by viewModel.killServiceOnExit.map { it == true }.collectAsStateWithLifecycle(initialValue = true)
     val mainLyricsProvider by viewModel.mainLyricsProvider.collectAsStateWithLifecycle()
     val youtubeSubtitleLanguage by viewModel.youtubeSubtitleLanguage.collectAsStateWithLifecycle()
     val spotifyLoggedIn by viewModel.spotifyLogIn.collectAsStateWithLifecycle()
     val spotifyLyrics by viewModel.spotifyLyrics.collectAsStateWithLifecycle()
     val spotifyCanvas by viewModel.spotifyCanvas.collectAsStateWithLifecycle()
-    val enableSponsorBlock by viewModel.sponsorBlockEnabled.map { it == TRUE }.collectAsStateWithLifecycle(initialValue = false)
+    val enableSponsorBlock by viewModel.sponsorBlockEnabled.map { it == true }.collectAsStateWithLifecycle(initialValue = false)
     val skipSegments by viewModel.sponsorBlockCategories.collectAsStateWithLifecycle()
     val playerCache by viewModel.cacheSize.collectAsStateWithLifecycle()
     val downloadedCache by viewModel.downloadedCacheSize.collectAsStateWithLifecycle()

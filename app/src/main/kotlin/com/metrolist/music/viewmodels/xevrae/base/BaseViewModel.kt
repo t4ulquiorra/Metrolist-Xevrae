@@ -115,9 +115,10 @@ abstract class BaseViewModel(
             title = queueData.playlistName,
             items = queueData.listTracks.map { track ->
                 track.toMediaItem()
-            }
+            },
+            startIndex = queueData.listTracks.indexOf(queueData.firstPlayedTrack).coerceAtLeast(0)
         )
-        playerConnection.playQueue(queue, queueData.listTracks.indexOf(queueData.firstPlayedTrack).coerceAtLeast(0))
+        playerConnection.playQueue(queue)
     }
 
     fun <T> loadMediaItem(

@@ -51,13 +51,13 @@ class AutoBackupWorker(
 
             // Check if auto backup is still enabled
             val enabled = dataStoreManager.autoBackupEnabled.first()
-            if (enabled != DataStoreManager.TRUE) {
+            if (enabled != true) {
                 Logger.i(TAG, "Auto backup is disabled, skipping...")
                 return@withContext Result.success()
             }
 
             // Get backup settings
-            val backupDownloaded = dataStoreManager.backupDownloaded.first() == DataStoreManager.TRUE
+            val backupDownloaded = dataStoreManager.backupDownloaded.first() == true
             val maxFiles = dataStoreManager.autoBackupMaxFiles.first()
 
             // Create temp backup file

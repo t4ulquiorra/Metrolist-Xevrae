@@ -560,7 +560,7 @@ fun SearchScreen(
                                 val isSelected = id == searchScreenState.searchType
                                 Spacer(modifier = Modifier.width(4.dp))
                                 Chip(
-                                    isAnimated = uiState is SearchScreenUIState.Loading,
+                                    isAnimated = uiState == SearchScreenUIState.Loading,
                                     isSelected = isSelected,
                                     text = stringResource(id.toStringRes()),
                                 ) {
@@ -592,11 +592,11 @@ fun SearchScreen(
                                     }
                                 }
                             },
-                            isRefreshing = uiState is SearchScreenUIState.Loading,
+                            isRefreshing = uiState == SearchScreenUIState.Loading,
                             indicator = {
                                 PullToRefreshDefaults.Indicator(
                                     state = pullToRefreshState,
-                                    isRefreshing = uiState is SearchScreenUIState.Loading,
+                                    isRefreshing = uiState == SearchScreenUIState.Loading,
                                     modifier = Modifier.align(Alignment.TopCenter),
                                     containerColor = PullToRefreshDefaults.indicatorContainerColor,
                                     color = PullToRefreshDefaults.indicatorColor,
@@ -606,7 +606,7 @@ fun SearchScreen(
                         ) {
                             Crossfade(targetState = uiState) { uiState ->
                                 when (uiState) {
-                                    is SearchScreenUIState.Loading -> {
+                                    SearchScreenUIState.Loading -> {
                                         // Loading state
                                         LazyColumn {
                                             items(10) {
@@ -615,7 +615,7 @@ fun SearchScreen(
                                         }
                                     }
 
-                                    is SearchScreenUIState.Success -> {
+                                    SearchScreenUIState.Success -> {
                                         // Success state with results
                                         Column(modifier = Modifier.fillMaxSize()) {
                                             // Search Results List
@@ -777,7 +777,7 @@ fun SearchScreen(
                                         }
                                     }
 
-                                    is SearchScreenUIState.Error -> {
+                                    SearchScreenUIState.Error -> {
                                         Box {
                                             // Error state
                                             Column(

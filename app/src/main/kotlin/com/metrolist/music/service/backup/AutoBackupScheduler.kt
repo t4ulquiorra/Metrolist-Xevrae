@@ -31,7 +31,7 @@ class AutoBackupScheduler(
         }.distinctUntilChanged().collect { (enabled, frequency) ->
             Logger.i(TAG, "Auto backup settings changed: enabled=$enabled, frequency=$frequency")
 
-            if (enabled == DataStoreManager.TRUE) {
+            if (enabled == true) {
                 scheduleBackup(frequency)
             } else {
                 cancelBackup()

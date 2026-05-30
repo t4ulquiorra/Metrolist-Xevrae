@@ -147,7 +147,7 @@ class SharedViewModel @Inject constructor(
 
     val blurBg: StateFlow<Boolean> =
         dataStoreManager.blurPlayerBackground
-            .map { it == TRUE }
+            .map { it == true }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(500L),
@@ -239,7 +239,7 @@ class SharedViewModel @Inject constructor(
                 launch {
                     dataStoreManager.watchVideoInsteadOfPlayingAudio.collectLatest {
                         Logger.w(tag, "GetVideo is $it")
-                        _getVideo.value = it == TRUE
+                        _getVideo.value = it == true
                     }
                 }
             val lyricsProviderJob =
@@ -251,13 +251,13 @@ class SharedViewModel @Inject constructor(
             val shareSavedLyricsJob =
                 launch {
                     dataStoreManager.helpBuildLyricsDatabase.distinctUntilChanged().collectLatest {
-                        _shareSavedLyrics.value = it == TRUE
+                        _shareSavedLyrics.value = it == true
                     }
                 }
 //            val controllerStateJob =
 //                launch {
 //                    controllerState.map { it.isLiked }.distinctUntilChanged().collectLatest {
-//                        if (dataStoreManager.combineLocalAndYouTubeLiked.first() == TRUE) {
+//                        if (dataStoreManager.combineLocalAndYouTubeLiked.first() == true) {
 //                            nowPlayingState.value?.mediaItem?.mediaId?.let {
 //                                getLikeStatus(it)
 //                            }
@@ -398,7 +398,7 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    fun blurFullscreenLyrics(): Boolean = runBlocking { dataStoreManager.blurFullscreenLyrics.first() == TRUE }
+    fun blurFullscreenLyrics(): Boolean = runBlocking { dataStoreManager.blurFullscreenLyrics.first() == true }
 
     private fun getLikeStatus(videoId: String?) {
         viewModelScope.launch {
@@ -418,7 +418,7 @@ class SharedViewModel @Inject constructor(
         Logger.w(tag, "Start getCanvas: $videoId $duration")
 //        canvasJob?.cancel()
         viewModelScope.launch {
-            if (dataStoreManager.spotifyCanvas.first() == TRUE) {
+            if (dataStoreManager.spotifyCanvas.first() == true) {
                 lyricsCanvasRepository.getCanvas(dataStoreManager, videoId, duration).cancellable().collect { response ->
                     val data = response.data
                     when (response) {
@@ -1027,7 +1027,7 @@ class SharedViewModel @Inject constructor(
 
         val shouldSendLyricsToXevrae =
             runBlocking {
-                dataStoreManager.helpBuildLyricsDatabase.first() == TRUE
+                dataStoreManager.helpBuildLyricsDatabase.first() == true
             } &&
                 lyricsProvider != LyricsProvider.XEVRAE
         if (_nowPlayingState.value?.songEntity?.videoId == videoId) {
@@ -1143,7 +1143,7 @@ class SharedViewModel @Inject constructor(
                         .firstOrNull()
                         ?.contains("Various Artists") == false
                 ) {
-                    artistName.firstOrNull()
+                    artistName.firstOrNull() ?: ""
                 } else {
                     playerConnection.nowPlaying
                         .first()
@@ -1158,7 +1158,7 @@ class SharedViewModel @Inject constructor(
                     getXevraeLyrics(
                         videoId,
                         song,
-                        (artist ?: ""),
+                        artist,
                         duration,
                     )
                 }
@@ -1166,7 +1166,7 @@ class SharedViewModel @Inject constructor(
                 DataStoreManager.LRCLIB -> {
                     getLrclibLyrics(
                         song,
-                        (artist ?: ""),
+                        artist,
                         duration,
                     )
                 }
@@ -1175,7 +1175,7 @@ class SharedViewModel @Inject constructor(
                     getYouTubeCaption(
                         videoId,
                         song,
-                        (artist ?: ""),
+                        artist,
                         duration,
                     )
                 }
@@ -1183,7 +1183,7 @@ class SharedViewModel @Inject constructor(
                 DataStoreManager.BETTER_LYRICS -> {
                     getBetterLyrics(
                         song,
-                        (artist ?: "").toString(),
+                        artist,
                         duration,
                     )
                 }
@@ -1216,7 +1216,7 @@ class SharedViewModel @Inject constructor(
                     videoId,
                     data,
                 )
-            } else if (dataStoreManager.spotifyLyrics.first() == TRUE) {
+            } else if (dataStoreManager.spotifyLyrics.first() == true) {
                 getSpotifyLyrics(
                     song.toTrack().copy(durationSeconds = duration),
                     "${song.title} $artist",
@@ -1413,9 +1413,9 @@ class SharedViewModel @Inject constructor(
         lyrics: Lyrics,
     ) {
         Logger.d(tag, "Get AI Translation Lyrics for $videoId")
-        if (dataStoreManager.useAITranslation.first() == TRUE &&
+        if (dataStoreManager.useAITranslation.first() == true &&
             dataStoreManager.aiApiKey.first().isNotEmpty() &&
-            dataStoreManager.enableTranslateLyric.first() == FALSE
+            dataStoreManager.enableTranslateLyric.first() == false
         ) {
             val savedTranslatedLyrics =
                 lyricsCanvasRepository
@@ -1534,7 +1534,7 @@ class SharedViewModel @Inject constructor(
 
     fun addListToQueue(listTrack: ArrayList<Track>) {
         viewModelScope.launch {
-            if (listTrack.size == 1 && dataStoreManager.endlessQueue.first() == TRUE) {
+            if (listTrack.size == 1 && dataStoreManager.endlessQueue.first() == true) {
                 playerConnection.playNext(listTrack.first())
                 makeToast(getString(R.string.play_next))
             } else {
@@ -1593,7 +1593,7 @@ class SharedViewModel @Inject constructor(
         _reloadDestination.value = null
     }
 
-    fun shouldCheckForUpdate(): Boolean = runBlocking { dataStoreManager.autoCheckForUpdates.first() == TRUE }
+    fun shouldCheckForUpdate(): Boolean = runBlocking { dataStoreManager.autoCheckForUpdates.first() == true }
 
     private var _downloadFileProgress = MutableStateFlow<DownloadProgress>(DownloadProgress.INIT)
     val downloadFileProgress: StateFlow<DownloadProgress> get() = _downloadFileProgress
@@ -1771,11 +1771,11 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    fun shouldStopMusicService(): Boolean = runBlocking { dataStoreManager.killServiceOnExit.first() == TRUE }
+    fun shouldStopMusicService(): Boolean = runBlocking { dataStoreManager.killServiceOnExit.first() == true }
 
     fun isUserLoggedIn(): Boolean = runBlocking { dataStoreManager.cookie.first().isNotEmpty() }
 
-    fun isCombineFavoriteAndYTLiked(): Boolean = runBlocking { dataStoreManager.combineLocalAndYouTubeLiked.first() == TRUE }
+    fun isCombineFavoriteAndYTLiked(): Boolean = runBlocking { dataStoreManager.combineLocalAndYouTubeLiked.first() == true }
 }
 
 sealed class UIEvent {
