@@ -1622,7 +1622,7 @@ class SharedViewModel @Inject constructor(
                 songRepository
                     .downloadToFile(
                         track = track,
-                        videoId = track.videoId,
+                        videoId = track.id,
                         path = path,
                         isVideo = nowPlayingScreenData.value.isVideo,
                     ).collectLatest<DownloadProgress> {

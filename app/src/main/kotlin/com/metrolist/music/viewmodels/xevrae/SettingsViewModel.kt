@@ -1305,25 +1305,15 @@ class SettingsViewModel @javax.inject.Inject constructor(
                                     dataStoreManager.putString("AccountName", it.first().name)
                                     dataStoreManager.putString(
                                         "AccountThumbUrl",
-                                        it
-                                            .first()
-                                            .thumbnails
-                                            .lastOrNull()
-                                            ?.url ?: "",
+                                        it.first().thumbnailUrl ?: "",
                                     )
                                     accountRepository
                                         .insertGoogleAccount(
                                             GoogleAccountEntity(
-                                                email = it.first().email,
+                                                email = it.first().email ?: "",
                                                 name = it.first().name,
-                                                thumbnailUrl =
-                                                    it
-                                                        .first()
-                                                        .thumbnails
-                                                        .lastOrNull()
-                                                        ?.url ?: "",
+                                                thumbnailUrl = it.first().thumbnailUrl ?: "",
                                                 cache = accountRepository.getYouTubeCookie(),
-                                                pageId = it.first().pageId,
                                                 isUsed = true,
                                             ),
                                         ).singleOrNull()
@@ -1375,11 +1365,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
                     dataStoreManager.putString("AccountName", accountInfoList.first().name)
                     dataStoreManager.putString(
                         "AccountThumbUrl",
-                        accountInfoList
-                            .first()
-                            .thumbnails
-                            .lastOrNull()
-                            ?.url ?: "",
+                        accountInfoList.first().thumbnailUrl ?: "",
                     )
                     val cookieItem =
                         netscapeCookie ?: commonRepository
@@ -1392,17 +1378,12 @@ class SettingsViewModel @javax.inject.Inject constructor(
                         accountRepository
                             .insertGoogleAccount(
                                 GoogleAccountEntity(
-                                    email = account.email,
+                                    email = account.email ?: "",
                                     name = account.name,
-                                    thumbnailUrl =
-                                        account
-                                            .thumbnails
-                                            .lastOrNull()
-                                            ?.url ?: "",
+                                    thumbnailUrl = account.thumbnailUrl ?: "",
                                     cache = cookie,
                                     isUsed = index == 0,
                                     netscapeCookie = cookieItem,
-                                    pageId = account.pageId,
                                 ),
                             ).firstOrNull()
                             ?.let {
