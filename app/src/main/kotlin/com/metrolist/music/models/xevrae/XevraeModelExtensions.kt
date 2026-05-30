@@ -1,4 +1,5 @@
 package com.metrolist.music.models.xevrae
+import androidx.core.net.toUri
 
 import com.metrolist.music.db.entities.SongEntity
 
@@ -80,3 +81,20 @@ fun SongEntity.toTrack(): Track {
 fun List<String>.connectArtists(): String {
     return joinToString(", ")
 }
+
+fun Track.toMediaItem() = androidx.media3.common.MediaItem.Builder()
+    .setMediaId(videoId)
+    .setUri(videoId)
+    .setCustomCacheKey(videoId)
+    .setMediaMetadata(
+        androidx.media3.common.MediaMetadata.Builder()
+            .setTitle(title)
+            .setSubtitle(artists?.joinToString { it.name } ?: "")
+            .setArtist(artists?.joinToString { it.name } ?: "")
+            .setArtworkUri(thumbnails?.lastOrNull()?.url?.toUri())
+            .setDisplayTitle(title)
+            .setIsBrowsable(false)
+            .setIsPlayable(true)
+            .build()
+    )
+    .build()

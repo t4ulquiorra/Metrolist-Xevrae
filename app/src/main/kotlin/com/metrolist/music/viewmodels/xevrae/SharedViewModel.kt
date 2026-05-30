@@ -1518,7 +1518,7 @@ class SharedViewModel @Inject constructor(
     private fun setLyricsProvider() {
         viewModelScope.launch {
             val songEntity = nowPlayingState.value?.songEntity ?: return@launch
-            val isVideo = nowPlayingState.value?.mediaItem?.isVideo() ?: false
+            val isVideo = songEntity.isVideo ?: false
             getLyricsFromFormat(isVideo, songEntity, timeline.value.total.toInt() / 1000)
         }
     }
@@ -1537,10 +1537,10 @@ class SharedViewModel @Inject constructor(
     fun addListToQueue(listTrack: ArrayList<Track>) {
         viewModelScope.launch {
             if (listTrack.size == 1 && dataStoreManager.endlessQueue.first() == true) {
-                playerConnection.playNext(listTrack.first())
+                playerConnection.playNext(listTrack.first().toMediaItem())
                 makeToast(getString(R.string.play_next))
             } else {
-                playerConnection.loadMoreCatalog(listTrack)
+                playerConnection.addToQueue(listTrack.map { track -> track.toMediaItem() })
                 makeToast(getString(R.string.added_to_queue))
             }
         }
