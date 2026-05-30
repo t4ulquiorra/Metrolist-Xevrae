@@ -14,10 +14,80 @@ import com.metrolist.innertube.models.SongItem
 import com.metrolist.music.constants.SongSortType
 import com.metrolist.music.constants.PlaylistSortType
 import com.metrolist.music.domain.manager.DataStoreManager
+import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.LocalDateTime
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
+
+@Singleton
+class CommonRepository @Inject constructor(
+    private val database: MusicDatabase,
+    @ApplicationContext private val context: Context
+) {
+    fun databaseDaoCheckpoint() {
+        database.checkpoint()
+    }
+
+    fun getDatabasePath(): String {
+        return context.getDatabasePath("song.db").absolutePath
+    }
+
+    fun closeDatabase() {
+        database.close()
+    }
+
+    fun getCookiesFromInternalDatabase(url: String, packageName: String): String {
+        return ""
+    }
+
+    fun writeTextToFile(text: String, path: String): Boolean {
+        return try {
+            java.io.File(path).writeText(text)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+}
+
+@Singleton
+class AccountRepository @Inject constructor(
+    private val database: MusicDatabase
+) {
+    fun getGoogleAccounts(): Flow<List<GoogleAccountEntity>?> = flow {
+        emit(emptyList<GoogleAccountEntity>())
+    }
+
+    fun getAccountInfo(cookie: String): Flow<List<com.metrolist.innertube.models.AccountInfo>> = flow {
+        emit(emptyList())
+    }
+
+    fun getYouTubeCookie(): String = ""
+
+    fun insertGoogleAccount(entity: GoogleAccountEntity): Flow<Long> = flow {
+        emit(0L)
+    }
+
+    fun updateGoogleAccountUsed(email: String, used: Boolean): Flow<Int> = flow {
+        emit(1)
+    }
+
+    fun deleteGoogleAccount(email: String): Flow<Int> = flow {
+        emit(1)
+    }
+}
+
+@Singleton
+class DownloadHandler @Inject constructor() {
+    fun cancelDownload(songId: String) {}
+    sealed class Download {
+        data class Downloading(val progress: Float) : Download()
+        data class Error(val message: String) : Download()
+        data object Completed : Download()
+    }
+}
 
 @Singleton
 class SongRepository @Inject constructor(
@@ -223,4 +293,6 @@ class UpdateRepository @Inject constructor() {
 @Singleton
 class CacheRepository @Inject constructor() {
     suspend fun getAllCacheKeys(cacheName: String): List<String> = emptyList()
+    suspend fun getCacheSize(cacheName: String): Long = 0L
+    suspend fun clearCache(cacheName: String) {}
 }

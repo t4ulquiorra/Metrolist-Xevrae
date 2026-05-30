@@ -117,3 +117,5 @@ fun String.isTwoLetterCode(): Boolean {
     val regex = "^[A-Za-z]{2}$".toRegex()
     return regex.matches(this)
 }
+
+fun String.toNetScapeString(): String = this

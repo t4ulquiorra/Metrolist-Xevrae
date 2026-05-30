@@ -24,14 +24,10 @@ import com.metrolist.music.common.SETTINGS_FILENAME
 import com.metrolist.music.common.VIDEO_QUALITY
 import com.metrolist.music.models.xevrae.DownloadState
 import com.metrolist.music.models.xevrae.GoogleAccountEntity
-import com.metrolist.music.domain.extension.toNetScapeString
+import com.metrolist.music.extensions.toNetScapeString
 import com.metrolist.music.domain.manager.DataStoreManager
-import com.metrolist.music.domain.mediaservice.handler.DownloadHandler
-import com.metrolist.music.domain.repository.AccountRepository
-import com.metrolist.music.domain.repository.CacheRepository
-import com.metrolist.music.domain.repository.CommonRepository
-import com.metrolist.music.domain.repository.SongRepository
-import com.metrolist.music.domain.utils.LocalResource
+import com.metrolist.music.db.MusicDatabase
+import com.metrolist.music.utils.LocalResource
 import com.metrolist.music.extensions.bytesToMB
 import com.metrolist.music.extensions.getSizeOfFile
 import com.metrolist.music.extensions.zipInputStream
@@ -67,12 +63,14 @@ import java.util.zip.ZipOutputStream
 class SettingsViewModel @javax.inject.Inject constructor(
     @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context,
     private val dataStoreManager: DataStoreManager,
-    private val commonRepository: CommonRepository,
-    private val songRepository: SongRepository,
-    private val accountRepository: AccountRepository,
-    private val cacheRepository: CacheRepository,
-    private val downloadUtils: DownloadHandler,
+    private val database: MusicDatabase,
 ) : BaseViewModel(context) {
+    private val commonRepository = CommonRepository(database, context)
+    private val songRepository = SongRepository(database)
+    private val accountRepository = AccountRepository(database)
+    private val cacheRepository = CacheRepository()
+    private val downloadUtils = DownloadHandler()
+
     private val databasePath: String? = commonRepository.getDatabasePath()
 
     private var _location: MutableStateFlow<String?> = MutableStateFlow(null)

@@ -11,13 +11,15 @@ import com.metrolist.music.common.DOWNLOAD_EXOPLAYER_FOLDER
 import com.metrolist.music.common.EXOPLAYER_DB_NAME
 import com.metrolist.music.common.SETTINGS_FILENAME
 import com.metrolist.music.domain.manager.DataStoreManager
-import com.metrolist.music.domain.repository.CommonRepository
+import com.metrolist.music.viewmodels.xevrae.CommonRepository
 import com.metrolist.music.logger.Logger
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.android.EntryPointAccessors
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -30,14 +32,21 @@ import java.util.zip.ZipOutputStream
 class AutoBackupWorker(
     private val context: Context,
     params: WorkerParameters,
-) : CoroutineWorker(context, params),
-    KoinComponent {
+) : CoroutineWorker(context, params) {
 
-    private val commonRepository: CommonRepository by inject()
-    private val dataStoreManager: DataStoreManager by inject()
+    @EntryPoint
+    @InstallIn(SingletonComponent::class)
+    interface AutoBackupWorkerEntryPoint {
+        fun commonRepository(): CommonRepository
+        fun dataStoreManager(): DataStoreManager
+    }
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         try {
+            val entryPoint = EntryPointAccessors.fromApplication(context, AutoBackupWorkerEntryPoint::class.java)
+            val commonRepository = entryPoint.commonRepository()
+            val dataStoreManager = entryPoint.dataStoreManager()
+
             Logger.i(TAG, "Starting auto backup...")
 
             // Check if auto backup is still enabled
