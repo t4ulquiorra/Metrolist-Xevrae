@@ -92,7 +92,7 @@ data class CommunityPlaylistItem(
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @ApplicationContext context: Context,
     private val database: MusicDatabase,
     val syncUtils: SyncUtils,
     val wrappedManager: WrappedManager,

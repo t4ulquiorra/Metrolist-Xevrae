@@ -634,7 +634,7 @@ constructor(
 
 @HiltViewModel
 class LibraryViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @ApplicationContext context: Context,
     private val database: MusicDatabase,
 ) : BaseViewModel(context) {
     private val dataStore = context.dataStore
@@ -837,7 +837,7 @@ class LibraryViewModel @Inject constructor(
 
 @HiltViewModel
 class LibraryDynamicPlaylistViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @ApplicationContext context: Context,
     private val database: MusicDatabase,
 ) : BaseViewModel(context) {
     private val _listFavoriteSong: MutableStateFlow<List<SongEntity>> = MutableStateFlow(emptyList())

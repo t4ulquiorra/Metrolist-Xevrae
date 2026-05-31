@@ -29,7 +29,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MoodViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @ApplicationContext context: Context,
 ) : BaseViewModel(context) {
 
     // --- Metrolist Original State ---

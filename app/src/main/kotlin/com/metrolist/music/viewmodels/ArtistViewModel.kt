@@ -39,7 +39,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ArtistViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @ApplicationContext context: Context,
     private val database: MusicDatabase,
     private val syncUtils: SyncUtils,
     private val savedStateHandle: SavedStateHandle,

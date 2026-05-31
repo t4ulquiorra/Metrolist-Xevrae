@@ -46,7 +46,7 @@ class AlbumViewModel @Inject constructor(
     private val database: MusicDatabase,
     private val downloadUtil: DownloadUtil,
     private val savedStateHandle: SavedStateHandle,
-    @ApplicationContext private val context: Context,
+    @ApplicationContext context: Context,
 ) : BaseViewModel(context) {
 
     val albumId = savedStateHandle.get<String>("albumId") ?: savedStateHandle.get<String>("browseId") ?: ""
