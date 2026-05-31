@@ -157,6 +157,12 @@ class DataStoreManager @Inject constructor(
     }
 
     companion object {
+        const val FDROID = "fdroid"
+        const val GITHUB = "github_release"
+        const val CROSSFADE_DURATION_AUTO = 0
+        const val AI_PROVIDER_OPENAI = "openai"
+        const val AI_PROVIDER_GEMINI = "gemini"
+        const val AI_PROVIDER_CUSTOM_OPENAI = "custom_openai"
         private val LOCAL_PLAYLIST_FILTER_KEY = intPreferencesKey("local_playlist_filter")
         
         const val LOCAL_PLAYLIST_FILTER_OLDER_FIRST = 0
