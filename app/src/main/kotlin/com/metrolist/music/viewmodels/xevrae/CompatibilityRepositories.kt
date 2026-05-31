@@ -6,7 +6,7 @@ import com.metrolist.music.db.entities.PlaylistEntity
 import com.metrolist.music.db.entities.FormatEntity
 import com.metrolist.music.db.entities.LyricsEntity
 import com.metrolist.music.models.xevrae.*
-import com.metrolist.music.utils.Resource
+import com.metrolist.music.utils.LocalResource
 import com.metrolist.innertube.YouTube
 import com.metrolist.innertube.models.WatchEndpoint
 import com.metrolist.innertube.models.YouTubeClient
@@ -24,7 +24,7 @@ import javax.inject.Singleton
 @Singleton
 class CommonRepository @Inject constructor(
     private val database: MusicDatabase,
-    @ApplicationContext context: Context
+    @ApplicationContext private val context: Context
 ) {
     fun databaseDaoCheckpoint() {
         database.checkpoint()
@@ -224,17 +224,17 @@ class LocalPlaylistRepository @Inject constructor(
 class StreamRepository @Inject constructor(
     private val database: MusicDatabase
 ) {
-    fun getFullMetadata(videoId: String): Flow<Resource<SongItem>> = flow {
-        emit(Resource.Loading())
+    fun getFullMetadata(videoId: String): Flow<LocalResource<SongItem>> = flow {
+        emit(LocalResource.Loading())
         YouTube.next(WatchEndpoint(videoId = videoId)).onSuccess { result ->
             val songItem = result.items.find { it.id == videoId }
             if (songItem != null) {
-                emit(Resource.Success(songItem))
+                emit(LocalResource.Success(songItem))
             } else {
-                emit(Resource.Error("Song not found"))
+                emit(LocalResource.Error("Song not found"))
             }
         }.onFailure {
-            emit(Resource.Error(it.message ?: "Unknown error"))
+            emit(LocalResource.Error(it.message ?: "Unknown error"))
         }
     }
 
@@ -247,7 +247,7 @@ class StreamRepository @Inject constructor(
                     mimeType = it.mimeType,
                     bitrate = it.bitrate,
                     contentLength = it.contentLength,
-                    lastModified = it.lastModified
+                    lastModified = 0L // Metrolist FormatEntity doesn't store lastModified
                 )
             }
         }
@@ -268,11 +268,11 @@ class LyricsCanvasRepository @Inject constructor(
         // Metrolist lyrics storage is simpler, doesn't support separate translated lyrics yet
     }
 
-    fun voteXevraeTranslatedLyrics(translatedLyricsId: String, vote: Boolean): Flow<Resource<Boolean>> =
-        flow { emit(Resource.Success(true)) }
+    fun voteXevraeTranslatedLyrics(translatedLyricsId: String, vote: Boolean): Flow<LocalResource<Boolean>> =
+        flow { emit(LocalResource.Success(true)) }
 
-    fun voteXevraeLyrics(lyricsId: String, vote: Boolean): Flow<Resource<Boolean>> =
-        flow { emit(Resource.Success(true)) }
+    fun voteXevraeLyrics(lyricsId: String, vote: Boolean): Flow<LocalResource<Boolean>> =
+        flow { emit(LocalResource.Success(true)) }
 
     fun getSavedTranslatedLyrics(videoId: String, language: String): Flow<TranslatedLyricsEntity?> =
         flow { emit(null) }
@@ -283,45 +283,45 @@ class LyricsCanvasRepository @Inject constructor(
         lines: List<TimeLine>?,
         syncType: String,
         language: String
-    ): Flow<Resource<Lyrics>> = flow { emit(Resource.Loading()) }
+    ): Flow<LocalResource<Lyrics>> = flow { emit(LocalResource.Loading()) }
 
-    fun getXevraeLyrics(videoId: String): Flow<Resource<Lyrics>> =
-        flow { emit(Resource.Loading()) }
+    fun getXevraeLyrics(videoId: String): Flow<LocalResource<Lyrics>> =
+        flow { emit(LocalResource.Loading()) }
 
     suspend fun insertXevraeLyrics(
         dataStoreManager: DataStoreManager,
         track: com.metrolist.innertube.models.SongItem,
         duration: Int,
         lyrics: Lyrics
-    ): Flow<Resource<Boolean>> = flow { emit(Resource.Success(true)) }
+    ): Flow<LocalResource<Boolean>> = flow { emit(LocalResource.Success(true)) }
 
     suspend fun insertXevraeTranslatedLyrics(
         dataStoreManager: DataStoreManager,
         track: com.metrolist.innertube.models.SongItem,
         lyrics: Lyrics,
         language: String
-    ): Flow<Resource<Boolean>> = flow { emit(Resource.Success(true)) }
+    ): Flow<LocalResource<Boolean>> = flow { emit(LocalResource.Success(true)) }
 
-    fun getSpotifyCanvas(videoId: String, duration: Int): Flow<Resource<CanvasResult>> =
-        flow { emit(Resource.Loading()) }
+    fun getSpotifyCanvas(videoId: String, duration: Int): Flow<LocalResource<CanvasResult>> =
+        flow { emit(LocalResource.Loading()) }
 
-    fun getCanvas(dataStoreManager: DataStoreManager, videoId: String, duration: Int): Flow<Resource<CanvasResult>> =
-        flow { emit(Resource.Loading()) }
+    fun getCanvas(dataStoreManager: DataStoreManager, videoId: String, duration: Int): Flow<LocalResource<CanvasResult>> =
+        flow { emit(LocalResource.Loading()) }
 
     suspend fun updateCanvasUrl(videoId: String, canvasUrl: String) {}
 
     suspend fun updateCanvasThumbUrl(videoId: String, thumbUrl: String) {}
 
-    fun getXevraeTranslatedLyrics(videoId: String, lang: String): Flow<Resource<TranslatedLyricsEntity>> =
-        flow { emit(Resource.Loading()) }
+    fun getXevraeTranslatedLyrics(videoId: String, lang: String): Flow<LocalResource<TranslatedLyricsEntity>> =
+        flow { emit(LocalResource.Loading()) }
 
     suspend fun insertTranslatedLyrics(translatedLyrics: TranslatedLyricsEntity) {}
 }
 
 @Singleton
 class UpdateRepository @Inject constructor() {
-    fun checkForGithubReleaseUpdate(): Flow<Resource<UpdateData>> = flow { emit(Resource.Loading()) }
-    fun checkForFdroidUpdate(): Flow<Resource<UpdateData>> = flow { emit(Resource.Loading()) }
+    fun checkForGithubReleaseUpdate(): Flow<LocalResource<UpdateData>> = flow { emit(LocalResource.Loading()) }
+    fun checkForFdroidUpdate(): Flow<LocalResource<UpdateData>> = flow { emit(LocalResource.Loading()) }
 }
 
 @Singleton
