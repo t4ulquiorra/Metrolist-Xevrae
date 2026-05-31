@@ -65,6 +65,7 @@ class DataStoreManager @Inject constructor(
     val videoDownloadQuality: Flow<String> = flowOf("high")
     val autoBackupEnabled: Flow<Boolean> = flowOf(false)
     val autoBackupFrequency: Flow<String> = flowOf("daily")
+    val backupDownloaded: Flow<Boolean> = flowOf(false)
     val autoBackupMaxFiles: Flow<Int> = flowOf(5)
     val autoBackupLastTime: Flow<Long> = flowOf(0L)
     val saveStateOfPlayback: Flow<Boolean> = flowOf(false)

@@ -57,11 +57,11 @@ class AutoBackupWorker(
             }
 
             // Get backup settings
-            val backupDownloaded = dataStoreManager.backupDownloaded.first() == true
-            val maxFiles = dataStoreManager.autoBackupMaxFiles.first()
+            val isBackupDownloaded = dataStoreManager.backupDownloaded.first() == true
+            val maxFiles = dataStoreManager.autoBackupMaxFiles.first() ?: 5
 
             // Create temp backup file
-            val tempBackupFile = createBackupFile(backupDownloaded, commonRepository)
+            val tempBackupFile = createBackupFile(isBackupDownloaded, commonRepository)
 
             // Save to Downloads/Xevrae folder
             val success = saveToDownloads(tempBackupFile)
@@ -90,7 +90,7 @@ class AutoBackupWorker(
     }
 
     private suspend fun createBackupFile(
-        backupDownloaded: Boolean,
+        isBackupDownloaded: Boolean,
         commonRepository: CommonRepository,
     ): File {
         val tempFile = File(context.cacheDir, "temp_backup.zip")
@@ -117,7 +117,7 @@ class AutoBackupWorker(
                 }
 
                 // Backup downloaded data if enabled
-                if (backupDownloaded) {
+                if (isBackupDownloaded) {
                     // Backup ExoPlayer database
                     val exoPlayerDb = context.getDatabasePath(EXOPLAYER_DB_NAME)
                     if (exoPlayerDb.exists()) {
