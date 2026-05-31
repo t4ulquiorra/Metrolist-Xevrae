@@ -74,7 +74,7 @@ import com.metrolist.music.ui.theme.xevrae.typo
 import com.metrolist.music.ui.theme.xevrae.white
 
 @Composable
-fun HomeItem(
+fun HomeItemComponent(
     navController: NavController,
     data: HomeItem,
     onTrackClick: (videoId: String) -> Unit = {},
@@ -206,11 +206,11 @@ fun HomeItemContentPlaylist(
 ) {
     val thumb = when (data) {
         is Content -> data.thumbnails?.lastOrNull()?.url
-        is PlaylistEntity -> data.thumbnail
+        is PlaylistEntity -> data.thumbnailUrl
         is PlaylistsResult -> data.thumbnails?.lastOrNull()?.url
-        is AlbumEntity -> data.thumbnails
+        is AlbumEntity -> data.thumbnailUrl
         is ChartItem -> null
-        is SongEntity -> data.thumbnail
+        is SongEntity -> data.thumbnailUrl
         else -> null
     }
 
@@ -277,7 +277,7 @@ fun SongFullWidthItems(
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(songEntity.thumbnail)
+                .data(songEntity.thumbnailUrl)
                 .crossfade(true)
                 .build(),
             contentDescription = null,
@@ -295,7 +295,7 @@ fun SongFullWidthItems(
                 maxLines = 1
             )
             Text(
-                text = songEntity.artistName ?: "",
+                text = "",
                 style = typo().bodySmall,
                 color = Color.LightGray,
                 maxLines = 1
@@ -326,7 +326,7 @@ fun ArtistFullWidthItems(
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(data.thumbnail)
+                .data(data.thumbnailUrl)
                 .crossfade(true)
                 .build(),
             contentDescription = null,
@@ -357,8 +357,8 @@ fun PlaylistFullWidthItems(
         else -> ""
     }
     val thumb = when (data) {
-        is PlaylistEntity -> data.thumbnail
-        is AlbumEntity -> data.thumbnails
+        is PlaylistEntity -> data.thumbnailUrl
+        is AlbumEntity -> data.thumbnailUrl
         else -> null
     }
     Row(
