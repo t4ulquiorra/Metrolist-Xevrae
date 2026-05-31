@@ -104,14 +104,12 @@ import com.metrolist.music.extensions.now
 import com.metrolist.music.domain.manager.DataStoreManager
 import com.metrolist.music.domain.utils.LocalResource
 import com.metrolist.music.utils.Logger
-import com.metrolist.music.Platform
 import com.metrolist.music.ui.utils.fileSaverResult
 import com.metrolist.music.ui.utils.openEqResult
 import com.metrolist.music.extensions.bytesToMB
 import com.metrolist.music.extensions.displayString
 import com.metrolist.music.extensions.isTwoLetterCode
 import com.metrolist.music.extensions.isValidProxyHost
-import com.metrolist.music.getPlatform
 import com.metrolist.music.ui.component.ActionButton
 import com.metrolist.music.ui.component.CenterLoadingBox
 import com.metrolist.music.ui.component.EndOfPage
@@ -177,7 +175,6 @@ fun SettingScreen(
     ),
 ) {
     val platformContext = LocalPlatformContext.current
-    val pl = com.mohamedrejeb.calf.core.LocalPlatformContext.current
     val localDensity = LocalDensity.current
     val uriHandler = LocalUriHandler.current
     val coroutineScope = rememberCoroutineScope()
@@ -359,13 +356,13 @@ fun SettingScreen(
                     smallSubtitle = true,
                     switch = (blurPlayerBackground to { viewModel.setBlurPlayerBackground(it) }),
                 )
-                if (getPlatform() == Platform.Android) {
+                if (true) {
                     SettingItem(
                         title = stringResource(com.metrolist.music.R.string.enable_liquid_glass_effect),
                         subtitle = stringResource(com.metrolist.music.R.string.enable_liquid_glass_effect_description),
                         smallSubtitle = true,
                         switch = (enableLiquidGlass to { viewModel.setEnableLiquidGlass(it) }),
-                        isEnable = getPlatform() == Platform.Android,
+                        isEnable = true,
                     )
                 }
             }
@@ -783,7 +780,7 @@ fun SettingScreen(
                 }
             }
         }
-        if (getPlatform() == Platform.Android) {
+        if (true) {
             item(key = "audio") {
                 Column {
                     Text(
@@ -832,7 +829,7 @@ fun SettingScreen(
                     subtitle = stringResource(com.metrolist.music.R.string.save_last_played_track_and_queue),
                     switch = (saveLastPlayed to { viewModel.setSaveLastPlayed(it) }),
                 )
-                if (getPlatform() == Platform.Android) {
+                if (true) {
                     SettingItem(
                         title = stringResource(com.metrolist.music.R.string.kill_service_on_exit),
                         subtitle = stringResource(com.metrolist.music.R.string.kill_service_on_exit_description),
@@ -916,7 +913,7 @@ fun SettingScreen(
                                 )
                             },
                         )
-                        if (getPlatform() == Platform.Android) {
+                        if (true) {
                             SettingItem(
                                 title = stringResource(com.metrolist.music.R.string.crossfade_dj_mode),
                                 subtitle = stringResource(com.metrolist.music.R.string.crossfade_dj_mode_description),
@@ -1432,7 +1429,7 @@ fun SettingScreen(
                 )
             }
         }
-        if (getPlatform() == Platform.Android) {
+        if (true) {
             item(key = "storage") {
                 Column {
                     Text(
@@ -1758,7 +1755,7 @@ fun SettingScreen(
                     switch = (backupDownloaded to { viewModel.setBackupDownloaded(it) }),
                 )
                 // Auto Backup (Android only)
-                if (getPlatform() == Platform.Android) {
+                if (true) {
                     SettingItem(
                         title = stringResource(com.metrolist.music.R.string.auto_backup),
                         subtitle = stringResource(com.metrolist.music.R.string.auto_backup_description),

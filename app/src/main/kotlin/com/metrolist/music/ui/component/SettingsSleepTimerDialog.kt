@@ -465,7 +465,8 @@ fun SleepTimerDialog(
                         .padding(horizontal = 16.dp, vertical = 4.dp),
                 ) {
                     Column(modifier = Modifier.fillMaxWidth()) {
-                        dayLabelcom.metrolist.music.R.indices.forEach { index ->
+                        val dayLabel = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
+                        dayLabel.indices.forEach { index ->
                             val isDaySelected = index in selectedDays
                             val dayTimes = dayTimesMap[index] ?: (DEFAULT_START to DEFAULT_END)
 

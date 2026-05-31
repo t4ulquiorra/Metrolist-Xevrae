@@ -42,8 +42,25 @@ import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.metrolist.music.models.xevrae.NotificationEntity
-import com.metrolist.music.extensions.formatTimeAgo
 import com.metrolist.music.ui.component.CenterLoadingBox
+
+fun String.formatTimeAgo(): String {
+    return try {
+        val timeMillis = this.toLong()
+        val diff = System.currentTimeMillis() - timeMillis
+        val minutes = diff / 60000
+        val hours = minutes / 60
+        val days = hours / 24
+        when {
+            minutes < 1 -> "just now"
+            minutes < 60 -> "$minutes min ago"
+            hours < 24 -> "$hours hr ago"
+            else -> "$days days ago"
+        }
+    } catch (e: Exception) {
+        this
+    }
+}
 import com.metrolist.music.ui.component.EndOfPage
 import com.metrolist.music.ui.component.RippleIconButton
 import com.metrolist.music.ui.navigation.xevrae.destination.list.AlbumDestination
