@@ -62,7 +62,7 @@ import java.util.zip.ZipOutputStream
 
 @dagger.hilt.android.lifecycle.HiltViewModel
 class SettingsViewModel @javax.inject.Inject constructor(
-    @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context,
+    @dagger.hilt.android.qualifiers.ApplicationContext context: android.content.Context,
     private val dataStoreManager: DataStoreManager,
     private val database: MusicDatabase,
 ) : BaseViewModel(context) {

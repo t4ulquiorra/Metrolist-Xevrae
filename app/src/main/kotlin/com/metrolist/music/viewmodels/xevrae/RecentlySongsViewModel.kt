@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.map
 
 @HiltViewModel
 class RecentlySongsViewModel @Inject constructor(
-    @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context,
+    @dagger.hilt.android.qualifiers.ApplicationContext context: android.content.Context,
     private val database: MusicDatabase,
 ) : BaseViewModel(context) {
     val recentlySongs: Flow<PagingData<SongEntity>> =

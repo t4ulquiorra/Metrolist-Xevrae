@@ -84,7 +84,7 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class SharedViewModel @Inject constructor(
-    @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context,
+    @dagger.hilt.android.qualifiers.ApplicationContext context: android.content.Context,
     val dataStoreManager: DataStoreManager,
     private val streamRepository: StreamRepository,
     private val updateRepository: UpdateRepository,

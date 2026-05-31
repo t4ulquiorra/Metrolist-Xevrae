@@ -42,7 +42,7 @@ import timber.log.Timber
 
 @HiltViewModel
 class NowPlayingBottomSheetViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @ApplicationContext context: Context,
     private val database: MusicDatabase,
     private val downloadUtil: DownloadUtil,
 ) : BaseViewModel(context) {

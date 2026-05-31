@@ -39,7 +39,7 @@ val ANALYTICS_DAY_RANGE_KEY = stringPreferencesKey("analytics_day_range")
 
 @HiltViewModel
 class AnalyticsViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @ApplicationContext context: Context,
     private val database: MusicDatabase,
 ) : BaseViewModel(context) {
     private val _analyticsUIState: MutableStateFlow<AnalyticsUiState> =

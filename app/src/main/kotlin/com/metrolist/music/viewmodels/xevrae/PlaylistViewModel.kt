@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 class PlaylistViewModel @Inject constructor(
     private val database: MusicDatabase,
     private val downloadUtil: DownloadUtil,
-    @ApplicationContext private val context: Context,
+    @ApplicationContext context: Context,
 ) : BaseViewModel(context) {
     private var _uiState = MutableStateFlow<PlaylistUIState>(Loading)
     val uiState: StateFlow<PlaylistUIState> = _uiState

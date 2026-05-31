@@ -36,7 +36,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 class AlbumViewModel @Inject constructor(
     private val database: MusicDatabase,
     private val downloadUtil: DownloadUtil,
-    @ApplicationContext private val context: Context,
+    @ApplicationContext context: Context,
 ) : BaseViewModel(context) {
     private val _uiState: MutableStateFlow<AlbumUIState> = MutableStateFlow(AlbumUIState.initial())
     val uiState: StateFlow<AlbumUIState> = _uiState

@@ -24,7 +24,7 @@ import javax.inject.Singleton
 @Singleton
 class CommonRepository @Inject constructor(
     private val database: MusicDatabase,
-    @ApplicationContext private val context: Context
+    @ApplicationContext context: Context
 ) {
     fun databaseDaoCheckpoint() {
         database.checkpoint()

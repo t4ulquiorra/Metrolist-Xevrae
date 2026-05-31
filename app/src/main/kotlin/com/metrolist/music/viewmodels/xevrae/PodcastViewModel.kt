@@ -63,7 +63,7 @@ sealed class PodcastUIEvent {
 
 @HiltViewModel
 class PodcastViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @ApplicationContext context: Context,
     private val database: MusicDatabase,
 ) : BaseViewModel(context) {
     private val _uiState = MutableStateFlow<PodcastUIState>(PodcastUIState.Loading)

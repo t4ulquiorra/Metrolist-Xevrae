@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 @HiltViewModel
 class NotificationViewModel @Inject constructor(
-    @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context,
+    @dagger.hilt.android.qualifiers.ApplicationContext context: android.content.Context,
     playerConnection: PlayerConnection,
 ) : BaseViewModel(context) {
     private var _listNotification: MutableStateFlow<List<com.metrolist.music.models.xevrae.NotificationEntity>?> =

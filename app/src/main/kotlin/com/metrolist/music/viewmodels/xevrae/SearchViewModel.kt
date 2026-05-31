@@ -44,7 +44,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    @ApplicationContext private val context: android.content.Context,
+    @ApplicationContext context: android.content.Context,
     private val database: MusicDatabase,
     private val savedStateHandle: SavedStateHandle,
 ) : BaseViewModel(context) {

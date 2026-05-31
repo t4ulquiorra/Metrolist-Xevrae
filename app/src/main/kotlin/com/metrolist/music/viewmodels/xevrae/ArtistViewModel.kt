@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class ArtistViewModel @Inject constructor(
-    @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context,
+    @dagger.hilt.android.qualifiers.ApplicationContext context: android.content.Context,
     private val database: MusicDatabase,
 ) : BaseViewModel(context) {
     // It is dynamic and can be changed by the user, so separate it from the ArtistScreenData

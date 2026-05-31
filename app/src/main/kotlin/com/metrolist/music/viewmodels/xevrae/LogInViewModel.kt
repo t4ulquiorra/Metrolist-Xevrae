@@ -21,7 +21,7 @@ val SpotifySpdcKey = stringPreferencesKey("spotify_spdc")
 
 @HiltViewModel
 class LogInViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @ApplicationContext context: Context,
 ) : BaseViewModel(context) {
     private val _spotifyStatus: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val spotifyStatus: StateFlow<Boolean> get() = _spotifyStatus
