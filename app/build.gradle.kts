@@ -363,6 +363,7 @@ dependencies {
     implementation(libs.media3)
     implementation(libs.media3.session)
     implementation(libs.media3.okhttp)
+    implementation(libs.media3.ui.compose)
 
     // Google Cast - only included in GMS flavor (not available in F-Droid/FOSS builds)
     "gmsImplementation"(libs.media3.cast)
@@ -393,6 +394,8 @@ dependencies {
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.okhttp)
     implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.client.encoding)
+    implementation(libs.ktor.client.logging)
     implementation(libs.ktor.serialization.json)
     implementation(libs.ktor.serialization.protobuf)
     implementation(libs.kotlinx.serialization.protobuf)

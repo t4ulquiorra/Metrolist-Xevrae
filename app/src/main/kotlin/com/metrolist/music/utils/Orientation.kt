@@ -2,6 +2,7 @@ package com.metrolist.music.utils
 
 import android.content.Context
 import android.content.res.Configuration
+import androidx.compose.runtime.Composable
 
 enum class Orientation {
     PORTRAIT, LANDSCAPE, UNSPECIFIED

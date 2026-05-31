@@ -68,7 +68,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.metrolist.music.utils.Logger
 import com.metrolist.music.ui.utils.PlatformBackdrop
 import com.metrolist.music.ui.utils.drawBackdropCustomShape
-import com.metrolist.music.extensions.greyScale
 import com.metrolist.music.ui.navigation.xevrae.destination.home.HomeDestination
 import com.metrolist.music.ui.navigation.xevrae.destination.library.LibraryDestination
 import com.metrolist.music.ui.navigation.xevrae.destination.search.SearchDestination
@@ -359,7 +358,7 @@ fun LiquidGlassNavBar(
                                                     fontWeight = FontWeight.Bold,
                                                 )
                                             } else {
-                                                typo().bodySmall.greyScale()
+                                                typo().bodySmall
                                             },
                                         color =
                                             if (selectedIndex == screen.ordinal) {

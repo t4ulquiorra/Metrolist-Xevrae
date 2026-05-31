@@ -51,12 +51,13 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
+import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.metrolist.music.R
+import com.metrolist.music.models.xevrae.ArtistItemCompat
 import com.metrolist.music.models.xevrae.Content
 import com.metrolist.music.models.xevrae.HomeItem
-import com.metrolist.music.models.xevrae.ItemArtist
 import com.metrolist.music.models.xevrae.connectArtists
 import com.metrolist.music.models.xevrae.toListName
 import com.metrolist.music.models.xevrae.toTrack
@@ -260,7 +261,7 @@ fun QuickPicksItem(
 
 @Composable
 fun ItemArtistChart(
-    item: ItemArtist,
+    item: ArtistItemCompat,
     onClick: () -> Unit,
 ) {
     Column(
