@@ -290,21 +290,22 @@ fun SettingScreen(
             blurEnabled = true,
         )
 
-    val checkForUpdateSubtitle by remember {
+    val checkingStr = stringResource(com.metrolist.music.R.string.checking)
+    val lastCheckedStr = stringResource(com.metrolist.music.R.string.last_checked_at)
+
+    val checkForUpdateSubtitle by remember(isCheckingUpdate, lastCheckUpdate) {
         derivedStateOf {
             if (isCheckingUpdate) {
-                return@derivedStateOf stringResource(com.metrolist.music.R.string.checking)
+                return@derivedStateOf checkingStr
             } else {
                 val lastCheckLong = lastCheckUpdate?.toLong() ?: 0L
-                return@derivedStateOf runBlocking {
-                    stringResource(
-                        com.metrolist.music.R.string.last_checked_at,
-                        DateTimeFormatter
-                            .ofPattern("yyyy-MM-dd HH:mm:ss")
-                            .withZone(ZoneId.systemDefault())
-                            .format(Instant.ofEpochMilli(lastCheckLong)),
-                    )
-                }
+                return@derivedStateOf String.format(
+                    lastCheckedStr,
+                    DateTimeFormatter
+                        .ofPattern("yyyy-MM-dd HH:mm:ss")
+                        .withZone(ZoneId.systemDefault())
+                        .format(Instant.ofEpochMilli(lastCheckLong)),
+                )
             }
         }
     }
@@ -383,13 +384,19 @@ fun SettingScreen(
                         showYouTubeAccountDialog = true
                     },
                 )
+                val languageTitle = stringResource(com.metrolist.music.R.string.language)
+                val changeStr = stringResource(com.metrolist.music.R.string.change)
+                val warningTitle = stringResource(com.metrolist.music.R.string.warning)
+                val changeLanguageWarning = stringResource(com.metrolist.music.R.string.change_language_warning)
+                val cancelStr = stringResource(com.metrolist.music.R.string.cancel)
+
                 SettingItem(
-                    title = stringResource(com.metrolist.music.R.string.language),
+                    title = languageTitle,
                     subtitle = SUPPORTED_LANGUAGE.getLanguageFromCode(language ?: "en-US"),
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = stringResource(com.metrolist.music.R.string.language),
+                                title = languageTitle,
                                 selectOne =
                                     SettingAlertState.SelectData(
                                         listSelect =
@@ -398,34 +405,35 @@ fun SettingScreen(
                                             },
                                     ),
                                 confirm =
-                                    stringResource(com.metrolist.music.R.string.change) to { state ->
+                                    changeStr to { state ->
                                         val code = SUPPORTED_LANGUAGE.getCodeFromLanguage(state.selectOne?.getSelected() ?: "English")
                                         viewModel.setBasicAlertData(
                                             SettingBasicAlertState(
-                                                title = stringResource(com.metrolist.music.R.string.warning),
-                                                message = stringResource(com.metrolist.music.R.string.change_language_warning),
+                                                title = warningTitle,
+                                                message = changeLanguageWarning,
                                                 confirm =
-                                                    stringResource(com.metrolist.music.R.string.change) to {
+                                                    changeStr to {
                                                         sharedViewModel.activityRecreate()
                                                         viewModel.setBasicAlertData(null)
                                                         viewModel.changeLanguage(code)
                                                     },
-                                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                                dismiss = cancelStr,
                                             ),
                                         )
                                     },
-                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                dismiss = cancelStr,
                             ),
                         )
                     },
                 )
+                val contentCountryTitle = stringResource(com.metrolist.music.R.string.content_country)
                 SettingItem(
-                    title = stringResource(com.metrolist.music.R.string.content_country),
+                    title = contentCountryTitle,
                     subtitle = location ?: "",
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = stringResource(com.metrolist.music.R.string.content_country),
+                                title = contentCountryTitle,
                                 selectOne =
                                     SettingAlertState.SelectData(
                                         listSelect =
@@ -434,24 +442,25 @@ fun SettingScreen(
                                             },
                                     ),
                                 confirm =
-                                    stringResource(com.metrolist.music.R.string.change) to { state ->
+                                    changeStr to { state ->
                                         viewModel.changeLocation(
                                             state.selectOne?.getSelected() ?: "US",
                                         )
                                     },
-                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                dismiss = cancelStr,
                             ),
                         )
                     },
                 )
+                val qualityTitle = stringResource(com.metrolist.music.R.string.quality)
                 SettingItem(
-                    title = stringResource(com.metrolist.music.R.string.quality),
+                    title = qualityTitle,
                     subtitle = quality ?: "",
                     smallSubtitle = true,
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = stringResource(com.metrolist.music.R.string.quality),
+                                title = qualityTitle,
                                 selectOne =
                                     SettingAlertState.SelectData(
                                         listSelect =
@@ -460,10 +469,10 @@ fun SettingScreen(
                                             },
                                     ),
                                 confirm =
-                                    stringResource(com.metrolist.music.R.string.change) to { state ->
+                                    changeStr to { state ->
                                         viewModel.changeQuality(state.selectOne?.getSelected())
                                     },
-                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                dismiss = cancelStr,
                             ),
                         )
                     },
@@ -475,41 +484,45 @@ fun SettingScreen(
                     switch = (prefer320kbpsStream to { viewModel.setPrefer320kbpsStream(it) }),
                 )
                 AnimatedVisibility(visible = prefer320kbpsStream, enter = slideInVertically() + fadeIn(), exit = slideOutVertically() + fadeOut()) {
+                    val your320kbpsUrlTitle = stringResource(com.metrolist.music.R.string.your_320kbps_url)
+                    val invalidStr = stringResource(com.metrolist.music.R.string.invalid)
+                    val setStr = stringResource(com.metrolist.music.R.string.set)
                     SettingItem(
-                        title = stringResource(com.metrolist.music.R.string.your_320kbps_url),
+                        title = your320kbpsUrlTitle,
                         subtitle = your320kbpsUrl,
                         isEnable = prefer320kbpsStream,
                         onClick = {
                             viewModel.setAlertData(
                                 SettingAlertState(
-                                    title = stringResource(com.metrolist.music.R.string.your_320kbps_url),
+                                    title = your320kbpsUrlTitle,
                                     textField =
                                         SettingAlertState.TextFieldData(
-                                            label = stringResource(com.metrolist.music.R.string.your_320kbps_url),
+                                            label = your320kbpsUrlTitle,
                                             value = "",
                                             verifyCodeBlock = {
-                                                (it.isNotEmpty()) to stringResource(com.metrolist.music.R.string.invalid)
+                                                (it.isNotEmpty()) to invalidStr
                                             },
                                         ),
                                     message = "",
                                     confirm =
-                                        stringResource(com.metrolist.music.R.string.set) to { state ->
+                                        setStr to { state ->
                                             viewModel.setYour320kbpsUrl(state.textField?.value ?: "")
                                         },
-                                    dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                    dismiss = cancelStr,
                                 ),
                             )
                         },
                     )
                 }
+                val downloadQualityTitle = stringResource(com.metrolist.music.R.string.download_quality)
                 SettingItem(
-                    title = stringResource(com.metrolist.music.R.string.download_quality),
+                    title = downloadQualityTitle,
                     subtitle = downloadQuality ?: "",
                     smallSubtitle = true,
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = stringResource(com.metrolist.music.R.string.download_quality),
+                                title = downloadQualityTitle,
                                 selectOne =
                                     SettingAlertState.SelectData(
                                         listSelect =
@@ -518,10 +531,10 @@ fun SettingScreen(
                                             },
                                     ),
                                 confirm =
-                                    stringResource(com.metrolist.music.R.string.change) to { state ->
+                                    changeStr to { state ->
                                         state.selectOne?.getSelected()?.let { viewModel.setDownloadQuality(it) }
                                     },
-                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                dismiss = cancelStr,
                             ),
                         )
                     },
@@ -532,13 +545,14 @@ fun SettingScreen(
                     smallSubtitle = true,
                     switch = (playVideo to { viewModel.setPlayVideoInsteadOfAudio(it) }),
                 )
+                val videoQualityTitle = stringResource(com.metrolist.music.R.string.video_quality)
                 SettingItem(
-                    title = stringResource(com.metrolist.music.R.string.video_quality),
+                    title = videoQualityTitle,
                     subtitle = videoQuality ?: "",
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = stringResource(com.metrolist.music.R.string.video_quality),
+                                title = videoQualityTitle,
                                 selectOne =
                                     SettingAlertState.SelectData(
                                         listSelect =
@@ -547,21 +561,22 @@ fun SettingScreen(
                                             },
                                     ),
                                 confirm =
-                                    stringResource(com.metrolist.music.R.string.change) to { state ->
+                                    changeStr to { state ->
                                         viewModel.changeVideoQuality(state.selectOne?.getSelected() ?: "")
                                     },
-                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                dismiss = cancelStr,
                             ),
                         )
                     },
                 )
+                val videoDownloadQualityTitle = stringResource(com.metrolist.music.R.string.video_download_quality)
                 SettingItem(
-                    title = stringResource(com.metrolist.music.R.string.video_download_quality),
+                    title = videoDownloadQualityTitle,
                     subtitle = videoDownloadQuality ?: "",
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = stringResource(com.metrolist.music.R.string.video_download_quality),
+                                title = videoDownloadQualityTitle,
                                 selectOne =
                                     SettingAlertState.SelectData(
                                         listSelect =
@@ -570,10 +585,10 @@ fun SettingScreen(
                                             },
                                     ),
                                 confirm =
-                                    stringResource(com.metrolist.music.R.string.change) to { state ->
+                                    changeStr to { state ->
                                         viewModel.setVideoDownloadQuality(state.selectOne?.getSelected() ?: "")
                                     },
-                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                dismiss = cancelStr,
                             ),
                         )
                     },
@@ -663,91 +678,101 @@ fun SettingScreen(
                                 )
                             },
                         )
+                        val proxyHostTitle = stringResource(com.metrolist.music.R.string.proxy_host)
+                        val proxyHostMessage = stringResource(com.metrolist.music.R.string.proxy_host_message)
+                        val invalidHostStr = stringResource(com.metrolist.music.R.string.invalid_host)
                         SettingItem(
-                            title = stringResource(com.metrolist.music.R.string.proxy_host),
+                            title = proxyHostTitle,
                             subtitle = proxyHost,
                             onClick = {
                                 viewModel.setAlertData(
                                     SettingAlertState(
-                                        title = stringResource(com.metrolist.music.R.string.proxy_host),
-                                        message = stringResource(com.metrolist.music.R.string.proxy_host_message),
+                                        title = proxyHostTitle,
+                                        message = proxyHostMessage,
                                         textField =
                                             SettingAlertState.TextFieldData(
-                                                label = stringResource(com.metrolist.music.R.string.proxy_host),
+                                                label = proxyHostTitle,
                                                 value = proxyHost,
                                                 verifyCodeBlock = {
-                                                    isValidProxyHost(it) to stringResource(com.metrolist.music.R.string.invalid_host)
+                                                    isValidProxyHost(it) to invalidHostStr
                                                 },
                                             ),
                                         confirm =
-                                            stringResource(com.metrolist.music.R.string.change) to { state ->
+                                            changeStr to { state ->
                                                 viewModel.setProxy(
                                                     proxyType,
                                                     state.textField?.value ?: "",
                                                     proxyPort,
                                                 )
                                             },
-                                        dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                        dismiss = cancelStr,
                                     ),
                                 )
                             },
                         )
+                        val proxyPortTitle = stringResource(com.metrolist.music.R.string.proxy_port)
+                        val proxyPortMessage = stringResource(com.metrolist.music.R.string.proxy_port_message)
+                        val invalidPortStr = stringResource(com.metrolist.music.R.string.invalid_port)
                         SettingItem(
-                            title = stringResource(com.metrolist.music.R.string.proxy_port),
+                            title = proxyPortTitle,
                             subtitle = proxyPort.toString(),
                             onClick = {
                                 viewModel.setAlertData(
                                     SettingAlertState(
-                                        title = stringResource(com.metrolist.music.R.string.proxy_port),
-                                        message = stringResource(com.metrolist.music.R.string.proxy_port_message),
+                                        title = proxyPortTitle,
+                                        message = proxyPortMessage,
                                         textField =
                                             SettingAlertState.TextFieldData(
-                                                label = stringResource(com.metrolist.music.R.string.proxy_port),
+                                                label = proxyPortTitle,
                                                 value = proxyPort.toString(),
                                                 verifyCodeBlock = {
-                                                    (it.toIntOrNull() != null) to stringResource(com.metrolist.music.R.string.invalid_port)
+                                                    (it.toIntOrNull() != null) to invalidPortStr
                                                 },
                                             ),
                                         confirm =
-                                            stringResource(com.metrolist.music.R.string.change) to { state ->
+                                            changeStr to { state ->
                                                 viewModel.setProxy(
                                                     proxyType,
                                                     proxyHost,
                                                     state.textField?.value?.toIntOrNull() ?: 0,
                                                 )
                                             },
-                                        dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                        dismiss = cancelStr,
                                     ),
                                 )
                             },
                         )
+                        val proxyUsernameTitle = stringResource(com.metrolist.music.R.string.proxy_username)
+                        val proxyUsernameMessage = stringResource(com.metrolist.music.R.string.proxy_username_message)
                         SettingItem(
-                            title = stringResource(com.metrolist.music.R.string.proxy_username),
+                            title = proxyUsernameTitle,
                             subtitle = proxyUsername,
                             onClick = {
                                 viewModel.setAlertData(
                                     SettingAlertState(
-                                        title = stringResource(com.metrolist.music.R.string.proxy_username),
-                                        message = stringResource(com.metrolist.music.R.string.proxy_username_message),
+                                        title = proxyUsernameTitle,
+                                        message = proxyUsernameMessage,
                                         textField =
                                             SettingAlertState.TextFieldData(
-                                                label = stringResource(com.metrolist.music.R.string.proxy_username),
+                                                label = proxyUsernameTitle,
                                                 value = proxyUsername,
                                             ),
                                         confirm =
-                                            stringResource(com.metrolist.music.R.string.change) to { state ->
+                                            changeStr to { state ->
                                                 viewModel.setProxyCredentials(
                                                     state.textField?.value ?: "",
                                                     proxyPassword,
                                                 )
                                             },
-                                        dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                        dismiss = cancelStr,
                                     ),
                                 )
                             },
                         )
+                        val proxyPasswordTitle = stringResource(com.metrolist.music.R.string.proxy_password)
+                        val proxyPasswordMessage = stringResource(com.metrolist.music.R.string.proxy_password_message)
                         SettingItem(
-                            title = stringResource(com.metrolist.music.R.string.proxy_password),
+                            title = proxyPasswordTitle,
                             subtitle =
                                 if (proxyPassword.isEmpty()) {
                                     ""
@@ -757,21 +782,21 @@ fun SettingScreen(
                             onClick = {
                                 viewModel.setAlertData(
                                     SettingAlertState(
-                                        title = stringResource(com.metrolist.music.R.string.proxy_password),
-                                        message = stringResource(com.metrolist.music.R.string.proxy_password_message),
+                                        title = proxyPasswordTitle,
+                                        message = proxyPasswordMessage,
                                         textField =
                                             SettingAlertState.TextFieldData(
-                                                label = stringResource(com.metrolist.music.R.string.proxy_password),
+                                                label = proxyPasswordTitle,
                                                 value = proxyPassword,
                                             ),
                                         confirm =
-                                            stringResource(com.metrolist.music.R.string.change) to { state ->
+                                            changeStr to { state ->
                                                 viewModel.setProxyCredentials(
                                                     proxyUsername,
                                                     state.textField?.value ?: "",
                                                 )
                                             },
-                                        dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                        dismiss = cancelStr,
                                     ),
                                 )
                             },
@@ -852,26 +877,28 @@ fun SettingScreen(
                     smallSubtitle = true,
                     switch = (crossfadeEnabled to { viewModel.setCrossfadeEnabled(it) }),
                 )
+                val crossfadeDurationTitle = stringResource(com.metrolist.music.R.string.crossfade_duration)
+                val crossfadeAutoStr = stringResource(com.metrolist.music.R.string.crossfade_auto)
                 AnimatedVisibility(visible = crossfadeEnabled) {
                     Column {
                         SettingItem(
-                            title = stringResource(com.metrolist.music.R.string.crossfade_duration),
+                            title = crossfadeDurationTitle,
                             subtitle =
                                 if (crossfadeDuration == DataStoreManager.CROSSFADE_DURATION_AUTO) {
-                                    stringResource(com.metrolist.music.R.string.crossfade_auto)
+                                    crossfadeAutoStr
                                 } else {
                                     "${crossfadeDuration / 1000}s"
                                 },
                             onClick = {
                                 viewModel.setAlertData(
                                     SettingAlertState(
-                                        title = stringResource(com.metrolist.music.R.string.crossfade_duration),
+                                        title = crossfadeDurationTitle,
                                         selectOne =
                                             SettingAlertState.SelectData(
                                                 listSelect =
                                                     listOf(
                                                         (crossfadeDuration == DataStoreManager.CROSSFADE_DURATION_AUTO) to
-                                                            stringResource(com.metrolist.music.R.string.crossfade_auto),
+                                                            crossfadeAutoStr,
                                                         (crossfadeDuration == 1000) to "1s",
                                                         (crossfadeDuration == 2000) to "2s",
                                                         (crossfadeDuration == 3000) to "3s",
@@ -885,15 +912,10 @@ fun SettingScreen(
                                                     ),
                                             ),
                                         confirm =
-                                            stringResource(com.metrolist.music.R.string.change) to { state ->
+                                            changeStr to { state ->
                                                 val duration =
                                                     when (state.selectOne?.getSelected()) {
-                                                        runBlocking {
-                                                            stringResource(
-                                                                com.metrolist.music.R.string.crossfade_auto,
-                                                            )
-                                                        },
-                                                        -> DataStoreManager.CROSSFADE_DURATION_AUTO
+                                                        crossfadeAutoStr -> DataStoreManager.CROSSFADE_DURATION_AUTO
                                                         "1s" -> 1000
                                                         "2s" -> 2000
                                                         "3s" -> 3000
@@ -908,7 +930,7 @@ fun SettingScreen(
                                                     }
                                                 viewModel.setCrossfadeDuration(duration)
                                             },
-                                        dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                        dismiss = cancelStr,
                                     ),
                                 )
                             },
@@ -933,147 +955,158 @@ fun SettingScreen(
                     color = white,
                     modifier = Modifier.padding(vertical = 8.dp),
                 )
+                val mainLyricsProviderTitle = stringResource(com.metrolist.music.R.string.main_lyrics_provider)
+                val xevraeLyricsStr = stringResource(com.metrolist.music.R.string.xevrae_lyrics)
+                val youtubeTranscriptStr = stringResource(com.metrolist.music.R.string.youtube_transcript)
+                val lrclibStr = stringResource(com.metrolist.music.R.string.lrclib)
+                val betterLyricsStr = stringResource(com.metrolist.music.R.string.better_lyrics)
+                val unknownStr = stringResource(com.metrolist.music.R.string.unknown)
                 SettingItem(
-                    title = stringResource(com.metrolist.music.R.string.main_lyrics_provider),
+                    title = mainLyricsProviderTitle,
                     subtitle =
                         when (mainLyricsProvider) {
-                            DataStoreManager.XEVRAE -> stringResource(com.metrolist.music.R.string.xevrae_lyrics)
-                            DataStoreManager.YOUTUBE -> stringResource(com.metrolist.music.R.string.youtube_transcript)
-                            DataStoreManager.LRCLIB -> stringResource(com.metrolist.music.R.string.lrclib)
-                            DataStoreManager.BETTER_LYRICS -> stringResource(com.metrolist.music.R.string.better_lyrics)
-                            else -> stringResource(com.metrolist.music.R.string.unknown)
+                            DataStoreManager.XEVRAE -> xevraeLyricsStr
+                            DataStoreManager.YOUTUBE -> youtubeTranscriptStr
+                            DataStoreManager.LRCLIB -> lrclibStr
+                            DataStoreManager.BETTER_LYRICS -> betterLyricsStr
+                            else -> unknownStr
                         },
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = stringResource(com.metrolist.music.R.string.main_lyrics_provider),
+                                title = mainLyricsProviderTitle,
                                 selectOne =
                                     SettingAlertState.SelectData(
                                         listSelect =
                                             listOf(
-                                                (mainLyricsProvider == DataStoreManager.XEVRAE) to
-                                                    stringResource(com.metrolist.music.R.string.xevrae_lyrics),
-                                                (mainLyricsProvider == DataStoreManager.YOUTUBE) to
-                                                    stringResource(com.metrolist.music.R.string.youtube_transcript),
-                                                (mainLyricsProvider == DataStoreManager.LRCLIB) to stringResource(com.metrolist.music.R.string.lrclib),
-                                                (mainLyricsProvider == DataStoreManager.BETTER_LYRICS) to
-                                                    stringResource(com.metrolist.music.R.string.better_lyrics),
+                                                (mainLyricsProvider == DataStoreManager.XEVRAE) to xevraeLyricsStr,
+                                                (mainLyricsProvider == DataStoreManager.YOUTUBE) to youtubeTranscriptStr,
+                                                (mainLyricsProvider == DataStoreManager.LRCLIB) to lrclibStr,
+                                                (mainLyricsProvider == DataStoreManager.BETTER_LYRICS) to betterLyricsStr,
                                             ),
                                     ),
                                 confirm =
-                                    stringResource(com.metrolist.music.R.string.change) to { state ->
+                                    changeStr to { state ->
                                         viewModel.setLyricsProvider(
                                             when (state.selectOne?.getSelected()) {
-                                                stringResource(com.metrolist.music.R.string.xevrae_lyrics) -> DataStoreManager.XEVRAE
-                                                stringResource(com.metrolist.music.R.string.youtube_transcript) -> DataStoreManager.YOUTUBE
-                                                stringResource(com.metrolist.music.R.string.lrclib) -> DataStoreManager.LRCLIB
-                                                stringResource(com.metrolist.music.R.string.better_lyrics) -> DataStoreManager.BETTER_LYRICS
+                                                xevraeLyricsStr -> DataStoreManager.XEVRAE
+                                                youtubeTranscriptStr -> DataStoreManager.YOUTUBE
+                                                lrclibStr -> DataStoreManager.LRCLIB
+                                                betterLyricsStr -> DataStoreManager.BETTER_LYRICS
                                                 else -> DataStoreManager.XEVRAE
                                             },
                                         )
                                     },
-                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                dismiss = cancelStr,
                             ),
                         )
                     },
                 )
 
+                val translationLanguageTitle = stringResource(com.metrolist.music.R.string.translation_language)
+                val invalidLanguageCodeStr = stringResource(com.metrolist.music.R.string.invalid_language_code)
+                val translationLanguageMessage = stringResource(com.metrolist.music.R.string.translation_language_message)
                 SettingItem(
-                    title = stringResource(com.metrolist.music.R.string.translation_language),
+                    title = translationLanguageTitle,
                     subtitle = translationLanguage ?: "",
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = stringResource(com.metrolist.music.R.string.translation_language),
+                                title = translationLanguageTitle,
                                 textField =
                                     SettingAlertState.TextFieldData(
-                                        label = stringResource(com.metrolist.music.R.string.translation_language),
+                                        label = translationLanguageTitle,
                                         value = translationLanguage ?: "",
                                         verifyCodeBlock = {
-                                            (it.length == 2 && it.isTwoLetterCode()) to
-                                                stringResource(com.metrolist.music.R.string.invalid_language_code)
+                                            (it.length == 2 && it.isTwoLetterCode()) to invalidLanguageCodeStr
                                         },
                                     ),
-                                message = stringResource(com.metrolist.music.R.string.translation_language_message),
+                                message = translationLanguageMessage,
                                 confirm =
-                                    stringResource(com.metrolist.music.R.string.change) to { state ->
+                                    changeStr to { state ->
                                         viewModel.setTranslationLanguage(state.textField?.value ?: "")
                                     },
-                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                dismiss = cancelStr,
                             ),
                         )
                     },
                     isEnable = true,
                 )
+                val youtubeSubtitleLanguageTitle = stringResource(com.metrolist.music.R.string.youtube_subtitle_language)
+                val youtubeSubtitleLanguageMessage = stringResource(com.metrolist.music.R.string.youtube_subtitle_language_message)
                 SettingItem(
-                    title = stringResource(com.metrolist.music.R.string.youtube_subtitle_language),
+                    title = youtubeSubtitleLanguageTitle,
                     subtitle = youtubeSubtitleLanguage,
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = stringResource(com.metrolist.music.R.string.youtube_subtitle_language),
+                                title = youtubeSubtitleLanguageTitle,
                                 textField =
                                     SettingAlertState.TextFieldData(
-                                        label = stringResource(com.metrolist.music.R.string.youtube_subtitle_language),
+                                        label = youtubeSubtitleLanguageTitle,
                                         value = youtubeSubtitleLanguage,
                                         verifyCodeBlock = {
-                                            (it.length == 2 && it.isTwoLetterCode()) to
-                                                stringResource(com.metrolist.music.R.string.invalid_language_code)
+                                            (it.length == 2 && it.isTwoLetterCode()) to invalidLanguageCodeStr
                                         },
                                     ),
-                                message = stringResource(com.metrolist.music.R.string.youtube_subtitle_language_message),
+                                message = youtubeSubtitleLanguageMessage,
                                 confirm =
-                                    stringResource(com.metrolist.music.R.string.change) to { state ->
+                                    changeStr to { state ->
                                         viewModel.setYoutubeSubtitleLanguage(state.textField?.value ?: "")
                                     },
-                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                dismiss = cancelStr,
                             ),
                         )
                     },
                 )
+                val helpBuildLyricsDatabaseTitle = stringResource(com.metrolist.music.R.string.help_build_lyrics_database)
+                val helpBuildLyricsDatabaseDescription = stringResource(com.metrolist.music.R.string.help_build_lyrics_database_description)
                 SettingItem(
-                    title = stringResource(com.metrolist.music.R.string.help_build_lyrics_database),
-                    subtitle = stringResource(com.metrolist.music.R.string.help_build_lyrics_database_description),
+                    title = helpBuildLyricsDatabaseTitle,
+                    subtitle = helpBuildLyricsDatabaseDescription,
                     switch = (helpBuildLyricsDatabase to { viewModel.setHelpBuildLyricsDatabase(it) }),
                 )
+                val contributorNameTitle = stringResource(com.metrolist.music.R.string.contributor_name)
+                val anonymousStr = stringResource(com.metrolist.music.R.string.anonymous)
                 SettingItem(
-                    title = stringResource(com.metrolist.music.R.string.contributor_name),
-                    subtitle = contributor.first.ifEmpty { stringResource(com.metrolist.music.R.string.anonymous) },
+                    title = contributorNameTitle,
+                    subtitle = contributor.first.ifEmpty { anonymousStr },
                     isEnable = helpBuildLyricsDatabase,
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = stringResource(com.metrolist.music.R.string.contributor_name),
+                                title = contributorNameTitle,
                                 textField =
                                     SettingAlertState.TextFieldData(
-                                        label = stringResource(com.metrolist.music.R.string.contributor_name),
+                                        label = contributorNameTitle,
                                         value = "",
                                     ),
                                 message = "",
                                 confirm =
-                                    stringResource(com.metrolist.music.R.string.set) to { state ->
+                                    setStr to { state ->
                                         viewModel.setContributorName(state.textField?.value ?: "")
                                     },
-                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                dismiss = cancelStr,
                             ),
                         )
                     },
                 )
+                val contributorEmailTitle = stringResource(com.metrolist.music.R.string.contributor_email)
                 SettingItem(
-                    title = stringResource(com.metrolist.music.R.string.contributor_email),
-                    subtitle = contributor.second.ifEmpty { stringResource(com.metrolist.music.R.string.anonymous) },
+                    title = contributorEmailTitle,
+                    subtitle = contributor.second.ifEmpty { anonymousStr },
                     isEnable = helpBuildLyricsDatabase,
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = stringResource(com.metrolist.music.R.string.contributor_email),
+                                title = contributorEmailTitle,
                                 textField =
                                     SettingAlertState.TextFieldData(
-                                        label = stringResource(com.metrolist.music.R.string.contributor_email),
+                                        label = contributorEmailTitle,
                                         value = "",
                                         verifyCodeBlock = {
                                             if (it.isNotEmpty()) {
-                                                (it.contains("@")) to stringResource(com.metrolist.music.R.string.invalid)
+                                                (it.contains("@")) to invalidStr
                                             } else {
                                                 true to ""
                                             }
@@ -1081,10 +1114,10 @@ fun SettingScreen(
                                     ),
                                 message = "",
                                 confirm =
-                                    stringResource(com.metrolist.music.R.string.set) to { state ->
+                                    setStr to { state ->
                                         viewModel.setContributorEmail(state.textField?.value ?: "")
                                     },
-                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                dismiss = cancelStr,
                             ),
                         )
                     },
@@ -1093,100 +1126,100 @@ fun SettingScreen(
         }
         item(key = "AI") {
             Column {
-                Text(text = stringResource(com.metrolist.music.R.string.ai), style = typo().labelMedium, color = white, modifier = Modifier.padding(vertical = 8.dp))
+                val aiTitle = stringResource(com.metrolist.music.R.string.ai)
+                Text(text = aiTitle, style = typo().labelMedium, color = white, modifier = Modifier.padding(vertical = 8.dp))
+                val aiProviderTitle = stringResource(com.metrolist.music.R.string.ai_provider)
+                val openaiStr = stringResource(com.metrolist.music.R.string.openai)
+                val geminiStr = stringResource(com.metrolist.music.R.string.gemini)
+                val openaiCompatibleStr = stringResource(com.metrolist.music.R.string.openai_api_compatible)
                 SettingItem(
-                    title = stringResource(com.metrolist.music.R.string.ai_provider),
+                    title = aiProviderTitle,
                     subtitle =
                         when (aiProvider) {
-                            DataStoreManager.AI_PROVIDER_OPENAI -> stringResource(com.metrolist.music.R.string.openai)
-                            DataStoreManager.AI_PROVIDER_GEMINI -> stringResource(com.metrolist.music.R.string.gemini)
-                            DataStoreManager.AI_PROVIDER_CUSTOM_OPENAI -> stringResource(com.metrolist.music.R.string.openai_api_compatible)
-                            else -> stringResource(com.metrolist.music.R.string.unknown)
+                            DataStoreManager.AI_PROVIDER_OPENAI -> openaiStr
+                            DataStoreManager.AI_PROVIDER_GEMINI -> geminiStr
+                            DataStoreManager.AI_PROVIDER_CUSTOM_OPENAI -> openaiCompatibleStr
+                            else -> unknownStr
                         },
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = stringResource(com.metrolist.music.R.string.ai_provider),
+                                title = aiProviderTitle,
                                 selectOne =
                                     SettingAlertState.SelectData(
                                         listSelect =
                                             listOf(
-                                                (mainLyricsProvider == DataStoreManager.AI_PROVIDER_OPENAI) to
-                                                    stringResource(com.metrolist.music.R.string.openai),
-                                                (mainLyricsProvider == DataStoreManager.AI_PROVIDER_GEMINI) to
-                                                    stringResource(com.metrolist.music.R.string.gemini),
-                                                (mainLyricsProvider == DataStoreManager.AI_PROVIDER_CUSTOM_OPENAI) to
-                                                    stringResource(com.metrolist.music.R.string.openai_api_compatible),
+                                                (aiProvider == DataStoreManager.AI_PROVIDER_OPENAI) to openaiStr,
+                                                (aiProvider == DataStoreManager.AI_PROVIDER_GEMINI) to geminiStr,
+                                                (aiProvider == DataStoreManager.AI_PROVIDER_CUSTOM_OPENAI) to openaiCompatibleStr,
                                             ),
                                     ),
                                 confirm =
-                                    stringResource(com.metrolist.music.R.string.change) to { state ->
+                                    changeStr to { state ->
                                         viewModel.setAIProvider(
                                             when (state.selectOne?.getSelected()) {
-                                                stringResource(com.metrolist.music.R.string.openai) -> DataStoreManager.AI_PROVIDER_OPENAI
-                                                stringResource(com.metrolist.music.R.string.gemini) -> DataStoreManager.AI_PROVIDER_GEMINI
-                                                runBlocking {
-                                                    stringResource(
-                                                        com.metrolist.music.R.string.openai_api_compatible,
-                                                    )
-                                                },
-                                                -> DataStoreManager.AI_PROVIDER_CUSTOM_OPENAI
-
+                                                openaiStr -> DataStoreManager.AI_PROVIDER_OPENAI
+                                                geminiStr -> DataStoreManager.AI_PROVIDER_GEMINI
+                                                openaiCompatibleStr -> DataStoreManager.AI_PROVIDER_CUSTOM_OPENAI
                                                 else -> DataStoreManager.AI_PROVIDER_OPENAI
                                             },
                                         )
                                     },
-                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                dismiss = cancelStr,
                             ),
                         )
                     },
                 )
+                val aiApiKeyTitle = stringResource(com.metrolist.music.R.string.ai_api_key)
                 SettingItem(
-                    title = stringResource(com.metrolist.music.R.string.ai_api_key),
+                    title = aiApiKeyTitle,
                     subtitle = if (isHasApiKey) "XXXXXXXXXX" else "N/A",
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = stringResource(com.metrolist.music.R.string.ai_api_key),
+                                title = aiApiKeyTitle,
                                 textField =
                                     SettingAlertState.TextFieldData(
-                                        label = stringResource(com.metrolist.music.R.string.ai_api_key),
+                                        label = aiApiKeyTitle,
                                         value = "",
                                         verifyCodeBlock = {
-                                            (it.isNotEmpty()) to stringResource(com.metrolist.music.R.string.invalid_api_key)
+                                            (it.isNotEmpty()) to invalidStr
                                         },
                                     ),
                                 message = "",
                                 confirm =
-                                    stringResource(com.metrolist.music.R.string.set) to { state ->
+                                    setStr to { state ->
                                         viewModel.setAIApiKey(state.textField?.value ?: "")
                                     },
-                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                dismiss = cancelStr,
                             ),
                         )
                     },
                 )
+                val customAiModelIdTitle = stringResource(com.metrolist.music.R.string.custom_ai_model_id)
+                val defaultModelsStr = stringResource(com.metrolist.music.R.string.default_models)
+                val customModelIdMessages = stringResource(com.metrolist.music.R.string.custom_model_id_messages)
                 SettingItem(
-                    title = stringResource(com.metrolist.music.R.string.custom_ai_model_id),
-                    subtitle = customModelId.ifEmpty { stringResource(com.metrolist.music.R.string.default_models) },
+                    title = customAiModelIdTitle,
+                    subtitle = customModelId.ifEmpty { defaultModelsStr },
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = stringResource(com.metrolist.music.R.string.custom_ai_model_id),
+                                title = customAiModelIdTitle,
                                 textField =
                                     SettingAlertState.TextFieldData(
-                                        label = stringResource(com.metrolist.music.R.string.custom_ai_model_id),
+                                        label = customAiModelIdTitle,
                                         value = "",
                                         verifyCodeBlock = {
-                                            (it.isNotEmpty() && !it.contains(" ")) to stringResource(com.metrolist.music.R.string.invalid)
+                                            (it.isNotEmpty() && !it.contains(" ")) to invalidStr
                                         },
                                     ),
-                                message = stringResource(com.metrolist.music.R.string.custom_model_id_messages),
+                                message = customModelIdMessages,
                                 confirm =
-                                    stringResource(com.metrolist.music.R.string.set) to { state ->
+                                    setStr to { state ->
                                         viewModel.setCustomModelId(state.textField?.value ?: "")
                                     },
-                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                dismiss = cancelStr,
                             ),
                         )
                     },
@@ -1210,10 +1243,10 @@ fun SettingScreen(
                                         ),
                                     message = "Enter OpenAI-compatible API base URL (e.g., https://api.openai.com/v1/)",
                                     confirm =
-                                        stringResource(com.metrolist.music.R.string.set) to { state ->
+                                        setStr to { state ->
                                             viewModel.setCustomOpenAIBaseUrl(state.textField?.value ?: "")
                                         },
-                                    dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                    dismiss = cancelStr,
                                 ),
                             )
                         },
@@ -1245,18 +1278,20 @@ fun SettingScreen(
                                         ),
                                     message = "Enter custom headers in JSON format:\n{\"key1\":\"value1\",\"key2\":\"value2\"}",
                                     confirm =
-                                        stringResource(com.metrolist.music.R.string.set) to { state ->
+                                        setStr to { state ->
                                             viewModel.setCustomOpenAIHeaders(state.textField?.value ?: "")
                                         },
-                                    dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                    dismiss = cancelStr,
                                 ),
                             )
                         },
                     )
                 }
+                val useAiTranslationTitle = stringResource(com.metrolist.music.R.string.use_ai_translation)
+                val useAiTranslationDescription = stringResource(com.metrolist.music.R.string.use_ai_translation_description)
                 SettingItem(
-                    title = stringResource(com.metrolist.music.R.string.use_ai_translation),
-                    subtitle = stringResource(com.metrolist.music.R.string.use_ai_translation_description),
+                    title = useAiTranslationTitle,
+                    subtitle = useAiTranslationDescription,
                     switch = (useAITranslation to { viewModel.setAITranslation(it) }),
                     isEnable = isHasApiKey,
                     onDisable = {
@@ -1431,88 +1466,95 @@ fun SettingScreen(
         }
         if (true) {
             item(key = "storage") {
+                val storageTitle = stringResource(com.metrolist.music.R.string.storage)
+                val clearStr = stringResource(com.metrolist.music.R.string.clear)
                 Column {
                     Text(
-                        text = stringResource(com.metrolist.music.R.string.storage),
+                        text = storageTitle,
                         style = typo().labelMedium,
                         color = white,
                         modifier = Modifier.padding(vertical = 8.dp),
                     )
+                    val clearPlayerCacheTitle = stringResource(com.metrolist.music.R.string.clear_player_cache)
                     SettingItem(
                         title = stringResource(com.metrolist.music.R.string.player_cache),
                         subtitle = "${playerCache.bytesToMB()} MB",
                         onClick = {
                             viewModel.setBasicAlertData(
                                 SettingBasicAlertState(
-                                    title = stringResource(com.metrolist.music.R.string.clear_player_cache),
+                                    title = clearPlayerCacheTitle,
                                     message = null,
                                     confirm =
-                                        stringResource(com.metrolist.music.R.string.clear) to {
+                                        clearStr to {
                                             viewModel.clearPlayerCache()
                                         },
-                                    dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                    dismiss = cancelStr,
                                 ),
                             )
                         },
                     )
+                    val clearDownloadedCacheTitle = stringResource(com.metrolist.music.R.string.clear_downloaded_cache)
                     SettingItem(
                         title = stringResource(com.metrolist.music.R.string.downloaded_cache),
                         subtitle = "${downloadedCache.bytesToMB()} MB",
                         onClick = {
                             viewModel.setBasicAlertData(
                                 SettingBasicAlertState(
-                                    title = stringResource(com.metrolist.music.R.string.clear_downloaded_cache),
+                                    title = clearDownloadedCacheTitle,
                                     message = null,
                                     confirm =
-                                        stringResource(com.metrolist.music.R.string.clear) to {
+                                        clearStr to {
                                             viewModel.clearDownloadedCache()
                                         },
-                                    dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                    dismiss = cancelStr,
                                 ),
                             )
                         },
                     )
+                    val clearThumbnailCacheTitle = stringResource(com.metrolist.music.R.string.clear_thumbnail_cache)
                     SettingItem(
                         title = stringResource(com.metrolist.music.R.string.thumbnail_cache),
                         subtitle = "${thumbnailCache.bytesToMB()} MB",
                         onClick = {
                             viewModel.setBasicAlertData(
                                 SettingBasicAlertState(
-                                    title = stringResource(com.metrolist.music.R.string.clear_thumbnail_cache),
+                                    title = clearThumbnailCacheTitle,
                                     message = null,
                                     confirm =
-                                        stringResource(com.metrolist.music.R.string.clear) to {
+                                        clearStr to {
                                             viewModel.clearThumbnailCache(platformContext)
                                         },
-                                    dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                    dismiss = cancelStr,
                                 ),
                             )
                         },
                     )
+                    val clearCanvasCacheTitle = stringResource(com.metrolist.music.R.string.clear_canvas_cache)
                     SettingItem(
                         title = stringResource(com.metrolist.music.R.string.spotify_canvas_cache),
                         subtitle = "${canvasCache.bytesToMB()} MB",
                         onClick = {
                             viewModel.setBasicAlertData(
                                 SettingBasicAlertState(
-                                    title = stringResource(com.metrolist.music.R.string.clear_canvas_cache),
+                                    title = clearCanvasCacheTitle,
                                     message = null,
                                     confirm =
-                                        stringResource(com.metrolist.music.R.string.clear) to {
+                                        clearStr to {
                                             viewModel.clearCanvasCache()
                                         },
-                                    dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                    dismiss = cancelStr,
                                 ),
                             )
                         },
                     )
+                    val limitPlayerCacheTitle = stringResource(com.metrolist.music.R.string.limit_player_cache)
                     SettingItem(
-                        title = stringResource(com.metrolist.music.R.string.limit_player_cache),
+                        title = limitPlayerCacheTitle,
                         subtitle = LIMIT_CACHE_SIZE.getItemFromData(limitPlayerCache).toString(),
                         onClick = {
                             viewModel.setAlertData(
                                 SettingAlertState(
-                                    title = stringResource(com.metrolist.music.R.string.limit_player_cache),
+                                    title = limitPlayerCacheTitle,
                                     selectOne =
                                         SettingAlertState.SelectData(
                                             listSelect =
@@ -1901,8 +1943,9 @@ fun SettingScreen(
                     subtitle = stringResource(com.metrolist.music.R.string.auto_check_for_update_description),
                     switch = (autoCheckUpdate to { viewModel.setAutoCheckUpdate(it) }),
                 )
+                val updateChannelTitle = stringResource(com.metrolist.music.R.string.update_channel)
                 SettingItem(
-                    title = stringResource(com.metrolist.music.R.string.update_channel),
+                    title = updateChannelTitle,
                     subtitle =
                         if (updateChannel == DataStoreManager.FDROID) {
                             "F-Droid"
@@ -1912,7 +1955,7 @@ fun SettingScreen(
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = stringResource(com.metrolist.music.R.string.update_channel),
+                                title = updateChannelTitle,
                                 selectOne =
                                     SettingAlertState.SelectData(
                                         listSelect =
@@ -1922,7 +1965,7 @@ fun SettingScreen(
                                             ),
                                     ),
                                 confirm =
-                                    stringResource(com.metrolist.music.R.string.change) to { state ->
+                                    changeStr to { state ->
                                         viewModel.setUpdateChannel(
                                             when (state.selectOne?.getSelected()) {
                                                 "F-Droid" -> DataStoreManager.FDROID
@@ -1931,7 +1974,7 @@ fun SettingScreen(
                                             },
                                         )
                                     },
-                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                dismiss = cancelStr,
                             ),
                         )
                     },
@@ -2008,6 +2051,10 @@ fun SettingScreen(
         )
     }
     if (showYouTubeAccountDialog) {
+        val noAccountStr = stringResource(com.metrolist.music.R.string.no_account)
+        val signedInStr = stringResource(com.metrolist.music.R.string.signed_in)
+        val logOutWarningStr = stringResource(com.metrolist.music.R.string.log_out_warning)
+        val logOutStr = stringResource(com.metrolist.music.R.string.log_out)
         BasicAlertDialog(
             onDismissRequest = { },
             modifier = Modifier.wrapContentSize(),
@@ -2069,7 +2116,7 @@ fun SettingScreen(
                         if (data.isNullOrEmpty()) {
                             item {
                                 Text(
-                                    stringResource(com.metrolist.music.R.string.no_account),
+                                    noAccountStr,
                                     style = typo().bodyMedium,
                                     textAlign = TextAlign.Center,
                                     modifier =
@@ -2113,7 +2160,7 @@ fun SettingScreen(
                                     Spacer(Modifier.width(12.dp))
                                     AnimatedVisibility(it.isUsed) {
                                         Text(
-                                            stringResource(com.metrolist.music.R.string.signed_in),
+                                            signedInStr,
                                             style = typo().bodySmall,
                                             maxLines = 2,
                                             textAlign = TextAlign.Center,
@@ -2148,14 +2195,14 @@ fun SettingScreen(
                             ) {
                                 viewModel.setBasicAlertData(
                                     SettingBasicAlertState(
-                                        title = stringResource(com.metrolist.music.R.string.warning),
-                                        message = stringResource(com.metrolist.music.R.string.log_out_warning),
+                                        title = warningTitle,
+                                        message = logOutWarningStr,
                                         confirm =
-                                            stringResource(com.metrolist.music.R.string.log_out) to {
+                                            logOutStr to {
                                                 viewModel.logOutAllYouTube()
                                                 showYouTubeAccountDialog = false
                                             },
-                                        dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                        dismiss = cancelStr,
                                     ),
                                 )
                             }

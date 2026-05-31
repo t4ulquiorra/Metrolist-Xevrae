@@ -1,4 +1,5 @@
 [versions]
+immutable = "0.3.7"
 androidGradlePlugin = "9.2.1"
 json = "20251224"
 kotlin = "2.1.21"
@@ -48,6 +49,7 @@ uri-kmp = "0.0.21"
 aboutlibraries = "14.1.0"
 
 [libraries]
+immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "immutable" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 coroutines-guava = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-guava", version.ref = "coroutinesGuava" }
 

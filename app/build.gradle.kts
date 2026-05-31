@@ -408,6 +408,7 @@ dependencies {
     coreLibraryDesugaring(libs.desugaring)
 
     implementation(libs.timber)
+    implementation(libs.immutable)
     implementation(libs.uri.kmp)
 
     implementation(libs.adaptive)

@@ -1,11 +1,15 @@
 package com.metrolist.music.extensions
 
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntSize
 import com.kmpalette.palette.graphics.Palette
+import com.metrolist.music.R
+import com.metrolist.music.common.SponsorBlockType
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
@@ -13,6 +17,20 @@ import java.util.Locale
 import java.util.concurrent.TimeUnit
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
+
+@Composable
+fun SponsorBlockType.displayString(): String =
+    when (this) {
+        SponsorBlockType.FILLER -> stringResource(R.string.filler)
+        SponsorBlockType.INTERACTION -> stringResource(R.string.interaction)
+        SponsorBlockType.INTRO -> stringResource(R.string.intro)
+        SponsorBlockType.MUSIC_OFF_TOPIC -> stringResource(R.string.music_off_topic)
+        SponsorBlockType.OUTRO -> stringResource(R.string.outro)
+        SponsorBlockType.POI_HIGHLIGHT -> stringResource(R.string.poi_highlight)
+        SponsorBlockType.PREVIEW -> stringResource(R.string.preview)
+        SponsorBlockType.SELF_PROMOTION -> stringResource(R.string.self_promotion)
+        SponsorBlockType.SPONSOR -> stringResource(R.string.sponsor)
+    }
 
 fun Long?.bytesToMB(): Long {
     val mbInBytes = 1024 * 1024
