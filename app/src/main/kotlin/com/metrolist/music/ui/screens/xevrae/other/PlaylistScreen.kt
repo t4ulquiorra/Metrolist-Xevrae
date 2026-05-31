@@ -98,7 +98,6 @@ import com.metrolist.music.models.xevrae.DownloadState
 import com.metrolist.music.models.xevrae.Track
 import com.metrolist.music.models.xevrae.toSongEntity
 import com.metrolist.music.utils.Logger
-import com.metrolist.music.Platform
 import com.metrolist.music.expect.ui.drawBackdropCustomShape
 import com.metrolist.music.expect.ui.layerBackdrop
 import com.metrolist.music.expect.ui.rememberBackdrop
@@ -107,7 +106,6 @@ import com.metrolist.music.extensions.angledGradientBackground
 import com.metrolist.music.extensions.getColorFromPalette
 import com.metrolist.music.extensions.getScreenSizeInfo
 import com.metrolist.music.extensions.getStringBlocking
-import com.metrolist.music.getPlatform
 import com.metrolist.music.ui.component.CenterLoadingBox
 import com.metrolist.music.ui.component.DescriptionView
 import com.metrolist.music.ui.component.EndOfPage
@@ -318,7 +316,7 @@ fun PlaylistScreen(
     // Apple Music-inspired immersive treatment: gated to mobile portrait so tablets,
     // foldable open state, landscape orientation, and Desktop keep the existing layout.
     val screenInfo = getScreenSizeInfo()
-    val isMobilePortrait = getPlatform() == Platform.Android && screenInfo.wDP < screenInfo.hDP
+    val isMobilePortrait = true && screenInfo.wDP < screenInfo.hDP
     val dominantColor = listColors.firstOrNull() ?: md_theme_dark_background
     // Apple Music-style page background: derived from palette's Muted swatch (medium-bright,
     // unlike getColorFromPalette which prefers DarkVibrant/DarkMuted and turns near-black for

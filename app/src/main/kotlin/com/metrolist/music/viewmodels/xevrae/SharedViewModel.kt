@@ -45,10 +45,8 @@ import com.metrolist.music.extensions.toSongEntity
 import com.metrolist.music.extensions.metadata
 import com.metrolist.music.utils.Logger
 import com.metrolist.music.utils.LogLevel
-import com.metrolist.music.Platform
 import com.metrolist.music.utils.getDownloadFolderPath
 import com.metrolist.music.ui.utils.toByteArray
-import com.metrolist.music.getPlatform
 import com.metrolist.music.models.xevrae.VersionManager
 import com.metrolist.music.viewmodels.xevrae.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers

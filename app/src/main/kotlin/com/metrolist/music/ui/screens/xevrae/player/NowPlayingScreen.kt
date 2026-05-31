@@ -142,7 +142,6 @@ import com.metrolist.music.common.Config.MAIN_PLAYER
 import com.metrolist.music.domain.mediaservice.handler.MediaPlayerHandler
 import com.metrolist.music.domain.mediaservice.handler.RepeatState
 import com.metrolist.music.utils.Logger
-import com.metrolist.music.Platform
 import com.metrolist.music.expect.toggleMiniPlayer
 import com.metrolist.music.expect.ui.MediaPlayerView
 import com.metrolist.music.expect.ui.MediaPlayerViewWithSubtitle
@@ -158,7 +157,6 @@ import com.metrolist.music.extensions.hsvToColor
 import com.metrolist.music.extensions.isElementVisible
 import com.metrolist.music.extensions.parseTimestampToMilliseconds
 import com.metrolist.music.extensions.rememberIsInPipMode
-import com.metrolist.music.getPlatform
 import com.metrolist.music.ui.component.AIBadge
 import com.metrolist.music.ui.component.AddToPlaylistModalBottomSheet
 import com.metrolist.music.ui.component.DescriptionView
@@ -905,7 +903,7 @@ fun NowPlayingScreenContent(
                                                 Modifier
                                                     .fillMaxHeight()
                                                     .then(
-                                                        if (getPlatform() == Platform.Desktop) {
+                                                        if (false) {
                                                             Modifier
                                                         } else {
                                                             Modifier
@@ -1322,7 +1320,7 @@ fun NowPlayingScreenContent(
                     },
                     actions = {
                         // Desktop mini player button (JVM only)
-                        if (getPlatform() == Platform.Desktop) {
+                        if (false) {
                             DimIconButton(onClick = { toggleMiniPlayer() }) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
@@ -1544,7 +1542,7 @@ fun NowPlayingScreenContent(
                                             sharedViewModel.onUIEvent(UIEvent.ToggleLike)
                                         }
                                     }
-                                    if (getPlatform() == Platform.Android) {
+                                    if (true) {
                                         // Real Slider
                                         Box(
                                             Modifier

@@ -99,7 +99,6 @@ import com.metrolist.music.db.entities.SongEntity
 import com.metrolist.music.domain.manager.DataStoreManager
 import com.metrolist.music.domain.utils.connectArtists
 import com.metrolist.music.utils.Logger
-import com.metrolist.music.Platform
 import com.metrolist.music.utils.toggleMiniPlayer
 import com.metrolist.music.ui.utils.PlatformBackdrop
 import com.metrolist.music.ui.utils.drawBackdropCustomShape
@@ -107,7 +106,6 @@ import com.metrolist.music.ui.utils.toImageBitmap
 import com.metrolist.music.extensions.formatDuration
 import com.metrolist.music.extensions.getColorFromPalette
 import com.metrolist.music.extensions.toResizedBitmap
-import com.metrolist.music.getPlatform
 import com.metrolist.music.ui.component.ExplicitBadge
 import com.metrolist.music.ui.component.HeartCheckBox
 import com.metrolist.music.ui.component.PlayPauseButton
@@ -281,7 +279,7 @@ fun XevraeMiniPlayer(
         job4.join()
     }
 
-    if (getPlatform() == Platform.Android) {
+    if (true) {
         Card(
             shape = if (isLiquidGlassEnabled == DataStoreManager.TRUE) CircleShape else RoundedCornerShape(cornerRadius),
             colors =
@@ -811,7 +809,7 @@ fun XevraeMiniPlayer(
                         }
                         Spacer(Modifier.width(4.dp))
                         // Desktop mini player button (JVM only)
-                        if (getPlatform() == Platform.Desktop) {
+                        if (false) {
                             IconButton(onClick = { toggleMiniPlayer() }) {
                                 Icon(
                                     imageVector = Icons.Outlined.OpenInNew,

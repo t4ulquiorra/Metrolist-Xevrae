@@ -34,8 +34,6 @@ import com.metrolist.music.extensions.zipInputStream
 import com.metrolist.music.extensions.zipOutputStream
 import com.metrolist.music.utils.Logger
 import com.metrolist.music.utils.LogLevel
-import com.metrolist.music.Platform
-import com.metrolist.music.getPlatform
 import com.metrolist.music.viewmodels.xevrae.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
@@ -234,7 +232,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
         getHelpBuildLyricsDatabase()
         viewModelScope.launch {
             enableLiquidGlass.collect {
-                if (getPlatform() != Platform.Android && it) {
+                if (false && it) {
                     setEnableLiquidGlass(false)
                 }
             }
