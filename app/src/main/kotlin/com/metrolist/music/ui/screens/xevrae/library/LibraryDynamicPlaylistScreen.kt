@@ -48,7 +48,7 @@ import com.metrolist.music.db.entities.ArtistEntity
 import com.metrolist.music.db.entities.SongEntity
 import com.metrolist.music.domain.mediaservice.handler.PlaylistType
 import com.metrolist.music.domain.mediaservice.handler.QueueData
-import com.metrolist.music.domain.utils.LocalResource
+import com.metrolist.music.utils.LocalResource
 import com.metrolist.music.domain.utils.toArrayListTrack
 import com.metrolist.music.models.xevrae.toTrack
 import com.metrolist.music.utils.Logger

@@ -62,8 +62,8 @@ import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import coil3.request.ImageRequest
 import coil3.request.crossfade
-import com.metrolist.music.common.LibraryChipType
-import com.metrolist.music.domain.utils.LocalResource
+import com.metrolist.music.models.xevrae.LibraryChipType
+import com.metrolist.music.utils.LocalResource
 import com.metrolist.music.utils.Logger
 import com.metrolist.music.extensions.copy
 import com.metrolist.music.extensions.isScrollingUp

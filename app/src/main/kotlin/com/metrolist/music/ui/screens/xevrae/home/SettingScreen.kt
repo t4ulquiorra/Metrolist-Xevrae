@@ -102,7 +102,7 @@ import com.metrolist.music.common.SponsorBlockType
 import com.metrolist.music.common.VIDEO_QUALITY
 import com.metrolist.music.extensions.now
 import com.metrolist.music.domain.manager.DataStoreManager
-import com.metrolist.music.domain.utils.LocalResource
+import com.metrolist.music.utils.LocalResource
 import com.metrolist.music.utils.Logger
 import com.metrolist.music.ui.utils.fileSaverResult
 import com.metrolist.music.ui.utils.openEqResult
