@@ -126,8 +126,8 @@ import com.metrolist.music.viewmodels.xevrae.PlaylistViewModel
 import com.metrolist.music.viewmodels.xevrae.SharedViewModel
 import com.metrolist.music.viewmodels.xevrae.UIEvent
 import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.hazeEffect
-import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import dev.chrisbanes.haze.rememberHazeState
@@ -284,7 +284,6 @@ fun PlaylistScreen(
     val paletteState = rememberPaletteState()
     val hazeState =
         rememberHazeState(
-            blurEnabled = true,
         )
     var bitmap by remember {
         mutableStateOf<ImageBitmap?>(null)
@@ -363,14 +362,13 @@ fun PlaylistScreen(
                 if (data == null) return@Crossfade
                 val hazeState =
                     rememberHazeState(
-                        blurEnabled = true,
                     )
                 LazyColumn(
                     modifier =
                         Modifier
                             .fillMaxWidth()
                             .background(if (isMobilePortrait) mutedPaletteBg else Color.Black)
-                            .hazeSource(hazeState),
+                            .haze(hazeState),
                     state = lazyState,
                 ) {
                     if (!showSearchBar) {
@@ -1155,8 +1153,7 @@ fun PlaylistScreen(
                             .onGloballyPositioned { searchBarHeightPx = it.size.height }
                             .then(
                                 if (isMobilePortrait) {
-                                    Modifier.hazeEffect(hazeState) {
-                                        blurEnabled = true
+                                    Modifier.hazeChild(hazeState) {
                                         blurRadius = 24.dp
                                         backgroundColor = mutedPaletteBg
                                         tints = listOf(HazeTint(mutedPaletteBg.copy(alpha = 0.55f)))
@@ -1311,8 +1308,7 @@ fun PlaylistScreen(
                             ),
                         modifier =
                             if (isMobilePortrait) {
-                                Modifier.hazeEffect(hazeState) {
-                                    blurEnabled = true
+                                Modifier.hazeChild(hazeState) {
                                     blurRadius = 24.dp
                                     backgroundColor = mutedPaletteBg
                                     tints = listOf(HazeTint(mutedPaletteBg.copy(alpha = 0.55f)))

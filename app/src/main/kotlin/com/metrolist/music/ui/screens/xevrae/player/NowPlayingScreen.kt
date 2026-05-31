@@ -181,8 +181,8 @@ import com.metrolist.music.viewmodels.xevrae.NowPlayingBottomSheetUIEvent
 import com.metrolist.music.viewmodels.xevrae.NowPlayingBottomSheetViewModel
 import com.metrolist.music.viewmodels.xevrae.SharedViewModel
 import com.metrolist.music.viewmodels.xevrae.UIEvent
-import dev.chrisbanes.haze.hazeEffect
-import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.materials.CupertinoMaterials
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.rememberHazeState
@@ -727,7 +727,6 @@ fun NowPlayingScreenContent(
 
     val hazeState =
         rememberHazeState(
-            blurEnabled = true,
         )
 
     if (screenDataState.lyricsData != null && controllerState.isPlaying) {
@@ -750,7 +749,7 @@ fun NowPlayingScreenContent(
                     Modifier
                         .align(Alignment.Center)
                         .fillMaxSize()
-                        .hazeSource(hazeState),
+                        .haze(hazeState),
             )
         }
         Column(
@@ -766,8 +765,7 @@ fun NowPlayingScreenContent(
                         if (blurBg && screenDataState.canvasData == null) {
                             Modifier
                                 .background(Color.Transparent)
-                                .hazeEffect(hazeState, style = CupertinoMaterials.thin()) {
-                                    blurEnabled = true
+                                .hazeChild(hazeState, style = CupertinoMaterials.thin()) {
                                 }
                         } else {
                             Modifier

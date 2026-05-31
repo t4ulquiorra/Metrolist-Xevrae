@@ -42,8 +42,8 @@ import com.metrolist.music.ui.component.RippleIconButton
 import com.metrolist.music.ui.theme.xevrae.typo
 import com.metrolist.music.viewmodels.xevrae.LogInViewModel
 import com.metrolist.music.viewmodels.xevrae.SettingsViewModel
-import dev.chrisbanes.haze.hazeEffect
-import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import dev.chrisbanes.haze.rememberHazeState
@@ -97,7 +97,7 @@ fun SpotifyLoginScreen(
     val state = rememberWebViewState()
     val cookieManager = createWebViewCookieManager()
 
-    Box(modifier = Modifier.fillMaxSize().hazeSource(state = hazeState)) {
+    Box(modifier = Modifier.fillMaxSize().haze(state = hazeState)) {
         Column {
             Spacer(
                 Modifier
@@ -184,8 +184,7 @@ fun SpotifyLoginScreen(
             modifier =
                 Modifier
                     .align(Alignment.TopCenter)
-                    .hazeEffect(state = hazeState, style = HazeMaterials.ultraThin()) {
-                        blurEnabled = true
+                    .hazeChild(state = hazeState, style = HazeMaterials.ultraThin()) {
                     },
             title = {
                 Text(

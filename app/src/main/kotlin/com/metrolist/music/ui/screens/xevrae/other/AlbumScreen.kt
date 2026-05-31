@@ -105,8 +105,8 @@ import com.metrolist.music.viewmodels.xevrae.LocalPlaylistState
 import com.metrolist.music.viewmodels.xevrae.SharedViewModel
 import com.metrolist.music.viewmodels.xevrae.UIEvent
 import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.hazeEffect
-import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.rememberHazeState
 import io.github.alexzhirkevich.compottie.Compottie
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
@@ -166,7 +166,6 @@ fun AlbumScreen(
     val paletteState = rememberPaletteState()
     val hazeState =
         rememberHazeState(
-            blurEnabled = true,
         )
     var bitmap by remember {
         mutableStateOf<ImageBitmap?>(null)
@@ -232,7 +231,7 @@ fun AlbumScreen(
                         Modifier
                             .fillMaxWidth()
                             .background(if (isMobilePortrait) mutedPaletteBg else Color.Black)
-                            .hazeSource(hazeState),
+                            .haze(hazeState),
                     state = lazyState,
                 ) {
                     item(contentType = "header") {
@@ -942,8 +941,7 @@ fun AlbumScreen(
                             ),
                         modifier =
                             if (isMobilePortrait) {
-                                Modifier.hazeEffect(hazeState) {
-                                    blurEnabled = true
+                                Modifier.hazeChild(hazeState) {
                                     blurRadius = 24.dp
                                     backgroundColor = mutedPaletteBg
                                     tints = listOf(HazeTint(mutedPaletteBg.copy(alpha = 0.55f)))

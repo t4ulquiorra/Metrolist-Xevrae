@@ -45,8 +45,8 @@ import com.metrolist.music.ui.navigation.xevrae.destination.list.PlaylistDestina
 import com.metrolist.music.ui.theme.xevrae.typo
 import com.metrolist.music.viewmodels.xevrae.RecentlySongsViewModel
 import com.metrolist.music.viewmodels.xevrae.SharedViewModel
-import dev.chrisbanes.haze.hazeEffect
-import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import dev.chrisbanes.haze.rememberHazeState

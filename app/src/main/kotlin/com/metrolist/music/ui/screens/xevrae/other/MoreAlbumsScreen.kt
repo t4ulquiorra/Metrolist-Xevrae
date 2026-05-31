@@ -40,8 +40,8 @@ import com.metrolist.music.ui.navigation.xevrae.destination.list.MoreAlbumsDesti
 import com.metrolist.music.ui.theme.xevrae.typo
 import com.metrolist.music.viewmodels.xevrae.MoreAlbumsUIState
 import com.metrolist.music.viewmodels.xevrae.MoreAlbumsViewModel
-import dev.chrisbanes.haze.hazeEffect
-import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import dev.chrisbanes.haze.rememberHazeState
@@ -85,7 +85,7 @@ fun MoreAlbumsScreen(
                     modifier =
                         Modifier
                             .fillMaxSize()
-                            .hazeSource(state = hazeState),
+                            .haze(state = hazeState),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
@@ -121,8 +121,7 @@ fun MoreAlbumsScreen(
                 TopAppBar(
                     modifier =
                         Modifier
-                            .hazeEffect(state = hazeState, style = HazeMaterials.ultraThin()) {
-                                blurEnabled = true
+                            .hazeChild(state = hazeState, style = HazeMaterials.ultraThin()) {
                             },
                     title = {
                         Text(

@@ -65,8 +65,8 @@ import com.metrolist.music.ui.theme.xevrae.typo
 import com.metrolist.music.viewmodels.xevrae.AnalyticsViewModel
 import com.metrolist.music.viewmodels.LibraryDynamicPlaylistViewModel
 import com.metrolist.music.viewmodels.xevrae.SharedViewModel
-import dev.chrisbanes.haze.hazeEffect
-import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import dev.chrisbanes.haze.rememberHazeState
@@ -104,7 +104,6 @@ fun LibraryDynamicPlaylistScreen(
     var tempTopAlbums by remember { mutableStateOf(analyticsUIState.topAlbums.data ?: emptyList()) }
     val hazeState =
         rememberHazeState(
-            blurEnabled = true,
         )
 
     LaunchedEffect(query) {
@@ -135,7 +134,7 @@ fun LibraryDynamicPlaylistScreen(
     }
 
     LazyColumn(
-        modifier = Modifier.hazeSource(hazeState),
+        modifier = Modifier.haze(hazeState),
         contentPadding = innerPadding,
     ) {
         item {
@@ -473,8 +472,7 @@ fun LibraryDynamicPlaylistScreen(
                 },
                 modifier =
                     Modifier
-                        .hazeEffect(hazeState, style = HazeMaterials.ultraThin()) {
-                            blurEnabled = true
+                        .hazeChild(hazeState, style = HazeMaterials.ultraThin()) {
                         },
                 colors =
                     TopAppBarDefaults.topAppBarColors(

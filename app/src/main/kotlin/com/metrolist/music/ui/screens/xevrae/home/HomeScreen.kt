@@ -139,8 +139,8 @@ import com.metrolist.music.viewmodels.HomeViewModel.Companion.HOME_PARAMS_SLEEP
 import com.metrolist.music.viewmodels.HomeViewModel.Companion.HOME_PARAMS_WORKOUT
 import com.metrolist.music.viewmodels.xevrae.ListState
 import com.metrolist.music.viewmodels.xevrae.SharedViewModel
-import dev.chrisbanes.haze.hazeEffect
-import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import dev.chrisbanes.haze.rememberHazeState

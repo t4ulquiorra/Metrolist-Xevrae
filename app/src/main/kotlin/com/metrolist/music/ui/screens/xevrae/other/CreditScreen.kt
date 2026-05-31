@@ -39,8 +39,8 @@ import com.metrolist.music.expect.openUrl
 import com.metrolist.music.ui.component.RippleIconButton
 import com.metrolist.music.ui.theme.xevrae.typo
 import com.metrolist.music.models.xevrae.VersionManager
-import dev.chrisbanes.haze.hazeEffect
-import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import dev.chrisbanes.haze.rememberHazeState
@@ -61,7 +61,7 @@ fun CreditScreen(
                 .padding(paddingValues)
                 .padding(top = 64.dp)
                 .verticalScroll(rememberScrollState())
-                .hazeSource(state = hazeState),
+                .haze(state = hazeState),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(30.dp))
@@ -190,8 +190,7 @@ fun CreditScreen(
     TopAppBar(
         modifier =
             Modifier
-                .hazeEffect(state = hazeState, style = HazeMaterials.ultraThin()) {
-                    blurEnabled = true
+                .hazeChild(state = hazeState, style = HazeMaterials.ultraThin()) {
                 },
         title = {
             Text(

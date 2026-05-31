@@ -139,8 +139,8 @@ import com.mohamedrejeb.calf.io.getPath
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
-import dev.chrisbanes.haze.hazeEffect
-import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import dev.chrisbanes.haze.rememberHazeState
@@ -300,7 +300,6 @@ fun SettingScreen(
 
     val hazeState =
         rememberHazeState(
-            blurEnabled = true,
         )
 
     val checkingStr = stringResource(com.metrolist.music.R.string.checking)
@@ -343,7 +342,7 @@ fun SettingScreen(
         modifier =
             Modifier
                 .padding(horizontal = 16.dp)
-                .hazeSource(hazeState),
+                .haze(hazeState),
     ) {
         item {
             Spacer(Modifier.height(64.dp))
@@ -2504,8 +2503,7 @@ fun SettingScreen(
         },
         modifier =
             Modifier
-                .hazeEffect(hazeState, style = HazeMaterials.ultraThin()) {
-                    blurEnabled = true
+                .hazeChild(hazeState, style = HazeMaterials.ultraThin()) {
                 },
         colors =
             TopAppBarDefaults.topAppBarColors(
