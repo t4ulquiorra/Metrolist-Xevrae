@@ -24,6 +24,7 @@ import com.metrolist.music.models.xevrae.SongInfoEntity
 import com.metrolist.music.models.xevrae.TranslatedLyricsEntity
 import com.metrolist.music.models.xevrae.SearchResultType
 import com.metrolist.music.models.xevrae.CanvasResult
+import com.metrolist.music.models.xevrae.Track
 import com.metrolist.music.models.xevrae.DownloadProgress
 import com.metrolist.music.models.xevrae.GenericIntent
 import com.metrolist.music.models.xevrae.Lyrics
@@ -47,6 +48,8 @@ import com.metrolist.music.utils.Logger
 import com.metrolist.music.utils.LogLevel
 import com.metrolist.music.utils.getDownloadFolderPath
 import com.metrolist.music.ui.utils.toByteArray
+import com.metrolist.music.models.xevrae.XevraeModelExtensions.toTrack
+import com.metrolist.music.models.xevrae.XevraeModelExtensions.toListName
 import com.metrolist.music.models.xevrae.VersionManager
 import com.metrolist.music.viewmodels.xevrae.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
@@ -421,7 +424,7 @@ class SharedViewModel @Inject constructor(
                 lyricsCanvasRepository.getCanvas(dataStoreManager, videoId, duration).cancellable().collect { response ->
                     val data = response.data
                     when (response) {
-                        is Resource.Success if (data != null && nowPlayingState.value?.mediaItem?.mediaId == videoId) -> {
+                        is Resource.Success<*> -> if (data != null && nowPlayingState.value?.mediaItem?.mediaId == videoId) {
                             _canvas.value = data
                             _nowPlayingScreenData.update {
                                 it.copy(
@@ -568,19 +571,19 @@ class SharedViewModel @Inject constructor(
 
     private fun getSavedLyrics(track: Track) {
         viewModelScope.launch {
-            lyricsCanvasRepository.getSavedLyrics(track.videoId).cancellable().collectLatest { lyrics ->
+            lyricsCanvasRepository.getSavedLyrics(track.id).cancellable().collectLatest { lyrics ->
                 if (lyrics != null) {
                     val lyricsData = lyrics.toLyrics()
                     Logger.d(tag, "Saved Lyrics $lyricsData")
                     updateLyrics(
-                        track.videoId,
+                        track.id,
                         track.durationSeconds ?: 0,
                         lyricsData,
                         false,
                         LyricsProvider.OFFLINE,
                     )
                     getAITranslationLyrics(
-                        track.videoId,
+                        track.id,
                         lyricsData,
                     )
                 }
@@ -608,7 +611,7 @@ class SharedViewModel @Inject constructor(
                 streamRepository.getFullMetadata(videoId).collectLatest { response ->
                     val track = response.data
                     when (response) {
-                        is Resource.Success if (track != null) -> {
+                        is Resource.Success<*> -> if (track != null) {
                             playerConnection.setQueueData(
                                 QueueData.Data(
                                     listTracks = arrayListOf(track),
@@ -643,7 +646,7 @@ class SharedViewModel @Inject constructor(
             songRepository.insertSong(track.toSongEntity()).lastOrNull()?.let {
                 println("insertSong: $it")
                 songRepository
-                    .getSongById(track.videoId)
+                    .getSongById(track.id)
                     .collect { songEntity ->
                         if (songEntity != null) {
                             Logger.w("Check like", "loadMediaItemFromTrack ${songEntity.liked}")
@@ -654,7 +657,7 @@ class SharedViewModel @Inject constructor(
             track.durationSeconds?.let {
                 songRepository.updateDurationSeconds(
                     it,
-                    track.videoId,
+                    track.id,
                 )
             }
             withContext(Dispatchers.Main) {
@@ -663,15 +666,15 @@ class SharedViewModel @Inject constructor(
 
             when (type) {
                 SONG_CLICK -> {
-                    playerConnection.getRelated(track.videoId)
+                    playerConnection.getRelated(track.id)
                 }
 
                 VIDEO_CLICK -> {
-                    playerConnection.getRelated(track.videoId)
+                    playerConnection.getRelated(track.id)
                 }
 
                 SHARE -> {
-                    playerConnection.getRelated(track.videoId)
+                    playerConnection.getRelated(track.id)
                 }
 
                 PLAYLIST_CLICK -> {
@@ -873,7 +876,7 @@ class SharedViewModel @Inject constructor(
                 updateRepository.checkForGithubReleaseUpdate().collectLatest { response ->
                     val data = response.data
                     when (response) {
-                        is Resource.Success if (data != null) -> {
+                        is Resource.Success<*> -> if (data != null) {
                             _updateResponse.value = data
                             showedUpdateDialog = true
                         }
@@ -888,7 +891,7 @@ class SharedViewModel @Inject constructor(
                 updateRepository.checkForFdroidUpdate().collectLatest { response ->
                     val data = response.data
                     when (response) {
-                        is Resource.Success if (data != null) -> {
+                        is Resource.Success<*> -> if (data != null) {
                             _updateResponse.value = data
                             showedUpdateDialog = true
                         }
@@ -997,13 +1000,14 @@ class SharedViewModel @Inject constructor(
                                         false,
                                     ).collectLatest {
                                         when (it) {
-                                            is Resource.Error -> {
+                                            is Resource.Error<*> -> {
                                                 Logger.w(tag, "Vote Xevrae Translated Lyrics Error ${it.message}")
                                             }
 
-                                            is Resource.Success -> {
+                                            is Resource.Success<*> -> {
                                                 Logger.d(tag, "Vote Xevrae Translated Lyrics Success")
                                             }
+                                            else -> {}
                                         }
                                     }
                             }
@@ -1059,13 +1063,14 @@ class SharedViewModel @Inject constructor(
                                     dataStoreManager.translationLanguage.first(),
                                 ).collect {
                                     when (it) {
-                                        is Resource.Error -> {
+                                        is Resource.Error<*> -> {
                                             log("Insert Xevrae Translated Lyrics Error ${it.message}")
                                         }
 
-                                        is Resource.Success -> {
+                                        is Resource.Success<*> -> {
                                             log("Insert Xevrae Translated Lyrics Success")
                                         }
+                                        else -> {}
                                     }
                                 }
                         }
@@ -1110,13 +1115,14 @@ class SharedViewModel @Inject constructor(
                                     lyrics,
                                 ).collect {
                                     when (it) {
-                                        is Resource.Error -> {
+                                        is Resource.Error<*> -> {
                                             Logger.w(tag, "Insert Xevrae Lyrics Error ${it.message}")
                                         }
 
-                                        is Resource.Success -> {
+                                        is Resource.Success<*> -> {
                                             Logger.d(tag, "Insert Xevrae Lyrics Success")
                                         }
+                                        else -> {}
                                     }
                                 }
                         }
@@ -1187,7 +1193,7 @@ class SharedViewModel @Inject constructor(
         lyricsCanvasRepository.getXevraeLyrics(videoId).collectLatest {
             Logger.w(tag, "Get Xevrae Lyrics for $videoId: $it")
             val data = it.data
-            if (it is Resource.Success && data != null) {
+            if (it is Resource.Success<*> && data != null) {
                 Logger.d(tag, "Get Xevrae Lyrics Success")
                 updateLyrics(
                     videoId,
@@ -1231,7 +1237,7 @@ class SharedViewModel @Inject constructor(
             .collect { response ->
                 val data = response.data
                 when (response) {
-                    is Resource.Success if (data != null) -> {
+                    is Resource.Success<*> -> if (data != null) {
                         val lyrics = data.first
                         val translatedLyrics = data.second
                         insertLyrics(lyrics.toLyricsEntity(videoId))
@@ -1284,7 +1290,7 @@ class SharedViewModel @Inject constructor(
                 ).collectLatest { res ->
                     val data = res.data
                     when (res) {
-                        is Resource.Success if (data != null) -> {
+                        is Resource.Success<*> -> if (data != null) {
                             Logger.d(tag, "Get Lyrics Data Success")
                             updateLyrics(
                                 song.id,
@@ -1307,6 +1313,7 @@ class SharedViewModel @Inject constructor(
                         else -> {
                             getSavedLyrics(
                                 song.toTrack().copy(
+                                    id = song.id,
                                     durationSeconds = duration,
                                 ),
                             )
@@ -1330,7 +1337,7 @@ class SharedViewModel @Inject constructor(
                 ).collectLatest { res ->
                     val data = res.data
                     when (res) {
-                        is Resource.Success if (data != null) -> {
+                        is Resource.Success<*> -> if (data != null) {
                             Logger.d(tag, "Get BetterLyrics Success")
                             updateLyrics(
                                 song.id,
@@ -1373,7 +1380,7 @@ class SharedViewModel @Inject constructor(
         lyricsCanvasRepository.getXevraeTranslatedLyrics(videoId, translationLanguage).collectLatest { response ->
             val data = response.data
             when (response) {
-                is Resource.Success if (data != null) -> {
+                is Resource.Success<*> -> if (data != null) {
                     Logger.d(tag, "Get Xevrae Translated Lyrics Success")
                     updateLyrics(
                         videoId,
@@ -1430,7 +1437,7 @@ class SharedViewModel @Inject constructor(
                     .collectLatest {
                         val data = it.data
                         when (it) {
-                            is Resource.Success if (data != null) -> {
+                            is Resource.Success<*> -> if (data != null) {
                                 Logger.d(tag, "Get AI Translate Lyrics Success")
                                 lyricsCanvasRepository.insertTranslatedLyrics(
                                     TranslatedLyricsEntity(
@@ -1470,22 +1477,22 @@ class SharedViewModel @Inject constructor(
                 Logger.d("Check SpotifyLyrics", response.toString())
                 val data = response.data
                 when (response) {
-                    is Resource.Success -> {
+                    is Resource.Success<*> -> {
                         if (data != null) {
                             insertLyrics(
                                 data.toLyricsEntity(
-                                    track.videoId,
+                                    track.id,
                                 ),
                             )
                             updateLyrics(
-                                track.videoId,
+                                track.id,
                                 duration ?: 0,
                                 data,
                                 false,
                                 LyricsProvider.SPOTIFY,
                             )
                             getAITranslationLyrics(
-                                track.videoId,
+                                track.id,
                                 data,
                             )
                         }
@@ -1682,7 +1689,7 @@ class SharedViewModel @Inject constructor(
                     vote = upvote,
                 ).collectLatest { result ->
                     when (result) {
-                        is Resource.Error -> {
+                        is Resource.Error<*> -> {
                             Logger.w(tag, "Vote Xevrae Lyrics Error ${result.message}")
                             _lyricsVoteState.update {
                                 it?.copy(
@@ -1691,7 +1698,7 @@ class SharedViewModel @Inject constructor(
                             }
                         }
 
-                        is Resource.Success -> {
+                        is Resource.Success<*> -> {
                             Logger.d(tag, "Vote Xevrae Lyrics Success")
                             _lyricsVoteState.update {
                                 it?.copy(
@@ -1701,6 +1708,7 @@ class SharedViewModel @Inject constructor(
                             }
                             makeToast(getString(R.string.vote_submitted))
                         }
+                        else -> {}
                     }
                 }
         }
@@ -1737,7 +1745,7 @@ class SharedViewModel @Inject constructor(
                     vote = upvote,
                 ).collectLatest { result ->
                     when (result) {
-                        is Resource.Error -> {
+                        is Resource.Error<*> -> {
                             Logger.w(tag, "Vote Xevrae Translated Lyrics Error ${result.message}")
                             _translatedVoteState.update {
                                 it?.copy(
@@ -1746,7 +1754,7 @@ class SharedViewModel @Inject constructor(
                             }
                         }
 
-                        is Resource.Success -> {
+                        is Resource.Success<*> -> {
                             Logger.d(tag, "Vote Xevrae Translated Lyrics Success")
                             _translatedVoteState.update {
                                 it?.copy(
@@ -1756,6 +1764,7 @@ class SharedViewModel @Inject constructor(
                             }
                             makeToast(getString(R.string.vote_submitted))
                         }
+                        else -> {}
                     }
                 }
         }
