@@ -55,6 +55,22 @@ import com.metrolist.music.db.entities.SongEntity
 import com.metrolist.music.domain.mediaservice.handler.PlaylistType as MetrolistPlaylistType
 import com.metrolist.music.domain.mediaservice.handler.QueueData
 import com.metrolist.music.utils.LocalResource
+import com.metrolist.music.extensions.filterExplicitAlbums
+import com.metrolist.music.extensions.filterYoutubeShorts
+import com.metrolist.music.extensions.matchesNormalizedQuery
+import com.metrolist.music.models.toMediaMetadata
+import com.metrolist.music.models.xevrae.ChartItem
+import com.metrolist.music.models.xevrae.PlaylistType
+import com.metrolist.music.models.xevrae.PlaylistsResult
+import com.metrolist.music.models.xevrae.RecentlyType
+import com.metrolist.music.models.xevrae.Thumbnail
+import com.metrolist.music.models.xevrae.XevraePlaylist
+import com.metrolist.music.models.xevrae.XevraeRecently
+import com.metrolist.music.playback.DownloadUtil
+import com.metrolist.music.ui.screens.xevrae.library.LibraryDynamicPlaylistType
+import com.metrolist.music.utils.Resource
+import com.metrolist.music.utils.SyncUtils
+import com.metrolist.music.utils.reportException
 import com.metrolist.music.viewmodels.xevrae.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
