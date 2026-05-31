@@ -243,9 +243,7 @@ fun HomeScreen(
     }
 
     val hazeState =
-        rememberHazeState(
-            blurEnabled = true,
-        )
+        rememberHazeState()
 
     LaunchedEffect(scrollState) {
         snapshotFlow { scrollState.firstVisibleItemIndex }
@@ -420,7 +418,7 @@ fun HomeScreen(
         Box(
             modifier =
                 Modifier
-                    .hazeSource(hazeState),
+                    .haze(hazeState),
         ) {
             Crossfade(targetState = loading, label = "Home Shimmer") { loading ->
                 if (!loading) {
@@ -653,6 +651,7 @@ fun HomeScreen(
             transitionSpec = {
                 fadeIn(tween(300)).togetherWith(fadeOut(tween(300)))
             },
+            label = "HomeTopBar"
         ) { target ->
             Column(
                 modifier =
@@ -663,9 +662,7 @@ fun HomeScreen(
                                 Modifier.background(Color.Transparent)
                             } else {
                                 Modifier
-                                    .hazeEffect(hazeState, style = HazeMaterials.ultraThin()) {
-                                        blurEnabled = true
-                                    }
+                                    .hazeChild(hazeState, style = HazeMaterials.ultraThin())
                             },
                         ).onGloballyPositioned { coordinates ->
                             topAppBarHeightPx = coordinates.size.height

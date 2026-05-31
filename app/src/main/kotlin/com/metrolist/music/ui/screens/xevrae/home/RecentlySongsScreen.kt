@@ -74,7 +74,7 @@ fun RecentlySongsScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .hazeSource(state = hazeState),
+                    .haze(hazeState),
         ) {
             item {
                 Spacer(
@@ -213,9 +213,7 @@ fun RecentlySongsScreen(
             modifier =
                 Modifier
                     .align(Alignment.TopCenter)
-                    .hazeEffect(state = hazeState, style = HazeMaterials.ultraThin()) {
-                        blurEnabled = true
-                    },
+                    .hazeChild(state = hazeState, style = HazeMaterials.ultraThin()),
             title = {
                 Text(
                     text = stringResource(com.metrolist.music.R.string.recently_added),

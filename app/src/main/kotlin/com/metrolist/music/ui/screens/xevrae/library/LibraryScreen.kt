@@ -78,8 +78,8 @@ import com.metrolist.music.ui.navigation.xevrae.destination.home.AnalyticsDestin
 import com.metrolist.music.ui.theme.xevrae.transparent
 import com.metrolist.music.ui.theme.xevrae.typo
 import com.metrolist.music.viewmodels.LibraryViewModel
-import dev.chrisbanes.haze.hazeEffect
-import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
 import dev.chrisbanes.haze.rememberHazeState
@@ -110,10 +110,12 @@ fun LibraryScreen(
     val chartPlaylists by viewModel.chartPlaylists.collectAsStateWithLifecycle()
     val recentlyAdded by viewModel.recentlyAdded.collectAsStateWithLifecycle()
     val accountThumbnail by viewModel.accountThumbnail.collectAsStateWithLifecycle()
+
+    val playlistNameCannotBeEmpty = stringResource(com.metrolist.music.R.string.playlist_name_cannot_be_empty)
+    val libraryStr = stringResource(com.metrolist.music.R.string.library)
+
     val hazeState =
-        rememberHazeState(
-            blurEnabled = true,
-        )
+        rememberHazeState()
 
     var topAppBarHeight by remember {
         mutableStateOf(0.dp)
@@ -172,7 +174,7 @@ fun LibraryScreen(
     }
 
     Crossfade(
-        modifier = Modifier.hazeSource(hazeState),
+        modifier = Modifier.haze(hazeState),
         targetState = currentFilter,
     ) { filter ->
         when (filter) {
@@ -383,7 +385,7 @@ fun LibraryScreen(
                     TextButton(
                         onClick = {
                             if (newTitle.isBlank()) {
-                                viewModel.makeToast(runBlocking { getString(com.metrolist.music.R.string.playlist_name_cannot_be_empty) })
+                                viewModel.makeToast(playlistNameCannotBeEmpty)
                             } else {
                                 viewModel.createPlaylist(newTitle)
                                 hideEditTitleBottomSheet()
@@ -403,16 +405,15 @@ fun LibraryScreen(
     Column(
         Modifier
             .background(transparent)
-            .hazeEffect(hazeState, style = HazeMaterials.ultraThin()) {
-                blurEnabled = true
-            }.onGloballyPositioned { coordinates ->
+            .hazeChild(hazeState, style = HazeMaterials.ultraThin())
+            .onGloballyPositioned { coordinates ->
                 topAppBarHeight = with(density) { coordinates.size.height.toDp() }
             },
     ) {
         TopAppBar(
             title = {
                 Text(
-                    text = stringResource(com.metrolist.music.R.string.library),
+                    text = libraryStr,
                     style = typo().titleMedium,
                     color = Color.White,
                 )
@@ -421,6 +422,7 @@ fun LibraryScreen(
                 TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.Transparent,
                 ),
+
             actions = {
                 IconButton(
                     onClick = {

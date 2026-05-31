@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.MarqueeAnimationMode
+import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
@@ -55,9 +56,17 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.metrolist.music.R
+import com.metrolist.music.db.entities.AlbumEntity
+import com.metrolist.music.db.entities.PlaylistEntity
+import com.metrolist.music.db.entities.SongEntity
+import com.metrolist.music.db.entities.ArtistEntity
 import com.metrolist.music.models.xevrae.ArtistItemCompat
+import com.metrolist.music.models.xevrae.ChartItem
 import com.metrolist.music.models.xevrae.Content
-import com.metrolist.music.models.xevrae.HomeItem
+import com.metrolist.music.models.xevrae.PlaylistsResult
+import com.metrolist.music.models.xevrae.PlaylistType
+import com.metrolist.music.models.xevrae.RecentlyType
+import com.metrolist.music.models.xevrae.Thumbnail
 import com.metrolist.music.models.xevrae.connectArtists
 import com.metrolist.music.models.xevrae.toListName
 import com.metrolist.music.models.xevrae.toTrack
@@ -66,9 +75,9 @@ import com.metrolist.music.ui.theme.xevrae.white
 
 @Composable
 fun HomeItem(
-    item: HomeItem,
     navController: NavController,
-    onTrackClick: (videoId: String) -> Unit,
+    data: HomeItem,
+    onTrackClick: (videoId: String) -> Unit = {},
 ) {
     Column(
         Modifier
@@ -77,7 +86,7 @@ fun HomeItem(
             .wrapContentHeight(),
     ) {
         Text(
-            text = item.title,
+            text = data.title,
             style = typo().headlineMedium,
             color = white,
             maxLines = 1,
@@ -93,7 +102,7 @@ fun HomeItem(
             item {
                 Spacer(modifier = Modifier.width(10.dp))
             }
-            items(item.contents, key = { it.videoId ?: it.browseId ?: it.title }) { content ->
+            items(data.contents, key = { it.videoId ?: it.browseId ?: it.title }) { content ->
                 HomeItemContentPlaylist(
                     data = content,
                     navController = navController,
@@ -114,7 +123,6 @@ fun HomeItemContentPlaylist(
     navController: NavController,
     onTrackClick: (videoId: String) -> Unit,
 ) {
-    var bottomSheetShow by remember { mutableStateOf(false) }
     val thumb = data.thumbnails?.lastOrNull()?.url
     Column(
         Modifier
@@ -190,11 +198,201 @@ fun HomeItemContentPlaylist(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun HomeItemContentPlaylist(
+    onClick: () -> Unit,
+    data: Any,
+    thumbSize: Dp = 160.dp,
+) {
+    val thumb = when (data) {
+        is Content -> data.thumbnails?.lastOrNull()?.url
+        is PlaylistEntity -> data.thumbnail
+        is PlaylistsResult -> data.thumbnails?.lastOrNull()?.url
+        is AlbumEntity -> data.thumbnails
+        is ChartItem -> null
+        is SongEntity -> data.thumbnail
+        else -> null
+    }
+
+    val title = when (data) {
+        is Content -> data.title
+        is PlaylistEntity -> data.name
+        is PlaylistsResult -> data.title
+        is AlbumEntity -> data.title
+        is ChartItem -> "Top 50 Weekly"
+        is SongEntity -> data.title
+        else -> ""
+    }
+
+    Column(
+        Modifier
+            .width(thumbSize)
+            .wrapContentHeight()
+            .clip(RoundedCornerShape(10.dp))
+            .clickable { onClick() },
+    ) {
+        Box(
+            modifier = Modifier
+                .size(thumbSize)
+                .clip(RoundedCornerShape(10.dp)),
+        ) {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(thumb)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize(),
+                placeholder = painterResource(R.drawable.baseline_album_24),
+                error = painterResource(R.drawable.baseline_album_24),
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = title,
+            style = typo().titleSmall,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(horizontal = 4.dp),
+        )
+    }
+}
+
+@Composable
+fun SongFullWidthItems(
+    songEntity: SongEntity,
+    isPlaying: Boolean,
+    modifier: Modifier = Modifier,
+    onMoreClickListener: (String) -> Unit = {},
+    onClickListener: (String) -> Unit = {},
+    onAddToQueue: (String) -> Unit = {},
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onClickListener(songEntity.videoId) }
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(songEntity.thumbnail)
+                .crossfade(true)
+                .build(),
+            contentDescription = null,
+            modifier = Modifier
+                .size(50.dp)
+                .clip(RoundedCornerShape(4.dp)),
+            contentScale = ContentScale.Crop
+        )
+        Spacer(Modifier.width(12.dp))
+        Column(Modifier.weight(1f)) {
+            Text(
+                text = songEntity.title,
+                style = typo().titleSmall,
+                color = Color.White,
+                maxLines = 1
+            )
+            Text(
+                text = songEntity.artistName ?: "",
+                style = typo().bodySmall,
+                color = Color.LightGray,
+                maxLines = 1
+            )
+        }
+        IconButton(onClick = { onMoreClickListener(songEntity.videoId) }) {
+            Icon(
+                painter = painterResource(R.drawable.more_vert),
+                contentDescription = null,
+                tint = Color.White
+            )
+        }
+    }
+}
+
+@Composable
+fun ArtistFullWidthItems(
+    data: ArtistEntity,
+    modifier: Modifier = Modifier,
+    onClickListener: (String) -> Unit,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onClickListener(data.channelId ?: "") }
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(data.thumbnail)
+                .crossfade(true)
+                .build(),
+            contentDescription = null,
+            modifier = Modifier
+                .size(50.dp)
+                .clip(CircleShape),
+            contentScale = ContentScale.Crop
+        )
+        Spacer(Modifier.width(12.dp))
+        Text(
+            text = data.name,
+            style = typo().titleSmall,
+            color = Color.White,
+            modifier = Modifier.weight(1f)
+        )
+    }
+}
+
+@Composable
+fun PlaylistFullWidthItems(
+    data: PlaylistType,
+    modifier: Modifier = Modifier,
+    onClickListener: () -> Unit,
+) {
+    val title = when (data) {
+        is PlaylistEntity -> data.name
+        is AlbumEntity -> data.title
+        else -> ""
+    }
+    val thumb = when (data) {
+        is PlaylistEntity -> data.thumbnail
+        is AlbumEntity -> data.thumbnails
+        else -> null
+    }
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onClickListener() }
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(thumb)
+                .crossfade(true)
+                .build(),
+            contentDescription = null,
+            modifier = Modifier
+                .size(50.dp)
+                .clip(RoundedCornerShape(4.dp)),
+            contentScale = ContentScale.Crop
+        )
+        Spacer(Modifier.width(12.dp))
+        Text(
+            text = title,
+            style = typo().titleSmall,
+            color = Color.White,
+            modifier = Modifier.weight(1f)
+        )
+    }
+}
+
 @Composable
 fun QuickPicksItem(
-    onClickListener: (videoId: String) -> Unit,
-    onMoreClickListener: (videoId: String) -> Unit,
+    onClick: () -> Unit,
+    onMoreClickListener: (String) -> Unit = {},
     data: Content,
     widthDp: Dp,
 ) {
@@ -207,7 +405,7 @@ fun QuickPicksItem(
                 .padding(vertical = 5.dp, horizontal = 10.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .clickable {
-                    data.videoId?.let { onClickListener(it) }
+                    onClick()
                 },
     ) {
         val thumb = data.thumbnails?.lastOrNull()?.url
@@ -261,8 +459,9 @@ fun QuickPicksItem(
 
 @Composable
 fun ItemArtistChart(
-    item: ArtistItemCompat,
     onClick: () -> Unit,
+    data: ArtistItemCompat,
+    widthDp: Dp = 120.dp,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -272,7 +471,7 @@ fun ItemArtistChart(
                 .clickable { onClick() }
                 .padding(8.dp),
     ) {
-        val thumb = item.thumbnails?.lastOrNull()?.url
+        val thumb = data.thumbnails?.lastOrNull()?.url
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(thumb)
@@ -289,7 +488,7 @@ fun ItemArtistChart(
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = item.name,
+            text = data.name,
             style = typo().bodySmall,
             textAlign = TextAlign.Center,
             maxLines = 1,
