@@ -42,7 +42,6 @@ import com.metrolist.innertube.models.SongItem
 import com.metrolist.innertube.YouTube
 import com.metrolist.music.playback.PlayerConnection
 import com.metrolist.music.extensions.toMediaItem
-import com.metrolist.music.extensions.toSongEntity
 import com.metrolist.music.extensions.metadata
 import com.metrolist.music.utils.Logger
 import com.metrolist.music.utils.LogLevel
@@ -50,11 +49,13 @@ import com.metrolist.music.utils.getDownloadFolderPath
 import com.metrolist.music.ui.utils.toByteArray
 import com.metrolist.music.models.xevrae.toLyrics
 import com.metrolist.music.models.xevrae.toLyricsEntity
-import com.metrolist.music.models.xevrae.XevraeModelExtensions.toTrack
-import com.metrolist.music.models.xevrae.XevraeModelExtensions.toListName
+import com.metrolist.music.models.xevrae.toTrack
+import com.metrolist.music.models.xevrae.toListName
+import com.metrolist.music.models.xevrae.toSongEntity
 import com.metrolist.music.models.xevrae.VersionManager
 import com.metrolist.music.viewmodels.xevrae.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -668,15 +669,15 @@ class SharedViewModel @Inject constructor(
 
             when (type) {
                 SONG_CLICK -> {
-                    playerConnection.getRelatedSongs(track.id)
+                    playerConnection.database.getRelatedSongs(track.id)
                 }
 
                 VIDEO_CLICK -> {
-                    playerConnection.getRelatedSongs(track.id)
+                    playerConnection.database.getRelatedSongs(track.id)
                 }
 
                 SHARE -> {
-                    playerConnection.getRelatedSongs(track.id)
+                    playerConnection.database.getRelatedSongs(track.id)
                 }
 
                 PLAYLIST_CLICK -> {
