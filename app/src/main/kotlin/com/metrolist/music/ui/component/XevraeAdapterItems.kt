@@ -271,7 +271,7 @@ fun SongFullWidthItems(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onClickListener(songEntity.videoId) }
+            .clickable { onClickListener(songEntity.id) }
             .padding(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -301,7 +301,7 @@ fun SongFullWidthItems(
                 maxLines = 1
             )
         }
-        IconButton(onClick = { onMoreClickListener(songEntity.videoId) }) {
+        IconButton(onClick = { onMoreClickListener(songEntity.id) }) {
             Icon(
                 painter = painterResource(R.drawable.more_vert),
                 contentDescription = null,
