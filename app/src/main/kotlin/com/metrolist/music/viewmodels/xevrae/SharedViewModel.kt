@@ -213,10 +213,10 @@ class SharedViewModel @Inject constructor(
                                 Pair(timeLine, nowPlayingState)
                             }
                         }.distinctUntilChanged { old, new ->
-                            (old.first.total.toString() + old.second.songEntity?.videoId).hashCode() ==
-                                (new.first.total.toString() + new.second.songEntity?.videoId).hashCode()
+                            (old.first.total.toString() + old.second.songEntity?.id).hashCode() ==
+                                (new.first.total.toString() + new.second.songEntity?.id).hashCode()
                         }.collectLatest {
-                            log("Timeline job ${(it.first.total.toString() + it.second.songEntity?.videoId).hashCode()}")
+                            log("Timeline job ${(it.first.total.toString() + it.second.songEntity?.id).hashCode()}")
                             val nowPlaying = it.second
                             val timeline = it.first
                             if (timeline.total > 0 && nowPlaying.songEntity != null) {
@@ -300,7 +300,7 @@ class SharedViewModel @Inject constructor(
                         _nowPlayingScreenData.value =
                             NowPlayingScreenData(
                                 nowPlayingTitle = track.title,
-                                artistName = track.artistName?.joinToString(", ") ?: "",
+                                artistName = state.track?.artists?.firstOrNull()?.name ?: "",
                                 isVideo = false,
                                 thumbnailURL = null,
                                 canvasData = null,
@@ -496,9 +496,9 @@ class SharedViewModel @Inject constructor(
             val downloadedCacheKeys = cacheRepository.getAllCacheKeys(DOWNLOAD_CACHE)
             songRepository.getDownloadedSongs().first().let { songs ->
                 songs?.forEach { song ->
-                    if (!downloadedCacheKeys.contains(song.videoId)) {
+                    if (!downloadedCacheKeys.contains(song.id)) {
                         songRepository.updateDownloadState(
-                            song.videoId,
+                            song.id,
                             DownloadState.STATE_NOT_DOWNLOADED,
                         )
                     }
@@ -806,7 +806,7 @@ class SharedViewModel @Inject constructor(
             songRepository.getDownloadingSongs().collect { songs ->
                 songs?.forEach { song ->
                     songRepository.updateDownloadState(
-                        song.videoId,
+                        song.id,
                         DownloadState.STATE_NOT_DOWNLOADED,
                     )
                 }
@@ -814,7 +814,7 @@ class SharedViewModel @Inject constructor(
             songRepository.getPreparingSongs().collect { songs ->
                 songs.forEach { song ->
                     songRepository.updateDownloadState(
-                        song.videoId,
+                        song.id,
                         DownloadState.STATE_NOT_DOWNLOADED,
                     )
                 }
@@ -1029,7 +1029,7 @@ class SharedViewModel @Inject constructor(
                 dataStoreManager.helpBuildLyricsDatabase.first() == true
             } &&
                 lyricsProvider != LyricsProvider.XEVRAE
-        if (_nowPlayingState.value?.songEntity?.videoId == videoId) {
+        if (_nowPlayingState.value?.songEntity?.id == videoId) {
             val track = _nowPlayingState.value?.track
             when (isTranslatedLyrics) {
                 true -> {
@@ -1132,22 +1132,12 @@ class SharedViewModel @Inject constructor(
         duration: Int,
     ) {
         viewModelScope.launch {
-            val videoId = song.videoId
+            val videoId = song.id
             log("Get Lyrics From Format for $videoId", LogLevel.WARN)
-            val artistName = song.artistName
             val artist =
-                if (artistName?.firstOrNull() != null &&
-                    artistName
-                        .firstOrNull()
-                        ?.contains("Various Artists") == false
-                ) {
-                    artistName.firstOrNull() ?: ""
-                } else {
-                    playerConnection.mediaMetadata
-                        .first<androidx.media3.common.MediaMetadata?>()
-                        ?.artist?.toString()
-                        ?: ""
-                }
+                playerConnection.mediaMetadata
+                    .value
+                    ?.artist?.toString() ?: ""
             resetLyricsVoteState()
             val lyricsProvider = dataStoreManager.lyricsProvider.first()
             when (lyricsProvider) {
@@ -1297,7 +1287,7 @@ class SharedViewModel @Inject constructor(
                         is Resource.Success if (data != null) -> {
                             Logger.d(tag, "Get Lyrics Data Success")
                             updateLyrics(
-                                song.videoId,
+                                song.id,
                                 duration,
                                 res.data,
                                 false,
@@ -1305,11 +1295,11 @@ class SharedViewModel @Inject constructor(
                             )
                             insertLyrics(
                                 res.data?.toLyricsEntity(
-                                    song.videoId,
+                                    song.id,
                                 ) ?: return@collectLatest,
                             )
                             getAITranslationLyrics(
-                                song.videoId,
+                                song.id,
                                 data,
                             )
                         }
@@ -1343,7 +1333,7 @@ class SharedViewModel @Inject constructor(
                         is Resource.Success if (data != null) -> {
                             Logger.d(tag, "Get BetterLyrics Success")
                             updateLyrics(
-                                song.videoId,
+                                song.id,
                                 duration,
                                 data,
                                 false,
@@ -1351,11 +1341,11 @@ class SharedViewModel @Inject constructor(
                             )
                             insertLyrics(
                                 data.toLyricsEntity(
-                                    song.videoId,
+                                    song.id,
                                 ),
                             )
                             getAITranslationLyrics(
-                                song.videoId,
+                                song.id,
                                 data,
                             )
                         }
@@ -1363,7 +1353,7 @@ class SharedViewModel @Inject constructor(
                         else -> {
                             log("Get BetterLyrics Error: ${res.message}")
                             getXevraeLyrics(
-                                song.videoId,
+                                song.id,
                                 song,
                                 artist,
                                 duration,

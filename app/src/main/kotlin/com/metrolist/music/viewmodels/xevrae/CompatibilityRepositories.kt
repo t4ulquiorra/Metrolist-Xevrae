@@ -285,6 +285,18 @@ class LyricsCanvasRepository @Inject constructor(
         language: String
     ): Flow<LocalResource<Lyrics>> = flow { emit(LocalResource.Loading()) }
 
+    fun getLrclibLyricsData(
+        artist: String,
+        title: String,
+        duration: Int
+    ): Flow<LocalResource<Lyrics>> = flow { emit(LocalResource.Loading()) }
+
+    fun getBetterLyrics(
+        artist: String,
+        title: String,
+        duration: Int
+    ): Flow<LocalResource<Lyrics>> = flow { emit(LocalResource.Loading()) }
+
     fun getXevraeLyrics(videoId: String): Flow<LocalResource<Lyrics>> =
         flow { emit(LocalResource.Loading()) }
 

@@ -2,6 +2,7 @@ package com.metrolist.music.models.xevrae
 import androidx.core.net.toUri
 
 import com.metrolist.music.db.entities.SongEntity
+import com.metrolist.music.db.entities.LyricsEntity
 
 fun SongsResult.toTrack(): Track =
     Track(
@@ -119,3 +120,9 @@ fun Track.toMediaItem() = androidx.media3.common.MediaItem.Builder()
             .build()
     )
     .build()
+
+fun Lyrics.toLyricsEntity(videoId: String): LyricsEntity =
+    LyricsEntity(
+        id = videoId,
+        lyrics = lines?.joinToString("\n") { it.words } ?: "",
+    )
