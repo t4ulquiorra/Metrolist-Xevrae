@@ -405,7 +405,7 @@ dependencies {
     coreLibraryDesugaring(libs.desugaring)
 
     implementation(libs.timber)
-    implementation(libs.uriKmp)
+    implementation(libs.uri.kmp)
 
     implementation(libs.adaptive)
     implementation(libs.adaptive.layout)
