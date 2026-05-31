@@ -378,6 +378,8 @@
     <string name="restore_success">Restore Success</string>
     <string name="library">Library</string>
     <string name="popular">Popular</string>
+    <string name="cancel">Cancel</string>
+    <string name="change">Change</string>
     <string name="error">Error</string>
     <string name="follow">Follow</string>
     <string name="removed_download">Removed download</string>

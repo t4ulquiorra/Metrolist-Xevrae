@@ -174,6 +174,11 @@ fun SettingScreen(
         viewModelStoreOwner = LocalActivity.current as ComponentActivity
     ),
 ) {
+    val cancelStr = stringResource(com.metrolist.music.R.string.cancel)
+    val changeStr = stringResource(com.metrolist.music.R.string.change)
+    val setStr = stringResource(com.metrolist.music.R.string.set)
+    val invalidStr = stringResource(com.metrolist.music.R.string.error)
+
     val platformContext = LocalPlatformContext.current
     val localDensity = LocalDensity.current
     val uriHandler = LocalUriHandler.current
@@ -385,10 +390,8 @@ fun SettingScreen(
                     },
                 )
                 val languageTitle = stringResource(com.metrolist.music.R.string.language)
-                val changeStr = stringResource(com.metrolist.music.R.string.change)
                 val warningTitle = stringResource(com.metrolist.music.R.string.warning)
                 val changeLanguageWarning = stringResource(com.metrolist.music.R.string.change_language_warning)
-                val cancelStr = stringResource(com.metrolist.music.R.string.cancel)
 
                 SettingItem(
                     title = languageTitle,
@@ -485,8 +488,6 @@ fun SettingScreen(
                 )
                 AnimatedVisibility(visible = prefer320kbpsStream, enter = slideInVertically() + fadeIn(), exit = slideOutVertically() + fadeOut()) {
                     val your320kbpsUrlTitle = stringResource(com.metrolist.music.R.string.your_320kbps_url)
-                    val invalidStr = stringResource(com.metrolist.music.R.string.invalid)
-                    val setStr = stringResource(com.metrolist.music.R.string.set)
                     SettingItem(
                         title = your320kbpsUrlTitle,
                         subtitle = your320kbpsUrl,
