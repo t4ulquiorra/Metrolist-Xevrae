@@ -16,7 +16,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.metrolist.innertube.YouTube
-import com.metrolist.innertube.models.Artist
 import com.metrolist.innertube.models.ArtistItem
 import com.metrolist.innertube.models.PlaylistItem
 import com.metrolist.innertube.utils.completed
@@ -48,15 +47,24 @@ import com.metrolist.music.constants.SongSortType
 import com.metrolist.music.constants.SongSortTypeKey
 import com.metrolist.music.constants.TopSize
 import com.metrolist.music.db.MusicDatabase
+import com.metrolist.music.db.entities.Album
 import com.metrolist.music.db.entities.AlbumEntity
+import com.metrolist.music.db.entities.Artist
 import com.metrolist.music.db.entities.ArtistEntity
+import com.metrolist.music.db.entities.Playlist
 import com.metrolist.music.db.entities.PlaylistEntity
+import com.metrolist.music.db.entities.Song
 import com.metrolist.music.db.entities.SongEntity
 import com.metrolist.music.domain.mediaservice.handler.PlaylistType as MetrolistPlaylistType
 import com.metrolist.music.domain.mediaservice.handler.QueueData
 import com.metrolist.music.utils.LocalResource
+import com.metrolist.music.utils.PodcastRefreshTrigger
+import com.metrolist.music.extensions.toEnum
+import com.metrolist.music.extensions.normalizeForSearch
 import com.metrolist.music.extensions.filterExplicitAlbums
 import com.metrolist.music.extensions.filterYoutubeShorts
+import com.metrolist.music.playback.queues.filterExplicit
+import com.metrolist.music.playback.queues.filterVideoSongs
 import com.metrolist.music.extensions.matchesNormalizedQuery
 import com.metrolist.music.models.toMediaMetadata
 import com.metrolist.music.models.xevrae.ChartItem
@@ -70,6 +78,7 @@ import com.metrolist.music.playback.DownloadUtil
 import com.metrolist.music.ui.screens.xevrae.library.LibraryDynamicPlaylistType
 import com.metrolist.music.utils.Resource
 import com.metrolist.music.utils.SyncUtils
+import com.metrolist.music.utils.dataStore
 import com.metrolist.music.utils.reportException
 import com.metrolist.music.viewmodels.xevrae.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -704,7 +713,7 @@ class LibraryViewModel @Inject constructor(
             database.events().collectLatest { events ->
                 val songs = events.map { it.song }.distinctBy { it.id }.take(20)
                 val temp = songs.map { 
-                    XevraeRecently(song = it, type = RecentlyType.Type.SONG) 
+                    XevraeRecently(song = it.song, type = RecentlyType.Type.SONG) 
                 }
                 _recentlyAdded.value = LocalResource.Success(temp.toImmutableList())
             }
@@ -755,8 +764,8 @@ class LibraryViewModel @Inject constructor(
                 database.playlistsByNameAsc()
             ) { albums, playlists ->
                 val temp = mutableListOf<PlaylistType>()
-                temp.addAll(albums.map { XevraePlaylist(albumEntity = it, type = PlaylistType.Type.ALBUM) })
-                temp.addAll(playlists.filter { !it.isEditable }.map { XevraePlaylist(entity = it, type = PlaylistType.Type.YOUTUBE_PLAYLIST) })
+                temp.addAll(albums.map { XevraePlaylist(albumEntity = it.album, type = PlaylistType.Type.ALBUM) })
+                temp.addAll(playlists.filter { !it.playlist.isEditable }.map { XevraePlaylist(entity = it.playlist, type = PlaylistType.Type.YOUTUBE_PLAYLIST) })
                 temp
             }.collectLatest {
                 _favoritePlaylist.value = LocalResource.Success(it)
@@ -795,7 +804,7 @@ class LibraryViewModel @Inject constructor(
         viewModelScope.launch {
             database.playlistsByNameAsc().collectLatest { playlists ->
                 val downloaded = playlists.filter { it.id == PlaylistEntity.DOWNLOADED_PLAYLIST_ID }
-                    .map { XevraePlaylist(entity = it, type = PlaylistType.Type.LOCAL) }
+                    .map { XevraePlaylist(entity = it.playlist, type = PlaylistType.Type.LOCAL) }
                 _downloadedPlaylist.value = LocalResource.Success(downloaded)
             }
         }
@@ -863,7 +872,7 @@ class LibraryDynamicPlaylistViewModel @Inject constructor(
     private fun getFollowedArtist() {
         viewModelScope.launch {
             database.artistsBookmarkedByNameAsc().collectLatest { followedArtist ->
-                _listFollowedArtist.value = followedArtist
+                _listFollowedArtist.value = followedArtist.map { it.artist }
             }
         }
     }
