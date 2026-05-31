@@ -1,10 +1,10 @@
 package com.metrolist.music.viewmodels.xevrae
 
 import androidx.compose.ui.graphics.Color
-import com.metrolist.music.db.entities.LocalPlaylistEntity
+import com.metrolist.music.models.xevrae.LocalPlaylistEntity
 import com.metrolist.music.models.xevrae.DownloadState
 import com.metrolist.music.domain.utils.FilterState
-import com.metrolist.music.ui.theme.md_theme_dark_background
+import com.metrolist.music.ui.theme.xevrae.md_theme_dark_background
 import java.time.LocalDateTime
 import com.metrolist.innertube.models.SongItem
 

@@ -415,7 +415,6 @@ dependencies {
 
     implementation(libs.haze)
     implementation(libs.haze.materials)
-    implementation(libs.haze.state)
     implementation(libs.liquid.glass)
     implementation(libs.kmpalette.core)
     implementation(libs.kmpalette.network)
