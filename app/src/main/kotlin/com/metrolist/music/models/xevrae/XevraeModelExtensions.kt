@@ -126,3 +126,8 @@ fun Lyrics.toLyricsEntity(videoId: String): LyricsEntity =
         id = videoId,
         lyrics = lines?.joinToString("\n") { it.words } ?: "",
     )
+
+fun LyricsEntity.toLyrics(): Lyrics = Lyrics(
+    lines = lyrics.split("\n").map { Line(words = it, endTimeMs = "", startTimeMs = "") },
+    syncType = null
+)

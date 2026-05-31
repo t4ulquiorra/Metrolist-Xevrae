@@ -48,6 +48,8 @@ import com.metrolist.music.utils.Logger
 import com.metrolist.music.utils.LogLevel
 import com.metrolist.music.utils.getDownloadFolderPath
 import com.metrolist.music.ui.utils.toByteArray
+import com.metrolist.music.models.xevrae.toLyrics
+import com.metrolist.music.models.xevrae.toLyricsEntity
 import com.metrolist.music.models.xevrae.XevraeModelExtensions.toTrack
 import com.metrolist.music.models.xevrae.XevraeModelExtensions.toListName
 import com.metrolist.music.models.xevrae.VersionManager
@@ -596,7 +598,7 @@ class SharedViewModel @Inject constructor(
             val localSong = songRepository.getSongById(videoId).firstOrNull()
             if (localSong != null) {
                 val track = localSong.toTrack()
-                playerConnection.setQueueData(
+                setQueueData(
                     QueueData.Data(
                         listTracks = arrayListOf(track),
                         firstPlayedTrack = track,
@@ -612,7 +614,7 @@ class SharedViewModel @Inject constructor(
                     val track = response.data
                     when (response) {
                         is Resource.Success<*> -> if (track != null) {
-                            playerConnection.setQueueData(
+                            setQueueData(
                                 QueueData.Data(
                                     listTracks = arrayListOf(track),
                                     firstPlayedTrack = track,
@@ -666,15 +668,15 @@ class SharedViewModel @Inject constructor(
 
             when (type) {
                 SONG_CLICK -> {
-                    playerConnection.getRelated(track.id)
+                    playerConnection.getRelatedSongs(track.id)
                 }
 
                 VIDEO_CLICK -> {
-                    playerConnection.getRelated(track.id)
+                    playerConnection.getRelatedSongs(track.id)
                 }
 
                 SHARE -> {
-                    playerConnection.getRelated(track.id)
+                    playerConnection.getRelatedSongs(track.id)
                 }
 
                 PLAYLIST_CLICK -> {
