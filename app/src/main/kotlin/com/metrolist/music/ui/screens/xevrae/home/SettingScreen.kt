@@ -178,7 +178,15 @@ fun SettingScreen(
     val changeStr = stringResource(com.metrolist.music.R.string.change)
     val setStr = stringResource(com.metrolist.music.R.string.set)
     val invalidStr = stringResource(com.metrolist.music.R.string.error)
+    val socksStr = stringResource(com.metrolist.music.R.string.socks)
+    val httpStr = stringResource(com.metrolist.music.R.string.http)
+    val saveStr = stringResource(com.metrolist.music.R.string.save)
+    val noneStr = stringResource(com.metrolist.music.R.string.none)
+    val dailyStr = stringResource(com.metrolist.music.R.string.daily)
+    val weeklyStr = stringResource(com.metrolist.music.R.string.weekly)
+    val monthlyStr = stringResource(com.metrolist.music.R.string.monthly)
 
+    val proxyTypeTitle = stringResource(com.metrolist.music.R.string.proxy_type)
     val platformContext = LocalPlatformContext.current
     val localDensity = LocalDensity.current
     val uriHandler = LocalUriHandler.current
@@ -221,7 +229,7 @@ fun SettingScreen(
     // Open equalizer
     val resultLauncher = openEqResult(viewModel.getAudioSessionId())
 
-    val enableTranslucentNavBar by viewModel.translucentBottomBar.map { it == true }.collectAsStateWithLifecycle(initialValue = false)
+    val enableTranslucentNavBar by viewModel.translucentBottomBar.collectAsStateWithLifecycle(initialValue = false)
     val language by viewModel.language.collectAsStateWithLifecycle()
     val location by viewModel.location.collectAsStateWithLifecycle()
     val quality by viewModel.quality.collectAsStateWithLifecycle()
@@ -232,20 +240,20 @@ fun SettingScreen(
     val keepYoutubePlaylistOffline by viewModel.keepYouTubePlaylistOffline.collectAsStateWithLifecycle()
     val localTrackingEnabled by viewModel.localTrackingEnabled.collectAsStateWithLifecycle(initialValue = false)
     val combineLocalAndYouTubeLiked by viewModel.combineLocalAndYouTubeLiked.collectAsStateWithLifecycle()
-    val playVideo by viewModel.playVideoInsteadOfAudio.map { it == true }.collectAsStateWithLifecycle(initialValue = false)
+    val playVideo by viewModel.playVideoInsteadOfAudio.collectAsStateWithLifecycle(initialValue = false)
     val videoQuality by viewModel.videoQuality.collectAsStateWithLifecycle()
-    val sendData by viewModel.sendBackToGoogle.map { it == true }.collectAsStateWithLifecycle(initialValue = false)
-    val normalizeVolume by viewModel.normalizeVolume.map { it == true }.collectAsStateWithLifecycle(initialValue = false)
-    val skipSilent by viewModel.skipSilent.map { it == true }.collectAsStateWithLifecycle(initialValue = false)
-    val savePlaybackState by viewModel.savedPlaybackState.map { it == true }.collectAsStateWithLifecycle(initialValue = false)
-    val saveLastPlayed by viewModel.saveRecentSongAndQueue.map { it == true }.collectAsStateWithLifecycle(initialValue = false)
-    val killServiceOnExit by viewModel.killServiceOnExit.map { it == true }.collectAsStateWithLifecycle(initialValue = true)
+    val sendData by viewModel.sendBackToGoogle.collectAsStateWithLifecycle(initialValue = false)
+    val normalizeVolume by viewModel.normalizeVolume.collectAsStateWithLifecycle(initialValue = false)
+    val skipSilent by viewModel.skipSilent.collectAsStateWithLifecycle(initialValue = false)
+    val savePlaybackState by viewModel.savedPlaybackState.collectAsStateWithLifecycle(initialValue = false)
+    val saveLastPlayed by viewModel.saveRecentSongAndQueue.collectAsStateWithLifecycle(initialValue = false)
+    val killServiceOnExit by viewModel.killServiceOnExit.collectAsStateWithLifecycle(initialValue = true)
     val mainLyricsProvider by viewModel.mainLyricsProvider.collectAsStateWithLifecycle()
     val youtubeSubtitleLanguage by viewModel.youtubeSubtitleLanguage.collectAsStateWithLifecycle()
     val spotifyLoggedIn by viewModel.spotifyLogIn.collectAsStateWithLifecycle()
     val spotifyLyrics by viewModel.spotifyLyrics.collectAsStateWithLifecycle()
     val spotifyCanvas by viewModel.spotifyCanvas.collectAsStateWithLifecycle()
-    val enableSponsorBlock by viewModel.sponsorBlockEnabled.map { it == true }.collectAsStateWithLifecycle(initialValue = false)
+    val enableSponsorBlock by viewModel.sponsorBlockEnabled.collectAsStateWithLifecycle(initialValue = false)
     val skipSegments by viewModel.sponsorBlockCategories.collectAsStateWithLifecycle()
     val playerCache by viewModel.cacheSize.collectAsStateWithLifecycle()
     val downloadedCache by viewModel.downloadedCacheSize.collectAsStateWithLifecycle()
@@ -647,25 +655,19 @@ fun SettingScreen(
                             onClick = {
                                 viewModel.setAlertData(
                                     SettingAlertState(
-                                        title = stringResource(com.metrolist.music.R.string.proxy_type),
+                                        title = proxyTypeTitle,
                                         selectOne =
                                             SettingAlertState.SelectData(
                                                 listSelect =
                                                     listOf(
-                                                        (proxyType == DataStoreManager.ProxyType.PROXY_TYPE_HTTP) to
-                                                            runBlocking {
-                                                                stringResource(
-                                                                    com.metrolist.music.R.string.http,
-                                                                )
-                                                            },
-                                                        (proxyType == DataStoreManager.ProxyType.PROXY_TYPE_SOCKS) to
-                                                            stringResource(com.metrolist.music.R.string.socks),
+                                                        (proxyType == DataStoreManager.ProxyType.PROXY_TYPE_HTTP) to httpStr,
+                                                        (proxyType == DataStoreManager.ProxyType.PROXY_TYPE_SOCKS) to socksStr,
                                                     ),
                                             ),
                                         confirm =
-                                            stringResource(com.metrolist.music.R.string.change) to { state ->
+                                            changeStr to { state ->
                                                 viewModel.setProxy(
-                                                    if (state.selectOne?.getSelected() == stringResource(com.metrolist.music.R.string.socks)) {
+                                                    if (state.selectOne?.getSelected() == socksStr) {
                                                         DataStoreManager.ProxyType.PROXY_TYPE_SOCKS
                                                     } else {
                                                         DataStoreManager.ProxyType.PROXY_TYPE_HTTP
@@ -674,7 +676,7 @@ fun SettingScreen(
                                                     proxyPort,
                                                 )
                                             },
-                                        dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                        dismiss = cancelStr,
                                     ),
                                 )
                             },
@@ -1417,7 +1419,7 @@ fun SettingScreen(
                                                 .mapIndexed { index, item ->
                                                     (
                                                         skipSegments?.contains(
-                                                            SponsorBlockType.toList().getOrNull(index)?.value,
+                                                            SponsorBlockType.toList()[index].value,
                                                         ) == true
                                                     ) to item
                                                 }.also {
@@ -1426,17 +1428,15 @@ fun SettingScreen(
                                                 },
                                     ),
                                 confirm =
-                                    stringResource(com.metrolist.music.R.string.save) to { state ->
+                                    saveStr to { state ->
                                         viewModel.setSponsorBlockCategories(
                                             state.multipleSelect
                                                 ?.getListSelected()
                                                 ?.map { selected ->
                                                     listName.indexOf(selected)
                                                 }?.mapNotNull { s ->
-                                                    SponsorBlockType.toList().getOrNull(s).let {
-                                                        it?.value
-                                                    }
-                                                }?.toCollection(ArrayList()) ?: arrayListOf(),
+                                                    SponsorBlockType.toList().getOrNull(s)?.value
+                                                } ?: listOf(),
                                         )
                                     },
                                 dismiss = stringResource(com.metrolist.music.R.string.cancel),
@@ -1564,7 +1564,7 @@ fun SettingScreen(
                                                 },
                                         ),
                                     confirm =
-                                        stringResource(com.metrolist.music.R.string.change) to { state ->
+                                        changeStr to { state ->
                                             viewModel.setPlayerCacheLimit(
                                                 LIMIT_CACHE_SIZE.getDataFromItem(state.selectOne?.getSelected()),
                                             )
@@ -1823,41 +1823,23 @@ fun SettingScreen(
                                                 SettingAlertState.SelectData(
                                                     listSelect =
                                                         listOf(
-                                                            (autoBackupFrequency == DataStoreManager.AUTO_BACKUP_FREQUENCY_DAILY) to
-                                                                stringResource(com.metrolist.music.R.string.daily),
-                                                            (autoBackupFrequency == DataStoreManager.AUTO_BACKUP_FREQUENCY_WEEKLY) to
-                                                                stringResource(com.metrolist.music.R.string.weekly),
-                                                            (autoBackupFrequency == DataStoreManager.AUTO_BACKUP_FREQUENCY_MONTHLY) to
-                                                                stringResource(com.metrolist.music.R.string.monthly),
+                                                            (autoBackupFrequency == DataStoreManager.AUTO_BACKUP_FREQUENCY_DAILY) to dailyStr,
+                                                            (autoBackupFrequency == DataStoreManager.AUTO_BACKUP_FREQUENCY_WEEKLY) to weeklyStr,
+                                                            (autoBackupFrequency == DataStoreManager.AUTO_BACKUP_FREQUENCY_MONTHLY) to monthlyStr,
                                                         ),
-                                                ),
-                                            confirm =
-                                                stringResource(com.metrolist.music.R.string.change) to { state ->
+                                                    ),
+                                                    confirm =
+                                                    changeStr to { state ->
                                                     val frequency =
-                                                        when (state.selectOne?.getSelected()) {
-                                                            runBlocking {
-                                                                stringResource(
-                                                                    com.metrolist.music.R.string.daily,
-                                                                )
-                                                            },
-                                                            -> DataStoreManager.AUTO_BACKUP_FREQUENCY_DAILY
-                                                            runBlocking {
-                                                                stringResource(
-                                                                    com.metrolist.music.R.string.weekly,
-                                                                )
-                                                            },
-                                                            -> DataStoreManager.AUTO_BACKUP_FREQUENCY_WEEKLY
-                                                            runBlocking {
-                                                                stringResource(
-                                                                    com.metrolist.music.R.string.monthly,
-                                                                )
-                                                            },
-                                                            -> DataStoreManager.AUTO_BACKUP_FREQUENCY_MONTHLY
-                                                            else -> DataStoreManager.AUTO_BACKUP_FREQUENCY_DAILY
-                                                        }
+                                                    when (state.selectOne?.getSelected()) {
+                                                        dailyStr -> DataStoreManager.AUTO_BACKUP_FREQUENCY_DAILY
+                                                        weeklyStr -> DataStoreManager.AUTO_BACKUP_FREQUENCY_WEEKLY
+                                                        monthlyStr -> DataStoreManager.AUTO_BACKUP_FREQUENCY_MONTHLY
+                                                        else -> DataStoreManager.AUTO_BACKUP_FREQUENCY_DAILY
+                                                    }
                                                     viewModel.setAutoBackupFrequency(frequency)
                                                 },
-                                            dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                            dismiss = cancelStr,
                                         ),
                                     )
                                 },
@@ -1880,11 +1862,11 @@ fun SettingScreen(
                                                         ),
                                                 ),
                                             confirm =
-                                                stringResource(com.metrolist.music.R.string.change) to { state ->
+                                                changeStr to { state ->
                                                     val maxFiles = state.selectOne?.getSelected()?.toIntOrNull() ?: 5
                                                     viewModel.setAutoBackupMaxFiles(maxFiles)
                                                 },
-                                            dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                            dismiss = cancelStr,
                                         ),
                                     )
                                 },

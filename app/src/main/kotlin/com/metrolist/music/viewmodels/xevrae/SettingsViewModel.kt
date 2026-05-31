@@ -76,44 +76,44 @@ class SettingsViewModel @javax.inject.Inject constructor(
     val location: StateFlow<String?> = _location
     private var _language: MutableStateFlow<String?> = MutableStateFlow(null)
     val language: StateFlow<String?> = _language
-    private var _loggedIn: MutableStateFlow<String?> = MutableStateFlow(null)
-    val loggedIn: StateFlow<String?> = _loggedIn
-    private var _normalizeVolume: MutableStateFlow<String?> = MutableStateFlow(null)
-    val normalizeVolume: StateFlow<String?> = _normalizeVolume
-    private var _skipSilent: MutableStateFlow<String?> = MutableStateFlow(null)
-    val skipSilent: StateFlow<String?> = _skipSilent
-    private var _savedPlaybackState: MutableStateFlow<String?> = MutableStateFlow(null)
-    val savedPlaybackState: StateFlow<String?> = _savedPlaybackState
-    private var _saveRecentSongAndQueue: MutableStateFlow<String?> = MutableStateFlow(null)
-    val saveRecentSongAndQueue: StateFlow<String?> = _saveRecentSongAndQueue
+    private var _loggedIn: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val loggedIn: StateFlow<Boolean> = _loggedIn
+    private var _normalizeVolume: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val normalizeVolume: StateFlow<Boolean> = _normalizeVolume
+    private var _skipSilent: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val skipSilent: StateFlow<Boolean> = _skipSilent
+    private var _savedPlaybackState: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val savedPlaybackState: StateFlow<Boolean> = _savedPlaybackState
+    private var _saveRecentSongAndQueue: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val saveRecentSongAndQueue: StateFlow<Boolean> = _saveRecentSongAndQueue
     private var _lastCheckForUpdate: MutableStateFlow<String?> = MutableStateFlow(null)
     val lastCheckForUpdate: StateFlow<String?> = _lastCheckForUpdate
-    private var _sponsorBlockEnabled: MutableStateFlow<String?> = MutableStateFlow(null)
-    val sponsorBlockEnabled: StateFlow<String?> = _sponsorBlockEnabled
-    private var _sponsorBlockCategories: MutableStateFlow<ArrayList<String>?> =
+    private var _sponsorBlockEnabled: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val sponsorBlockEnabled: StateFlow<Boolean> = _sponsorBlockEnabled
+    private var _sponsorBlockCategories: MutableStateFlow<List<String>?> =
         MutableStateFlow(null)
-    val sponsorBlockCategories: StateFlow<ArrayList<String>?> = _sponsorBlockCategories
-    private var _sendBackToGoogle: MutableStateFlow<String?> = MutableStateFlow(null)
-    val sendBackToGoogle: StateFlow<String?> = _sendBackToGoogle
+    val sponsorBlockCategories: StateFlow<List<String>?> = _sponsorBlockCategories
+    private var _sendBackToGoogle: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val sendBackToGoogle: StateFlow<Boolean> = _sendBackToGoogle
     private var _mainLyricsProvider: MutableStateFlow<String?> = MutableStateFlow(null)
     val mainLyricsProvider: StateFlow<String?> = _mainLyricsProvider
 
     private var _translationLanguage: MutableStateFlow<String?> = MutableStateFlow(null)
     val translationLanguage: StateFlow<String?> = _translationLanguage
-    private var _useTranslation: MutableStateFlow<String?> = MutableStateFlow(null)
-    val useTranslation: StateFlow<String?> = _useTranslation
+    private var _useTranslation: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val useTranslation: StateFlow<Boolean> = _useTranslation
     private var _playerCacheLimit: MutableStateFlow<Int?> = MutableStateFlow(null)
     val playerCacheLimit: StateFlow<Int?> = _playerCacheLimit
-    private var _playVideoInsteadOfAudio: MutableStateFlow<String?> = MutableStateFlow(null)
-    val playVideoInsteadOfAudio: StateFlow<String?> = _playVideoInsteadOfAudio
+    private var _playVideoInsteadOfAudio: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val playVideoInsteadOfAudio: StateFlow<Boolean> = _playVideoInsteadOfAudio
     private var _videoQuality: MutableStateFlow<String?> = MutableStateFlow(null)
     val videoQuality: StateFlow<String?> = _videoQuality
     private var _thumbCacheSize = MutableStateFlow<Long?>(null)
     val thumbCacheSize: StateFlow<Long?> = _thumbCacheSize
     private var _canvasCacheSize: MutableStateFlow<Long?> = MutableStateFlow(null)
     val canvasCacheSize: StateFlow<Long?> = _canvasCacheSize
-    private var _translucentBottomBar: MutableStateFlow<String?> = MutableStateFlow(null)
-    val translucentBottomBar: StateFlow<String?> = _translucentBottomBar
+    private var _translucentBottomBar: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val translucentBottomBar: StateFlow<Boolean> = _translucentBottomBar
     private var _usingProxy = MutableStateFlow(false)
     val usingProxy: StateFlow<Boolean> = _usingProxy
     private var _proxyType = MutableStateFlow(DataStoreManager.ProxyType.PROXY_TYPE_HTTP)
@@ -224,8 +224,8 @@ class SettingsViewModel @javax.inject.Inject constructor(
     val fraction: StateFlow<SettingsStorageSectionFraction> = _fraction
 
     // Biến để lưu trữ và hiển thị trạng thái killServiceOnExit
-    private var _killServiceOnExit: MutableStateFlow<String?> = MutableStateFlow(null)
-    val killServiceOnExit: StateFlow<String?> = _killServiceOnExit
+    private var _killServiceOnExit: MutableStateFlow<Boolean> = MutableStateFlow(false)
+    val killServiceOnExit: StateFlow<Boolean> = _killServiceOnExit
 
     init {
         getYoutubeSubtitleLanguage()
@@ -1054,7 +1054,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
         }
     }
 
-    fun setSponsorBlockCategories(list: ArrayList<String>) {
+    fun setSponsorBlockCategories(list: List<String>) {
         log("setSponsorBlockCategories: $list", LogLevel.WARN)
         viewModelScope.launch {
             runBlocking(Dispatchers.IO) {
