@@ -293,11 +293,11 @@ fun SettingScreen(
     val checkForUpdateSubtitle by remember {
         derivedStateOf {
             if (isCheckingUpdate) {
-                return@derivedStateOf runBlocking { getString(com.metrolist.music.R.string.checking) }
+                return@derivedStateOf stringResource(com.metrolist.music.R.string.checking)
             } else {
                 val lastCheckLong = lastCheckUpdate?.toLong() ?: 0L
                 return@derivedStateOf runBlocking {
-                    getString(
+                    stringResource(
                         com.metrolist.music.R.string.last_checked_at,
                         DateTimeFormatter
                             .ofPattern("yyyy-MM-dd HH:mm:ss")
@@ -389,7 +389,7 @@ fun SettingScreen(
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = runBlocking { getString(com.metrolist.music.R.string.language) },
+                                title = stringResource(com.metrolist.music.R.string.language),
                                 selectOne =
                                     SettingAlertState.SelectData(
                                         listSelect =
@@ -398,23 +398,23 @@ fun SettingScreen(
                                             },
                                     ),
                                 confirm =
-                                    runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                    stringResource(com.metrolist.music.R.string.change) to { state ->
                                         val code = SUPPORTED_LANGUAGE.getCodeFromLanguage(state.selectOne?.getSelected() ?: "English")
                                         viewModel.setBasicAlertData(
                                             SettingBasicAlertState(
-                                                title = runBlocking { getString(com.metrolist.music.R.string.warning) },
-                                                message = runBlocking { getString(com.metrolist.music.R.string.change_language_warning) },
+                                                title = stringResource(com.metrolist.music.R.string.warning),
+                                                message = stringResource(com.metrolist.music.R.string.change_language_warning),
                                                 confirm =
-                                                    runBlocking { getString(com.metrolist.music.R.string.change) } to {
+                                                    stringResource(com.metrolist.music.R.string.change) to {
                                                         sharedViewModel.activityRecreate()
                                                         viewModel.setBasicAlertData(null)
                                                         viewModel.changeLanguage(code)
                                                     },
-                                                dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
                                             ),
                                         )
                                     },
-                                dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
                             ),
                         )
                     },
@@ -425,7 +425,7 @@ fun SettingScreen(
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = runBlocking { getString(com.metrolist.music.R.string.content_country) },
+                                title = stringResource(com.metrolist.music.R.string.content_country),
                                 selectOne =
                                     SettingAlertState.SelectData(
                                         listSelect =
@@ -434,12 +434,12 @@ fun SettingScreen(
                                             },
                                     ),
                                 confirm =
-                                    runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                    stringResource(com.metrolist.music.R.string.change) to { state ->
                                         viewModel.changeLocation(
                                             state.selectOne?.getSelected() ?: "US",
                                         )
                                     },
-                                dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
                             ),
                         )
                     },
@@ -451,7 +451,7 @@ fun SettingScreen(
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = runBlocking { getString(com.metrolist.music.R.string.quality) },
+                                title = stringResource(com.metrolist.music.R.string.quality),
                                 selectOne =
                                     SettingAlertState.SelectData(
                                         listSelect =
@@ -460,10 +460,10 @@ fun SettingScreen(
                                             },
                                     ),
                                 confirm =
-                                    runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                    stringResource(com.metrolist.music.R.string.change) to { state ->
                                         viewModel.changeQuality(state.selectOne?.getSelected())
                                     },
-                                dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
                             ),
                         )
                     },
@@ -482,21 +482,21 @@ fun SettingScreen(
                         onClick = {
                             viewModel.setAlertData(
                                 SettingAlertState(
-                                    title = runBlocking { getString(com.metrolist.music.R.string.your_320kbps_url) },
+                                    title = stringResource(com.metrolist.music.R.string.your_320kbps_url),
                                     textField =
                                         SettingAlertState.TextFieldData(
-                                            label = runBlocking { getString(com.metrolist.music.R.string.your_320kbps_url) },
+                                            label = stringResource(com.metrolist.music.R.string.your_320kbps_url),
                                             value = "",
                                             verifyCodeBlock = {
-                                                (it.isNotEmpty()) to runBlocking { getString(com.metrolist.music.R.string.invalid) }
+                                                (it.isNotEmpty()) to stringResource(com.metrolist.music.R.string.invalid)
                                             },
                                         ),
                                     message = "",
                                     confirm =
-                                        runBlocking { getString(com.metrolist.music.R.string.set) } to { state ->
+                                        stringResource(com.metrolist.music.R.string.set) to { state ->
                                             viewModel.setYour320kbpsUrl(state.textField?.value ?: "")
                                         },
-                                    dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                    dismiss = stringResource(com.metrolist.music.R.string.cancel),
                                 ),
                             )
                         },
@@ -509,7 +509,7 @@ fun SettingScreen(
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = runBlocking { getString(com.metrolist.music.R.string.download_quality) },
+                                title = stringResource(com.metrolist.music.R.string.download_quality),
                                 selectOne =
                                     SettingAlertState.SelectData(
                                         listSelect =
@@ -518,10 +518,10 @@ fun SettingScreen(
                                             },
                                     ),
                                 confirm =
-                                    runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                    stringResource(com.metrolist.music.R.string.change) to { state ->
                                         state.selectOne?.getSelected()?.let { viewModel.setDownloadQuality(it) }
                                     },
-                                dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
                             ),
                         )
                     },
@@ -538,7 +538,7 @@ fun SettingScreen(
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = runBlocking { getString(com.metrolist.music.R.string.video_quality) },
+                                title = stringResource(com.metrolist.music.R.string.video_quality),
                                 selectOne =
                                     SettingAlertState.SelectData(
                                         listSelect =
@@ -547,10 +547,10 @@ fun SettingScreen(
                                             },
                                     ),
                                 confirm =
-                                    runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                    stringResource(com.metrolist.music.R.string.change) to { state ->
                                         viewModel.changeVideoQuality(state.selectOne?.getSelected() ?: "")
                                     },
-                                dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
                             ),
                         )
                     },
@@ -561,7 +561,7 @@ fun SettingScreen(
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = runBlocking { getString(com.metrolist.music.R.string.video_download_quality) },
+                                title = stringResource(com.metrolist.music.R.string.video_download_quality),
                                 selectOne =
                                     SettingAlertState.SelectData(
                                         listSelect =
@@ -570,10 +570,10 @@ fun SettingScreen(
                                             },
                                     ),
                                 confirm =
-                                    runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                    stringResource(com.metrolist.music.R.string.change) to { state ->
                                         viewModel.setVideoDownloadQuality(state.selectOne?.getSelected() ?: "")
                                     },
-                                dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
                             ),
                         )
                     },
@@ -631,25 +631,25 @@ fun SettingScreen(
                             onClick = {
                                 viewModel.setAlertData(
                                     SettingAlertState(
-                                        title = runBlocking { getString(com.metrolist.music.R.string.proxy_type) },
+                                        title = stringResource(com.metrolist.music.R.string.proxy_type),
                                         selectOne =
                                             SettingAlertState.SelectData(
                                                 listSelect =
                                                     listOf(
                                                         (proxyType == DataStoreManager.ProxyType.PROXY_TYPE_HTTP) to
                                                             runBlocking {
-                                                                getString(
+                                                                stringResource(
                                                                     com.metrolist.music.R.string.http,
                                                                 )
                                                             },
                                                         (proxyType == DataStoreManager.ProxyType.PROXY_TYPE_SOCKS) to
-                                                            runBlocking { getString(com.metrolist.music.R.string.socks) },
+                                                            stringResource(com.metrolist.music.R.string.socks),
                                                     ),
                                             ),
                                         confirm =
-                                            runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                            stringResource(com.metrolist.music.R.string.change) to { state ->
                                                 viewModel.setProxy(
-                                                    if (state.selectOne?.getSelected() == runBlocking { getString(com.metrolist.music.R.string.socks) }) {
+                                                    if (state.selectOne?.getSelected() == stringResource(com.metrolist.music.R.string.socks)) {
                                                         DataStoreManager.ProxyType.PROXY_TYPE_SOCKS
                                                     } else {
                                                         DataStoreManager.ProxyType.PROXY_TYPE_HTTP
@@ -658,7 +658,7 @@ fun SettingScreen(
                                                     proxyPort,
                                                 )
                                             },
-                                        dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                        dismiss = stringResource(com.metrolist.music.R.string.cancel),
                                     ),
                                 )
                             },
@@ -669,25 +669,25 @@ fun SettingScreen(
                             onClick = {
                                 viewModel.setAlertData(
                                     SettingAlertState(
-                                        title = runBlocking { getString(com.metrolist.music.R.string.proxy_host) },
-                                        message = runBlocking { getString(com.metrolist.music.R.string.proxy_host_message) },
+                                        title = stringResource(com.metrolist.music.R.string.proxy_host),
+                                        message = stringResource(com.metrolist.music.R.string.proxy_host_message),
                                         textField =
                                             SettingAlertState.TextFieldData(
-                                                label = runBlocking { getString(com.metrolist.music.R.string.proxy_host) },
+                                                label = stringResource(com.metrolist.music.R.string.proxy_host),
                                                 value = proxyHost,
                                                 verifyCodeBlock = {
-                                                    isValidProxyHost(it) to runBlocking { getString(com.metrolist.music.R.string.invalid_host) }
+                                                    isValidProxyHost(it) to stringResource(com.metrolist.music.R.string.invalid_host)
                                                 },
                                             ),
                                         confirm =
-                                            runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                            stringResource(com.metrolist.music.R.string.change) to { state ->
                                                 viewModel.setProxy(
                                                     proxyType,
                                                     state.textField?.value ?: "",
                                                     proxyPort,
                                                 )
                                             },
-                                        dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                        dismiss = stringResource(com.metrolist.music.R.string.cancel),
                                     ),
                                 )
                             },
@@ -698,25 +698,25 @@ fun SettingScreen(
                             onClick = {
                                 viewModel.setAlertData(
                                     SettingAlertState(
-                                        title = runBlocking { getString(com.metrolist.music.R.string.proxy_port) },
-                                        message = runBlocking { getString(com.metrolist.music.R.string.proxy_port_message) },
+                                        title = stringResource(com.metrolist.music.R.string.proxy_port),
+                                        message = stringResource(com.metrolist.music.R.string.proxy_port_message),
                                         textField =
                                             SettingAlertState.TextFieldData(
-                                                label = runBlocking { getString(com.metrolist.music.R.string.proxy_port) },
+                                                label = stringResource(com.metrolist.music.R.string.proxy_port),
                                                 value = proxyPort.toString(),
                                                 verifyCodeBlock = {
-                                                    (it.toIntOrNull() != null) to runBlocking { getString(com.metrolist.music.R.string.invalid_port) }
+                                                    (it.toIntOrNull() != null) to stringResource(com.metrolist.music.R.string.invalid_port)
                                                 },
                                             ),
                                         confirm =
-                                            runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                            stringResource(com.metrolist.music.R.string.change) to { state ->
                                                 viewModel.setProxy(
                                                     proxyType,
                                                     proxyHost,
                                                     state.textField?.value?.toIntOrNull() ?: 0,
                                                 )
                                             },
-                                        dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                        dismiss = stringResource(com.metrolist.music.R.string.cancel),
                                     ),
                                 )
                             },
@@ -727,21 +727,21 @@ fun SettingScreen(
                             onClick = {
                                 viewModel.setAlertData(
                                     SettingAlertState(
-                                        title = runBlocking { getString(com.metrolist.music.R.string.proxy_username) },
-                                        message = runBlocking { getString(com.metrolist.music.R.string.proxy_username_message) },
+                                        title = stringResource(com.metrolist.music.R.string.proxy_username),
+                                        message = stringResource(com.metrolist.music.R.string.proxy_username_message),
                                         textField =
                                             SettingAlertState.TextFieldData(
-                                                label = runBlocking { getString(com.metrolist.music.R.string.proxy_username) },
+                                                label = stringResource(com.metrolist.music.R.string.proxy_username),
                                                 value = proxyUsername,
                                             ),
                                         confirm =
-                                            runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                            stringResource(com.metrolist.music.R.string.change) to { state ->
                                                 viewModel.setProxyCredentials(
                                                     state.textField?.value ?: "",
                                                     proxyPassword,
                                                 )
                                             },
-                                        dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                        dismiss = stringResource(com.metrolist.music.R.string.cancel),
                                     ),
                                 )
                             },
@@ -757,21 +757,21 @@ fun SettingScreen(
                             onClick = {
                                 viewModel.setAlertData(
                                     SettingAlertState(
-                                        title = runBlocking { getString(com.metrolist.music.R.string.proxy_password) },
-                                        message = runBlocking { getString(com.metrolist.music.R.string.proxy_password_message) },
+                                        title = stringResource(com.metrolist.music.R.string.proxy_password),
+                                        message = stringResource(com.metrolist.music.R.string.proxy_password_message),
                                         textField =
                                             SettingAlertState.TextFieldData(
-                                                label = runBlocking { getString(com.metrolist.music.R.string.proxy_password) },
+                                                label = stringResource(com.metrolist.music.R.string.proxy_password),
                                                 value = proxyPassword,
                                             ),
                                         confirm =
-                                            runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                            stringResource(com.metrolist.music.R.string.change) to { state ->
                                                 viewModel.setProxyCredentials(
                                                     proxyUsername,
                                                     state.textField?.value ?: "",
                                                 )
                                             },
-                                        dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                        dismiss = stringResource(com.metrolist.music.R.string.cancel),
                                     ),
                                 )
                             },
@@ -865,13 +865,13 @@ fun SettingScreen(
                             onClick = {
                                 viewModel.setAlertData(
                                     SettingAlertState(
-                                        title = runBlocking { getString(com.metrolist.music.R.string.crossfade_duration) },
+                                        title = stringResource(com.metrolist.music.R.string.crossfade_duration),
                                         selectOne =
                                             SettingAlertState.SelectData(
                                                 listSelect =
                                                     listOf(
                                                         (crossfadeDuration == DataStoreManager.CROSSFADE_DURATION_AUTO) to
-                                                            runBlocking { getString(com.metrolist.music.R.string.crossfade_auto) },
+                                                            stringResource(com.metrolist.music.R.string.crossfade_auto),
                                                         (crossfadeDuration == 1000) to "1s",
                                                         (crossfadeDuration == 2000) to "2s",
                                                         (crossfadeDuration == 3000) to "3s",
@@ -885,11 +885,11 @@ fun SettingScreen(
                                                     ),
                                             ),
                                         confirm =
-                                            runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                            stringResource(com.metrolist.music.R.string.change) to { state ->
                                                 val duration =
                                                     when (state.selectOne?.getSelected()) {
                                                         runBlocking {
-                                                            getString(
+                                                            stringResource(
                                                                 com.metrolist.music.R.string.crossfade_auto,
                                                             )
                                                         },
@@ -908,7 +908,7 @@ fun SettingScreen(
                                                     }
                                                 viewModel.setCrossfadeDuration(duration)
                                             },
-                                        dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                        dismiss = stringResource(com.metrolist.music.R.string.cancel),
                                     ),
                                 )
                             },
@@ -946,33 +946,33 @@ fun SettingScreen(
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = runBlocking { getString(com.metrolist.music.R.string.main_lyrics_provider) },
+                                title = stringResource(com.metrolist.music.R.string.main_lyrics_provider),
                                 selectOne =
                                     SettingAlertState.SelectData(
                                         listSelect =
                                             listOf(
                                                 (mainLyricsProvider == DataStoreManager.XEVRAE) to
-                                                    runBlocking { getString(com.metrolist.music.R.string.xevrae_lyrics) },
+                                                    stringResource(com.metrolist.music.R.string.xevrae_lyrics),
                                                 (mainLyricsProvider == DataStoreManager.YOUTUBE) to
-                                                    runBlocking { getString(com.metrolist.music.R.string.youtube_transcript) },
-                                                (mainLyricsProvider == DataStoreManager.LRCLIB) to runBlocking { getString(com.metrolist.music.R.string.lrclib) },
+                                                    stringResource(com.metrolist.music.R.string.youtube_transcript),
+                                                (mainLyricsProvider == DataStoreManager.LRCLIB) to stringResource(com.metrolist.music.R.string.lrclib),
                                                 (mainLyricsProvider == DataStoreManager.BETTER_LYRICS) to
-                                                    runBlocking { getString(com.metrolist.music.R.string.better_lyrics) },
+                                                    stringResource(com.metrolist.music.R.string.better_lyrics),
                                             ),
                                     ),
                                 confirm =
-                                    runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                    stringResource(com.metrolist.music.R.string.change) to { state ->
                                         viewModel.setLyricsProvider(
                                             when (state.selectOne?.getSelected()) {
-                                                runBlocking { getString(com.metrolist.music.R.string.xevrae_lyrics) } -> DataStoreManager.XEVRAE
-                                                runBlocking { getString(com.metrolist.music.R.string.youtube_transcript) } -> DataStoreManager.YOUTUBE
-                                                runBlocking { getString(com.metrolist.music.R.string.lrclib) } -> DataStoreManager.LRCLIB
-                                                runBlocking { getString(com.metrolist.music.R.string.better_lyrics) } -> DataStoreManager.BETTER_LYRICS
+                                                stringResource(com.metrolist.music.R.string.xevrae_lyrics) -> DataStoreManager.XEVRAE
+                                                stringResource(com.metrolist.music.R.string.youtube_transcript) -> DataStoreManager.YOUTUBE
+                                                stringResource(com.metrolist.music.R.string.lrclib) -> DataStoreManager.LRCLIB
+                                                stringResource(com.metrolist.music.R.string.better_lyrics) -> DataStoreManager.BETTER_LYRICS
                                                 else -> DataStoreManager.XEVRAE
                                             },
                                         )
                                     },
-                                dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
                             ),
                         )
                     },
@@ -984,22 +984,22 @@ fun SettingScreen(
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = runBlocking { getString(com.metrolist.music.R.string.translation_language) },
+                                title = stringResource(com.metrolist.music.R.string.translation_language),
                                 textField =
                                     SettingAlertState.TextFieldData(
-                                        label = runBlocking { getString(com.metrolist.music.R.string.translation_language) },
+                                        label = stringResource(com.metrolist.music.R.string.translation_language),
                                         value = translationLanguage ?: "",
                                         verifyCodeBlock = {
                                             (it.length == 2 && it.isTwoLetterCode()) to
-                                                runBlocking { getString(com.metrolist.music.R.string.invalid_language_code) }
+                                                stringResource(com.metrolist.music.R.string.invalid_language_code)
                                         },
                                     ),
-                                message = runBlocking { getString(com.metrolist.music.R.string.translation_language_message) },
+                                message = stringResource(com.metrolist.music.R.string.translation_language_message),
                                 confirm =
-                                    runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                    stringResource(com.metrolist.music.R.string.change) to { state ->
                                         viewModel.setTranslationLanguage(state.textField?.value ?: "")
                                     },
-                                dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
                             ),
                         )
                     },
@@ -1011,22 +1011,22 @@ fun SettingScreen(
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = runBlocking { getString(com.metrolist.music.R.string.youtube_subtitle_language) },
+                                title = stringResource(com.metrolist.music.R.string.youtube_subtitle_language),
                                 textField =
                                     SettingAlertState.TextFieldData(
-                                        label = runBlocking { getString(com.metrolist.music.R.string.youtube_subtitle_language) },
+                                        label = stringResource(com.metrolist.music.R.string.youtube_subtitle_language),
                                         value = youtubeSubtitleLanguage,
                                         verifyCodeBlock = {
                                             (it.length == 2 && it.isTwoLetterCode()) to
-                                                runBlocking { getString(com.metrolist.music.R.string.invalid_language_code) }
+                                                stringResource(com.metrolist.music.R.string.invalid_language_code)
                                         },
                                     ),
-                                message = runBlocking { getString(com.metrolist.music.R.string.youtube_subtitle_language_message) },
+                                message = stringResource(com.metrolist.music.R.string.youtube_subtitle_language_message),
                                 confirm =
-                                    runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                    stringResource(com.metrolist.music.R.string.change) to { state ->
                                         viewModel.setYoutubeSubtitleLanguage(state.textField?.value ?: "")
                                     },
-                                dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
                             ),
                         )
                     },
@@ -1043,18 +1043,18 @@ fun SettingScreen(
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = runBlocking { getString(com.metrolist.music.R.string.contributor_name) },
+                                title = stringResource(com.metrolist.music.R.string.contributor_name),
                                 textField =
                                     SettingAlertState.TextFieldData(
-                                        label = runBlocking { getString(com.metrolist.music.R.string.contributor_name) },
+                                        label = stringResource(com.metrolist.music.R.string.contributor_name),
                                         value = "",
                                     ),
                                 message = "",
                                 confirm =
-                                    runBlocking { getString(com.metrolist.music.R.string.set) } to { state ->
+                                    stringResource(com.metrolist.music.R.string.set) to { state ->
                                         viewModel.setContributorName(state.textField?.value ?: "")
                                     },
-                                dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
                             ),
                         )
                     },
@@ -1066,14 +1066,14 @@ fun SettingScreen(
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = runBlocking { getString(com.metrolist.music.R.string.contributor_email) },
+                                title = stringResource(com.metrolist.music.R.string.contributor_email),
                                 textField =
                                     SettingAlertState.TextFieldData(
-                                        label = runBlocking { getString(com.metrolist.music.R.string.contributor_email) },
+                                        label = stringResource(com.metrolist.music.R.string.contributor_email),
                                         value = "",
                                         verifyCodeBlock = {
                                             if (it.isNotEmpty()) {
-                                                (it.contains("@")) to runBlocking { getString(com.metrolist.music.R.string.invalid) }
+                                                (it.contains("@")) to stringResource(com.metrolist.music.R.string.invalid)
                                             } else {
                                                 true to ""
                                             }
@@ -1081,10 +1081,10 @@ fun SettingScreen(
                                     ),
                                 message = "",
                                 confirm =
-                                    runBlocking { getString(com.metrolist.music.R.string.set) } to { state ->
+                                    stringResource(com.metrolist.music.R.string.set) to { state ->
                                         viewModel.setContributorEmail(state.textField?.value ?: "")
                                     },
-                                dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
                             ),
                         )
                     },
@@ -1106,27 +1106,27 @@ fun SettingScreen(
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = runBlocking { getString(com.metrolist.music.R.string.ai_provider) },
+                                title = stringResource(com.metrolist.music.R.string.ai_provider),
                                 selectOne =
                                     SettingAlertState.SelectData(
                                         listSelect =
                                             listOf(
                                                 (mainLyricsProvider == DataStoreManager.AI_PROVIDER_OPENAI) to
-                                                    runBlocking { getString(com.metrolist.music.R.string.openai) },
+                                                    stringResource(com.metrolist.music.R.string.openai),
                                                 (mainLyricsProvider == DataStoreManager.AI_PROVIDER_GEMINI) to
-                                                    runBlocking { getString(com.metrolist.music.R.string.gemini) },
+                                                    stringResource(com.metrolist.music.R.string.gemini),
                                                 (mainLyricsProvider == DataStoreManager.AI_PROVIDER_CUSTOM_OPENAI) to
-                                                    runBlocking { getString(com.metrolist.music.R.string.openai_api_compatible) },
+                                                    stringResource(com.metrolist.music.R.string.openai_api_compatible),
                                             ),
                                     ),
                                 confirm =
-                                    runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                    stringResource(com.metrolist.music.R.string.change) to { state ->
                                         viewModel.setAIProvider(
                                             when (state.selectOne?.getSelected()) {
-                                                runBlocking { getString(com.metrolist.music.R.string.openai) } -> DataStoreManager.AI_PROVIDER_OPENAI
-                                                runBlocking { getString(com.metrolist.music.R.string.gemini) } -> DataStoreManager.AI_PROVIDER_GEMINI
+                                                stringResource(com.metrolist.music.R.string.openai) -> DataStoreManager.AI_PROVIDER_OPENAI
+                                                stringResource(com.metrolist.music.R.string.gemini) -> DataStoreManager.AI_PROVIDER_GEMINI
                                                 runBlocking {
-                                                    getString(
+                                                    stringResource(
                                                         com.metrolist.music.R.string.openai_api_compatible,
                                                     )
                                                 },
@@ -1136,7 +1136,7 @@ fun SettingScreen(
                                             },
                                         )
                                     },
-                                dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
                             ),
                         )
                     },
@@ -1147,21 +1147,21 @@ fun SettingScreen(
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = runBlocking { getString(com.metrolist.music.R.string.ai_api_key) },
+                                title = stringResource(com.metrolist.music.R.string.ai_api_key),
                                 textField =
                                     SettingAlertState.TextFieldData(
-                                        label = runBlocking { getString(com.metrolist.music.R.string.ai_api_key) },
+                                        label = stringResource(com.metrolist.music.R.string.ai_api_key),
                                         value = "",
                                         verifyCodeBlock = {
-                                            (it.isNotEmpty()) to runBlocking { getString(com.metrolist.music.R.string.invalid_api_key) }
+                                            (it.isNotEmpty()) to stringResource(com.metrolist.music.R.string.invalid_api_key)
                                         },
                                     ),
                                 message = "",
                                 confirm =
-                                    runBlocking { getString(com.metrolist.music.R.string.set) } to { state ->
+                                    stringResource(com.metrolist.music.R.string.set) to { state ->
                                         viewModel.setAIApiKey(state.textField?.value ?: "")
                                     },
-                                dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
                             ),
                         )
                     },
@@ -1172,21 +1172,21 @@ fun SettingScreen(
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = runBlocking { getString(com.metrolist.music.R.string.custom_ai_model_id) },
+                                title = stringResource(com.metrolist.music.R.string.custom_ai_model_id),
                                 textField =
                                     SettingAlertState.TextFieldData(
-                                        label = runBlocking { getString(com.metrolist.music.R.string.custom_ai_model_id) },
+                                        label = stringResource(com.metrolist.music.R.string.custom_ai_model_id),
                                         value = "",
                                         verifyCodeBlock = {
-                                            (it.isNotEmpty() && !it.contains(" ")) to runBlocking { getString(com.metrolist.music.R.string.invalid) }
+                                            (it.isNotEmpty() && !it.contains(" ")) to stringResource(com.metrolist.music.R.string.invalid)
                                         },
                                     ),
-                                message = runBlocking { getString(com.metrolist.music.R.string.custom_model_id_messages) },
+                                message = stringResource(com.metrolist.music.R.string.custom_model_id_messages),
                                 confirm =
-                                    runBlocking { getString(com.metrolist.music.R.string.set) } to { state ->
+                                    stringResource(com.metrolist.music.R.string.set) to { state ->
                                         viewModel.setCustomModelId(state.textField?.value ?: "")
                                     },
-                                dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
                             ),
                         )
                     },
@@ -1210,10 +1210,10 @@ fun SettingScreen(
                                         ),
                                     message = "Enter OpenAI-compatible API base URL (e.g., https://api.openai.com/v1/)",
                                     confirm =
-                                        runBlocking { getString(com.metrolist.music.R.string.set) } to { state ->
+                                        stringResource(com.metrolist.music.R.string.set) to { state ->
                                             viewModel.setCustomOpenAIBaseUrl(state.textField?.value ?: "")
                                         },
-                                    dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                    dismiss = stringResource(com.metrolist.music.R.string.cancel),
                                 ),
                             )
                         },
@@ -1245,10 +1245,10 @@ fun SettingScreen(
                                         ),
                                     message = "Enter custom headers in JSON format:\n{\"key1\":\"value1\",\"key2\":\"value2\"}",
                                     confirm =
-                                        runBlocking { getString(com.metrolist.music.R.string.set) } to { state ->
+                                        stringResource(com.metrolist.music.R.string.set) to { state ->
                                             viewModel.setCustomOpenAIHeaders(state.textField?.value ?: "")
                                         },
-                                    dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                    dismiss = stringResource(com.metrolist.music.R.string.cancel),
                                 ),
                             )
                         },
@@ -1373,7 +1373,7 @@ fun SettingScreen(
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = runBlocking { getString(com.metrolist.music.R.string.categories_sponsor_block) },
+                                title = stringResource(com.metrolist.music.R.string.categories_sponsor_block),
                                 multipleSelect =
                                     SettingAlertState.SelectData(
                                         listSelect =
@@ -1390,7 +1390,7 @@ fun SettingScreen(
                                                 },
                                     ),
                                 confirm =
-                                    runBlocking { getString(com.metrolist.music.R.string.save) } to { state ->
+                                    stringResource(com.metrolist.music.R.string.save) to { state ->
                                         viewModel.setSponsorBlockCategories(
                                             state.multipleSelect
                                                 ?.getListSelected()
@@ -1403,7 +1403,7 @@ fun SettingScreen(
                                                 }?.toCollection(ArrayList()) ?: arrayListOf(),
                                         )
                                     },
-                                dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
                             ),
                         )
                     },
@@ -1444,13 +1444,13 @@ fun SettingScreen(
                         onClick = {
                             viewModel.setBasicAlertData(
                                 SettingBasicAlertState(
-                                    title = runBlocking { getString(com.metrolist.music.R.string.clear_player_cache) },
+                                    title = stringResource(com.metrolist.music.R.string.clear_player_cache),
                                     message = null,
                                     confirm =
-                                        runBlocking { getString(com.metrolist.music.R.string.clear) } to {
+                                        stringResource(com.metrolist.music.R.string.clear) to {
                                             viewModel.clearPlayerCache()
                                         },
-                                    dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                    dismiss = stringResource(com.metrolist.music.R.string.cancel),
                                 ),
                             )
                         },
@@ -1461,13 +1461,13 @@ fun SettingScreen(
                         onClick = {
                             viewModel.setBasicAlertData(
                                 SettingBasicAlertState(
-                                    title = runBlocking { getString(com.metrolist.music.R.string.clear_downloaded_cache) },
+                                    title = stringResource(com.metrolist.music.R.string.clear_downloaded_cache),
                                     message = null,
                                     confirm =
-                                        runBlocking { getString(com.metrolist.music.R.string.clear) } to {
+                                        stringResource(com.metrolist.music.R.string.clear) to {
                                             viewModel.clearDownloadedCache()
                                         },
-                                    dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                    dismiss = stringResource(com.metrolist.music.R.string.cancel),
                                 ),
                             )
                         },
@@ -1478,13 +1478,13 @@ fun SettingScreen(
                         onClick = {
                             viewModel.setBasicAlertData(
                                 SettingBasicAlertState(
-                                    title = runBlocking { getString(com.metrolist.music.R.string.clear_thumbnail_cache) },
+                                    title = stringResource(com.metrolist.music.R.string.clear_thumbnail_cache),
                                     message = null,
                                     confirm =
-                                        runBlocking { getString(com.metrolist.music.R.string.clear) } to {
+                                        stringResource(com.metrolist.music.R.string.clear) to {
                                             viewModel.clearThumbnailCache(platformContext)
                                         },
-                                    dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                    dismiss = stringResource(com.metrolist.music.R.string.cancel),
                                 ),
                             )
                         },
@@ -1495,13 +1495,13 @@ fun SettingScreen(
                         onClick = {
                             viewModel.setBasicAlertData(
                                 SettingBasicAlertState(
-                                    title = runBlocking { getString(com.metrolist.music.R.string.clear_canvas_cache) },
+                                    title = stringResource(com.metrolist.music.R.string.clear_canvas_cache),
                                     message = null,
                                     confirm =
-                                        runBlocking { getString(com.metrolist.music.R.string.clear) } to {
+                                        stringResource(com.metrolist.music.R.string.clear) to {
                                             viewModel.clearCanvasCache()
                                         },
-                                    dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                    dismiss = stringResource(com.metrolist.music.R.string.cancel),
                                 ),
                             )
                         },
@@ -1512,7 +1512,7 @@ fun SettingScreen(
                         onClick = {
                             viewModel.setAlertData(
                                 SettingAlertState(
-                                    title = runBlocking { getString(com.metrolist.music.R.string.limit_player_cache) },
+                                    title = stringResource(com.metrolist.music.R.string.limit_player_cache),
                                     selectOne =
                                         SettingAlertState.SelectData(
                                             listSelect =
@@ -1521,12 +1521,12 @@ fun SettingScreen(
                                                 },
                                         ),
                                     confirm =
-                                        runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                        stringResource(com.metrolist.music.R.string.change) to { state ->
                                             viewModel.setPlayerCacheLimit(
                                                 LIMIT_CACHE_SIZE.getDataFromItem(state.selectOne?.getSelected()),
                                             )
                                         },
-                                    dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                    dismiss = stringResource(com.metrolist.music.R.string.cancel),
                                 ),
                             )
                         },
@@ -1775,37 +1775,37 @@ fun SettingScreen(
                                 onClick = {
                                     viewModel.setAlertData(
                                         SettingAlertState(
-                                            title = runBlocking { getString(com.metrolist.music.R.string.backup_frequency) },
+                                            title = stringResource(com.metrolist.music.R.string.backup_frequency),
                                             selectOne =
                                                 SettingAlertState.SelectData(
                                                     listSelect =
                                                         listOf(
                                                             (autoBackupFrequency == DataStoreManager.AUTO_BACKUP_FREQUENCY_DAILY) to
-                                                                runBlocking { getString(com.metrolist.music.R.string.daily) },
+                                                                stringResource(com.metrolist.music.R.string.daily),
                                                             (autoBackupFrequency == DataStoreManager.AUTO_BACKUP_FREQUENCY_WEEKLY) to
-                                                                runBlocking { getString(com.metrolist.music.R.string.weekly) },
+                                                                stringResource(com.metrolist.music.R.string.weekly),
                                                             (autoBackupFrequency == DataStoreManager.AUTO_BACKUP_FREQUENCY_MONTHLY) to
-                                                                runBlocking { getString(com.metrolist.music.R.string.monthly) },
+                                                                stringResource(com.metrolist.music.R.string.monthly),
                                                         ),
                                                 ),
                                             confirm =
-                                                runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                                stringResource(com.metrolist.music.R.string.change) to { state ->
                                                     val frequency =
                                                         when (state.selectOne?.getSelected()) {
                                                             runBlocking {
-                                                                getString(
+                                                                stringResource(
                                                                     com.metrolist.music.R.string.daily,
                                                                 )
                                                             },
                                                             -> DataStoreManager.AUTO_BACKUP_FREQUENCY_DAILY
                                                             runBlocking {
-                                                                getString(
+                                                                stringResource(
                                                                     com.metrolist.music.R.string.weekly,
                                                                 )
                                                             },
                                                             -> DataStoreManager.AUTO_BACKUP_FREQUENCY_WEEKLY
                                                             runBlocking {
-                                                                getString(
+                                                                stringResource(
                                                                     com.metrolist.music.R.string.monthly,
                                                                 )
                                                             },
@@ -1814,7 +1814,7 @@ fun SettingScreen(
                                                         }
                                                     viewModel.setAutoBackupFrequency(frequency)
                                                 },
-                                            dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                            dismiss = stringResource(com.metrolist.music.R.string.cancel),
                                         ),
                                     )
                                 },
@@ -1825,7 +1825,7 @@ fun SettingScreen(
                                 onClick = {
                                     viewModel.setAlertData(
                                         SettingAlertState(
-                                            title = runBlocking { getString(com.metrolist.music.R.string.keep_backups) },
+                                            title = stringResource(com.metrolist.music.R.string.keep_backups),
                                             selectOne =
                                                 SettingAlertState.SelectData(
                                                     listSelect =
@@ -1837,11 +1837,11 @@ fun SettingScreen(
                                                         ),
                                                 ),
                                             confirm =
-                                                runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                                stringResource(com.metrolist.music.R.string.change) to { state ->
                                                     val maxFiles = state.selectOne?.getSelected()?.toIntOrNull() ?: 5
                                                     viewModel.setAutoBackupMaxFiles(maxFiles)
                                                 },
-                                            dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                            dismiss = stringResource(com.metrolist.music.R.string.cancel),
                                         ),
                                     )
                                 },
@@ -1912,7 +1912,7 @@ fun SettingScreen(
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = runBlocking { getString(com.metrolist.music.R.string.update_channel) },
+                                title = stringResource(com.metrolist.music.R.string.update_channel),
                                 selectOne =
                                     SettingAlertState.SelectData(
                                         listSelect =
@@ -1922,7 +1922,7 @@ fun SettingScreen(
                                             ),
                                     ),
                                 confirm =
-                                    runBlocking { getString(com.metrolist.music.R.string.change) } to { state ->
+                                    stringResource(com.metrolist.music.R.string.change) to { state ->
                                         viewModel.setUpdateChannel(
                                             when (state.selectOne?.getSelected()) {
                                                 "F-Droid" -> DataStoreManager.FDROID
@@ -1931,7 +1931,7 @@ fun SettingScreen(
                                             },
                                         )
                                     },
-                                dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
                             ),
                         )
                     },
@@ -2148,14 +2148,14 @@ fun SettingScreen(
                             ) {
                                 viewModel.setBasicAlertData(
                                     SettingBasicAlertState(
-                                        title = runBlocking { getString(com.metrolist.music.R.string.warning) },
-                                        message = runBlocking { getString(com.metrolist.music.R.string.log_out_warning) },
+                                        title = stringResource(com.metrolist.music.R.string.warning),
+                                        message = stringResource(com.metrolist.music.R.string.log_out_warning),
                                         confirm =
-                                            runBlocking { getString(com.metrolist.music.R.string.log_out) } to {
+                                            stringResource(com.metrolist.music.R.string.log_out) to {
                                                 viewModel.logOutAllYouTube()
                                                 showYouTubeAccountDialog = false
                                             },
-                                        dismiss = runBlocking { getString(com.metrolist.music.R.string.cancel) },
+                                        dismiss = stringResource(com.metrolist.music.R.string.cancel),
                                     ),
                                 )
                             }
