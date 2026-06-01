@@ -92,7 +92,7 @@ class PlaylistViewModel @Inject constructor(
                 
                 // Get local entity if exists
                 database.playlistByBrowseId(id).collectLatest { entity ->
-                    _playlistEntity.value = entity
+                    _playlistEntity.value = entity?.playlist
                 }
             }.onFailure {
                 _uiState.value = Error(it.message ?: "Error")
@@ -176,7 +176,7 @@ class PlaylistViewModel @Inject constructor(
                     return
                 }
                 viewModelScope.launch {
-                    YouTube.next(shuffleEndpoint.videoId, shuffleEndpoint.playlistId, shuffleEndpoint.params).onSuccess { next ->
+                    YouTube.next(com.metrolist.innertube.models.WatchEndpoint(videoId = shuffleEndpoint.videoId, playlistId = shuffleEndpoint.playlistId, params = shuffleEndpoint.params)).onSuccess { next ->
                         val nextTracks = next.items.filterIsInstance<SongItem>()
                         if (nextTracks.isNotEmpty()) {
                             setQueueData(
@@ -202,7 +202,7 @@ class PlaylistViewModel @Inject constructor(
                     return
                 }
                 viewModelScope.launch {
-                    YouTube.next(radioEndpoint.videoId, radioEndpoint.playlistId, radioEndpoint.params).onSuccess { next ->
+                    YouTube.next(com.metrolist.innertube.models.WatchEndpoint(videoId = radioEndpoint.videoId, playlistId = radioEndpoint.playlistId, params = radioEndpoint.params)).onSuccess { next ->
                         val nextTracks = next.items.filterIsInstance<SongItem>()
                         if (nextTracks.isNotEmpty()) {
                             setQueueData(

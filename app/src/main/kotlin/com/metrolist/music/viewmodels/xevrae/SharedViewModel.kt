@@ -520,9 +520,7 @@ class SharedViewModel @Inject constructor(
                             val tracks = emptyList<Track>()
                             if (tracks.isEmpty() ||
                                 (
-                                    !downloadedCacheKeys.containsAll(
-                                        tracks,
-                                    )
+                                    false
                                 )
                             ) {
                                 albumRepository.updateAlbumDownloadState(
@@ -536,9 +534,7 @@ class SharedViewModel @Inject constructor(
                             val tracks = emptyList<Track>()
                             if (tracks.isEmpty() ||
                                 (
-                                    !downloadedCacheKeys.containsAll(
-                                        tracks,
-                                    )
+                                    false
                                 )
                             ) {
                                 playlistRepository.updatePlaylistDownloadState(
@@ -552,9 +548,7 @@ class SharedViewModel @Inject constructor(
                             val tracks = emptyList<Track>()
                             if (tracks.isEmpty() ||
                                 (
-                                    !downloadedCacheKeys.containsAll(
-                                        tracks,
-                                    )
+                                    false
                                 )
                             ) {
                                 localPlaylistRepository.updateLocalPlaylistDownloadState(

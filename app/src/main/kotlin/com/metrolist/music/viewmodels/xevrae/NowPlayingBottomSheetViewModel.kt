@@ -92,17 +92,17 @@ class NowPlayingBottomSheetViewModel @Inject constructor(
                 // In Metrolist we don't have a direct "library playlist" repo like Xevrae
                 // We'll use YouTube.libraryPlaylists()
                 runCatching {
-                    YouTube.libraryPlaylists()
-                }.onSuccess { playlists ->
+                    YouTube.library("FEmusic_liked_playlists")
+                }.onSuccess { libraryPage ->
                     _uiState.update { state ->
                         state.copy(
-                            listYouTubePlaylist = playlists?.map {
+                            listYouTubePlaylist = libraryPage.items.filterIsInstance<PlaylistItem>().map {
                                 PlaylistsResult(
                                     browseId = it.id,
-                                    title = it.name,
-                                    thumbnails = it.thumbnails?.map { t -> Thumbnail(t.url) }
+                                    title = it.title,
+                                    thumbnails = listOf(Thumbnail(it.thumbnail))
                                 )
-                            } ?: emptyList()
+                            }
                         )
                     }
                 }
@@ -120,17 +120,17 @@ class NowPlayingBottomSheetViewModel @Inject constructor(
         // unless we want to force refresh YouTube playlists
         viewModelScope.launch {
              runCatching {
-                YouTube.libraryPlaylists()
-            }.onSuccess { playlists ->
+                YouTube.library("FEmusic_liked_playlists")
+            }.onSuccess { libraryPage ->
                 _uiState.update { state ->
                     state.copy(
-                        listYouTubePlaylist = playlists?.map {
+                        listYouTubePlaylist = libraryPage.items.filterIsInstance<PlaylistItem>().map {
                             PlaylistsResult(
                                 browseId = it.id,
-                                title = it.name,
-                                thumbnails = it.thumbnails?.map { t -> Thumbnail(t.url) }
+                                title = it.title,
+                                thumbnails = listOf(Thumbnail(it.thumbnail))
                             )
-                        } ?: emptyList()
+                        }
                     )
                 }
             }
@@ -143,8 +143,8 @@ class NowPlayingBottomSheetViewModel @Inject constructor(
                 id = it.id,
                 title = it.title,
                 thumbnailUrl = it.thumbnailUrl,
-                albumId = it.albumId,
-                albumName = it.albumName,
+                albumId = null,
+                albumName = it.albumTitle?.toString(),
                 duration = it.duration
             )
         } ?: return)
@@ -203,7 +203,7 @@ class NowPlayingBottomSheetViewModel @Inject constructor(
             when (ev) {
                 is NowPlayingBottomSheetUIEvent.DeleteFromPlaylist -> {
                     val playlistId = "LP${ev.playlistId}"
-                    database.delete(PlaylistSongMap(playlistId, songUIState.videoId, 0))
+                    database.delete(PlaylistSongMap(playlistId = playlistId, songId = songUIState.videoId))
                     makeToast(getString(com.metrolist.music.R.string.delete_song_from_playlist))
                 }
 
@@ -253,8 +253,16 @@ class NowPlayingBottomSheetViewModel @Inject constructor(
 
                 is NowPlayingBottomSheetUIEvent.AddToPlaylist -> {
                     val playlistId = "LP${ev.playlistId}"
-                    database.addSongToPlaylist(playlistId, songUIState.videoId)
+                    database.insert(PlaylistSongMap(playlistId = playlistId, songId = songUIState.videoId))
                     makeToast(getString(com.metrolist.music.R.string.added_to_playlist))
+                }
+
+                is NowPlayingBottomSheetUIEvent.StartRadio -> {
+                    // stub - radio handled elsewhere
+                }
+
+                is NowPlayingBottomSheetUIEvent.Share -> {
+                    // stub
                 }
 
                 is NowPlayingBottomSheetUIEvent.PlayNext -> {
@@ -389,6 +397,4 @@ sealed class NowPlayingBottomSheetUIEvent {
     ) : NowPlayingBottomSheetUIEvent()
 
     data object Share : NowPlayingBottomSheetUIEvent()
-}
-  data object Share : NowPlayingBottomSheetUIEvent()
 }
