@@ -36,12 +36,13 @@ import com.metrolist.music.models.xevrae.SimpleMediaState
 import com.metrolist.music.models.xevrae.SleepTimerState
 import com.metrolist.music.models.xevrae.RepeatState
 import com.metrolist.music.domain.mediaservice.handler.QueueData
+import com.metrolist.music.domain.mediaservice.handler.PlaylistType
 import com.metrolist.music.domain.manager.DataStoreManager
 import com.metrolist.music.utils.Resource
 import com.metrolist.innertube.models.SongItem
 import com.metrolist.innertube.YouTube
 import com.metrolist.music.playback.PlayerConnection
-import com.metrolist.music.extensions.toMediaItem
+import com.metrolist.music.models.xevrae.toMediaItem
 import com.metrolist.music.extensions.metadata
 import com.metrolist.music.utils.Logger
 import com.metrolist.music.utils.LogLevel
@@ -64,6 +65,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.cancellable
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -371,7 +373,7 @@ class SharedViewModel @Inject constructor(
                                     androidx.media3.common.Player.REPEAT_MODE_ALL -> RepeatState.All
                                     else -> RepeatState.None
                                 },
-                            isLiked = song?.liked ?: false,
+                            isLiked = song?.song?.liked ?: false,
                             isNextAvailable = playerConnection.player.hasNextMediaItem(),
                             isPreviousAvailable = playerConnection.player.hasPreviousMediaItem(),
                             isCrossfading = false,
@@ -410,7 +412,7 @@ class SharedViewModel @Inject constructor(
             if (videoId != null) {
                 _likeStatus.value = false
                 songRepository.getLikeStatus(videoId).collectLatest { status ->
-                    _likeStatus.value = status
+                    _likeStatus.value = status != 0
                 }
             }
         }
@@ -434,19 +436,19 @@ class SharedViewModel @Inject constructor(
                                     canvasData =
                                         NowPlayingScreenData.CanvasData(
                                             isVideo = data.isVideo,
-                                            url = data.canvasUrl,
+                                            url = null,
                                         ),
                                 )
                             }
                             // Save canvas video url
-                            if (data.isVideo) lyricsCanvasRepository.updateCanvasUrl(videoId, data.canvasUrl)
+                            if (data.isVideo) lyricsCanvasRepository.updateCanvasUrl(videoId, "")
                             // Save canvas thumb url
                             data.canvasThumbUrl?.let { lyricsCanvasRepository.updateCanvasThumbUrl(videoId, it) }
                         }
 
                         else -> {
                             log("Get canvas error: ${response.message}", LogLevel.WARN)
-                            nowPlayingState.value?.songEntity?.canvasUrl?.let { url ->
+                            null?.let { url: String ->
                                 _nowPlayingScreenData.update {
                                     it.copy(
                                         canvasData =
@@ -514,7 +516,7 @@ class SharedViewModel @Inject constructor(
                 for (data in list) {
                     when (data) {
                         is AlbumEntity -> {
-                            val tracks = data.tracks ?: emptyList()
+                            val tracks = emptyList<Track>()
                             if (tracks.isEmpty() ||
                                 (
                                     !downloadedCacheKeys.containsAll(
@@ -530,7 +532,7 @@ class SharedViewModel @Inject constructor(
                         }
 
                         is PlaylistEntity -> {
-                            val tracks = data.tracks ?: emptyList()
+                            val tracks = emptyList<Track>()
                             if (tracks.isEmpty() ||
                                 (
                                     !downloadedCacheKeys.containsAll(
@@ -546,7 +548,7 @@ class SharedViewModel @Inject constructor(
                         }
 
                         is LocalPlaylistEntity -> {
-                            val tracks = data.tracks ?: emptyList()
+                            val tracks = emptyList<Track>()
                             if (tracks.isEmpty() ||
                                 (
                                     !downloadedCacheKeys.containsAll(
@@ -574,19 +576,19 @@ class SharedViewModel @Inject constructor(
 
     private fun getSavedLyrics(track: Track) {
         viewModelScope.launch {
-            lyricsCanvasRepository.getSavedLyrics(track.id).cancellable().collectLatest { lyrics ->
+            lyricsCanvasRepository.getSavedLyrics(track.videoId).cancellable().collectLatest { lyrics ->
                 if (lyrics != null) {
                     val lyricsData = lyrics.toLyrics()
                     Logger.d(tag, "Saved Lyrics $lyricsData")
                     updateLyrics(
-                        track.id,
+                        track.videoId,
                         track.durationSeconds ?: 0,
                         lyricsData,
                         false,
                         LyricsProvider.OFFLINE,
                     )
                     getAITranslationLyrics(
-                        track.id,
+                        track.videoId,
                         lyricsData,
                     )
                 }
@@ -601,8 +603,8 @@ class SharedViewModel @Inject constructor(
                 val track = localSong.toTrack()
                 setQueueData(
                     QueueData.Data(
-                        listTracks = arrayListOf(track),
-                        firstPlayedTrack = track,
+                        listTracks = emptyList<SongItem>(),
+                        firstPlayedTrack = null,
                         playlistId = "RDAMVM$videoId",
                         playlistName = getString(R.string.shared),
                         playlistType = PlaylistType.RADIO,
@@ -625,7 +627,7 @@ class SharedViewModel @Inject constructor(
                                     continuation = null,
                                 ),
                             )
-                            loadMediaItemFromTrack(track, SONG_CLICK)
+                            loadMediaItemFromTrack(track.toTrack(), SONG_CLICK)
                         }
 
                         else -> {
@@ -645,11 +647,11 @@ class SharedViewModel @Inject constructor(
     ) {
         quality = runBlocking { dataStoreManager.quality.first() }
         viewModelScope.launch {
-            playerConnection.clearMediaItems()
+//            playerConnection.clearMediaItems()
             songRepository.insertSong(track.toSongEntity()).lastOrNull()?.let {
                 println("insertSong: $it")
                 songRepository
-                    .getSongById(track.id)
+                    .getSongById(track.videoId)
                     .collect { songEntity ->
                         if (songEntity != null) {
                             Logger.w("Check like", "loadMediaItemFromTrack ${songEntity.liked}")
@@ -660,24 +662,25 @@ class SharedViewModel @Inject constructor(
             track.durationSeconds?.let {
                 songRepository.updateDurationSeconds(
                     it,
-                    track.id,
+                    track.videoId,
                 )
             }
             withContext(Dispatchers.Main) {
-                playerConnection.addMediaItem(track.toMediaItem(), playWhenReady = type != RECOVER_TRACK_QUEUE)
+                playerConnection.player.addMediaItem(track.toMediaItem())
+                if (type != RECOVER_TRACK_QUEUE) playerConnection.player.play()
             }
 
             when (type) {
                 SONG_CLICK -> {
-                    playerConnection.database.getRelatedSongs(track.id)
+                    playerConnection.database.getRelatedSongs(track.videoId)
                 }
 
                 VIDEO_CLICK -> {
-                    playerConnection.database.getRelatedSongs(track.id)
+                    playerConnection.database.getRelatedSongs(track.videoId)
                 }
 
                 SHARE -> {
-                    playerConnection.database.getRelatedSongs(track.id)
+                    playerConnection.database.getRelatedSongs(track.videoId)
                 }
 
                 PLAYLIST_CLICK -> {
@@ -1427,7 +1430,7 @@ class SharedViewModel @Inject constructor(
                 updateLyrics(
                     videoId,
                     0,
-                    savedTranslatedLyrics.toLyrics(),
+                    null,
                     true,
                 )
             } else {
@@ -1435,8 +1438,8 @@ class SharedViewModel @Inject constructor(
                     .getAITranslationLyrics(
                         videoId = videoId,
                         error = false,
-                        lines = lyrics.lines,
-                        syncType = lyrics.syncType,
+                        lines = null,
+                        syncType = lyrics.syncType ?: "",
                         language = dataStoreManager.translationLanguage.first() ?: "",
                     ).cancellable()
                     .collectLatest {
@@ -1487,18 +1490,18 @@ class SharedViewModel @Inject constructor(
                         if (data != null) {
                             insertLyrics(
                                 data.toLyricsEntity(
-                                    track.id,
+                                    track.videoId,
                                 ),
                             )
                             updateLyrics(
-                                track.id,
+                                track.videoId,
                                 duration ?: 0,
                                 data,
                                 false,
                                 LyricsProvider.SPOTIFY,
                             )
                             getAITranslationLyrics(
-                                track.id,
+                                track.videoId,
                                 data,
                             )
                         }
@@ -1838,7 +1841,7 @@ data class NowPlayingScreenData(
 ) {
     data class CanvasData(
         val isVideo: Boolean,
-        val url: String,
+        val url: String?,
     )
 
     data class LyricsData(
