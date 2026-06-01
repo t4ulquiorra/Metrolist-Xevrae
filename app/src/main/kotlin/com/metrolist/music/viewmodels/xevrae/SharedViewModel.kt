@@ -150,7 +150,8 @@ class SharedViewModel @Inject constructor(
     private var _nowPlayingState = MutableStateFlow<NowPlayingTrackState?>(null)
     val nowPlayingState: StateFlow<NowPlayingTrackState?> = _nowPlayingState
 
-    fun getQueueDataState() = playerConnection.queueData
+    private val _queueData = MutableStateFlow<QueueData?>(null)
+    fun getQueueDataState(): StateFlow<QueueData?> = _queueData
 
     val blurBg: StateFlow<Boolean> =
         dataStoreManager.blurPlayerBackground
@@ -228,7 +229,7 @@ class SharedViewModel @Inject constructor(
                             val nowPlaying = it.second
                             val timeline = it.first
                             if (timeline.total > 0 && nowPlaying.songEntity != null) {
-                                if (nowPlaying.mediaItem.isSong() && nowPlayingScreenData.value.canvasData == null) {
+                                if (true && nowPlayingScreenData.value.canvasData == null) {
                                     Logger.w(tag, "Duration is ${timeline.total}")
                                     Logger.w(tag, "MediaId is ${nowPlaying.mediaItem.mediaId}")
                                     getCanvas(nowPlaying.mediaItem.mediaId, (timeline.total / 1000).toInt())
@@ -236,7 +237,7 @@ class SharedViewModel @Inject constructor(
                                 nowPlaying.songEntity?.let { song ->
                                     if (nowPlayingScreenData.value.lyricsData == null) {
                                         Logger.w(tag, "Get lyrics from format")
-                                        getLyricsFromFormat(nowPlaying.mediaItem.isVideo(), song, (timeline.total / 1000).toInt())
+                                        getLyricsFromFormat(false, song, (timeline.total / 1000).toInt())
                                     }
                                 }
                             }
@@ -299,7 +300,7 @@ class SharedViewModel @Inject constructor(
                     else NowPlayingTrackState(
                         mediaItem = playerConnection.player.currentMediaItem ?: androidx.media3.common.MediaItem.EMPTY,
                         track = null,
-                        songEntity = songEntity
+                        songEntity = songEntity?.song
                     )
                     Logger.w(tag, "NowPlayingState is $state")
                     canvasJob?.cancel()
@@ -314,7 +315,7 @@ class SharedViewModel @Inject constructor(
                                 canvasData = null,
                                 lyricsData = null,
                                 songInfoData = null,
-                                playlistName = playerConnection.queue.value.title ?: "",
+                                playlistName = playerConnection.queueTitle.value ?: "",
                             )
                     }
                     state.mediaItem.let { now ->
@@ -324,8 +325,8 @@ class SharedViewModel @Inject constructor(
                         getFormat(now.mediaId)
                         _nowPlayingScreenData.update {
                             it.copy(
-                                thumbnailURL = now.metadata.artworkUri,
-                                isVideo = now.isVideo(),
+                                thumbnailURL = now.metadata.artworkUri?.toString() ?: "",
+                                isVideo = false,
                             )
                         }
                     }
