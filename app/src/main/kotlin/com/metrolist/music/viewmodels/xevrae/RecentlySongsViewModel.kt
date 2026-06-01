@@ -21,7 +21,7 @@ class RecentlySongsViewModel @Inject constructor(
     val recentlySongs: Flow<PagingData<SongEntity>> =
         database.events()
             .map { events ->
-                events.map { it.song }.distinctBy { it.id }
+                events.map { it.song.song }.distinctBy { it.id }
             }
             .map { songs ->
                 PagingData.from(songs)

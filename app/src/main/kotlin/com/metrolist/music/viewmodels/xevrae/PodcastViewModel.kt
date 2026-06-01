@@ -213,7 +213,7 @@ class PodcastViewModel @Inject constructor(
                         database.getSongByIdBlocking(episode.videoId)?.toMediaMetadata()
                     }.filterNotNull()
                     val index = metadataList.indexOfFirst { it.id == event.videoId }.coerceAtLeast(0)
-                    playerConnection.play(metadataList, index)
+                    playerConnection.play()
                 }
             }
 

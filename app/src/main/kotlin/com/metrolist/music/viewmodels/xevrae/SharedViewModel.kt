@@ -106,7 +106,7 @@ class SharedViewModel @Inject constructor(
     var isFirstSuggestions: Boolean = false
     var showedUpdateDialog: Boolean = false
 
-    val translationLanguage: StateFlow<String?> = dataStoreManager.translationLanguage.stateIn(
+    val translationLanguage: StateFlow<String?> = dataStoreManager.translationLanguage.stateIn<String?>(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = null
@@ -156,7 +156,7 @@ class SharedViewModel @Inject constructor(
     val blurBg: StateFlow<Boolean> =
         dataStoreManager.blurPlayerBackground
             .map { it == true }
-            .stateIn(
+            .stateIn<Boolean>(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(500L),
                 initialValue = false,
@@ -199,7 +199,7 @@ class SharedViewModel @Inject constructor(
     private var _likeStatus = MutableStateFlow<Boolean>(false)
     val likeStatus: StateFlow<Boolean> = _likeStatus
 
-    val openAppTime: StateFlow<Int> = dataStoreManager.openAppTime.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), 0)
+    val openAppTime: StateFlow<Int> = dataStoreManager.openAppTime.stateIn<Int>(viewModelScope, SharingStarted.WhileSubscribed(5000L), 0)
     private val _shareSavedLyrics: MutableStateFlow<Boolean> = MutableStateFlow(true)
     val shareSavedLyrics: StateFlow<Boolean> get() = _shareSavedLyrics
 
@@ -325,7 +325,7 @@ class SharedViewModel @Inject constructor(
                         getFormat(now.mediaId)
                         _nowPlayingScreenData.update {
                             it.copy(
-                                thumbnailURL = now.metadata.artworkUri?.toString() ?: "",
+                                thumbnailURL = now.mediaMetadata.artworkUri?.toString() ?: "",
                                 isVideo = false,
                             )
                         }
@@ -628,7 +628,7 @@ class SharedViewModel @Inject constructor(
                                     continuation = null,
                                 ),
                             )
-                            loadMediaItemFromTrack(track.toTrack(), SONG_CLICK)
+                            loadMediaItemFromTrack(null, SONG_CLICK)
                         }
 
                         else -> {

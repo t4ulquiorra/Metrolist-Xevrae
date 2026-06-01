@@ -239,7 +239,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
         }
     }
 
-    fun getAudioSessionId() = mediaPlayerHandler.player.audioSessionId
+    // fun getAudioSessionId() = mediaPlayerHandler.player.audioSessionId
 
     fun getData() {
         getLocation()
@@ -366,18 +366,18 @@ class SettingsViewModel @javax.inject.Inject constructor(
     }
 
     private fun getKeepYouTubePlaylistOffline() {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.keepYouTubePlaylistOffline.collect { keep ->
                 _keepYouTubePlaylistOffline.value = keep == true
             }
-        }
+        }*/
     }
 
     fun setKeepYouTubePlaylistOffline(keep: Boolean) {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.setKeepYouTubePlaylistOffline(keep)
             getKeepYouTubePlaylistOffline()
-        }
+        }*/
     }
 
     private fun getCombineLocalAndYouTubeLiked() {
@@ -396,18 +396,18 @@ class SettingsViewModel @javax.inject.Inject constructor(
     }
 
     private fun getKeepServiceAlive() {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.keepServiceAlive.collect { keepServiceAlive ->
                 _keepServiceAlive.value = keepServiceAlive == true
             }
-        }
+        }*/
     }
 
     fun setKeepServiceAlive(keepServiceAlive: Boolean) {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.setKeepServiceAlive(keepServiceAlive)
             getKeepServiceAlive()
-        }
+        }*/
     }
 
     private fun getCrossfadeEnabled() {
@@ -537,18 +537,18 @@ class SettingsViewModel @javax.inject.Inject constructor(
     }
 
     private fun getEnableLiquidGlass() {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.enableLiquidGlass.collect { enableLiquidGlass ->
                 _enableLiquidGlass.value = enableLiquidGlass == true
             }
-        }
+        }*/
     }
 
     fun setEnableLiquidGlass(enableLiquidGlass: Boolean) {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.setEnableLiquidGlass(enableLiquidGlass)
             getEnableLiquidGlass()
-        }
+        }*/
     }
 
     private fun getUpdateChannel() {
@@ -660,63 +660,63 @@ class SettingsViewModel @javax.inject.Inject constructor(
     }
 
     private fun getCustomModelId() {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.customModelId.collect { customModelId ->
                 _customModelId.value = customModelId
             }
-        }
+        }*/
     }
 
     fun setCustomModelId(modelId: String) {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.setCustomModelId(modelId)
             getCustomModelId()
-        }
+        }*/
     }
 
     private fun getCustomOpenAIBaseUrl() {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.customOpenAIBaseUrl.collect { baseUrl ->
                 _customOpenAIBaseUrl.value = baseUrl
             }
-        }
+        }*/
     }
 
     fun setCustomOpenAIBaseUrl(baseUrl: String) {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.setCustomOpenAIBaseUrl(baseUrl)
             getCustomOpenAIBaseUrl()
-        }
+        }*/
     }
 
     private fun getCustomOpenAIHeaders() {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.customOpenAIHeaders.collect { headers ->
                 _customOpenAIHeaders.value = headers
             }
-        }
+        }*/
     }
 
     fun setCustomOpenAIHeaders(headers: String) {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.setCustomOpenAIHeaders(headers)
             getCustomOpenAIHeaders()
-        }
+        }*/
     }
 
     private fun getAIProvider() {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.aiProvider.collect { aiProvider ->
                 _aiProvider.value = aiProvider
             }
-        }
+        }*/
     }
 
     fun setAIProvider(provider: String) {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.setAIProvider(provider)
             getAIProvider()
-        }
+        }*/
     }
 
     private fun getAITranslation() {
@@ -955,10 +955,10 @@ class SettingsViewModel @javax.inject.Inject constructor(
     }
 
     fun setUseTranslation(useTranslation: Boolean) {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.setEnableTranslateLyric(useTranslation)
             getUseTranslation()
-        }
+        }*/
     }
 
     fun getLyricsProvider() {
@@ -1039,10 +1039,10 @@ class SettingsViewModel @javax.inject.Inject constructor(
     }
 
     fun setPlayVideoInsteadOfAudio(playVideoInsteadOfAudio: Boolean) {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.setWatchVideoInsteadOfPlayingAudio(playVideoInsteadOfAudio)
             getPlayVideoInsteadOfAudio()
-        }
+        }*/
     }
 
     fun getSponsorBlockCategories() {
@@ -1127,12 +1127,12 @@ class SettingsViewModel @javax.inject.Inject constructor(
             cacheRepository.clearCache(Config.DOWNLOAD_CACHE)
             songRepository.getDownloadedSongs().singleOrNull()?.let { songs ->
                 songs.forEach { song ->
-                    songRepository.updateDownloadState(song.videoId, DownloadState.STATE_NOT_DOWNLOADED)
+                    songRepository.updateDownloadState(song.id, DownloadState.STATE_NOT_DOWNLOADED)
                 }
             }
             makeToast(getString(com.metrolist.music.R.string.clear_downloaded_cache))
             getDownloadedCacheSize()
-            downloadUtils.removeAllDownloads()
+            // downloadUtils.removeAllDownloads()
         }
     }
 
@@ -1200,48 +1200,48 @@ class SettingsViewModel @javax.inject.Inject constructor(
     }
 
     fun getNormalizeVolume() {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.normalizeVolume.collect { normalizeVolume ->
                 _normalizeVolume.emit(normalizeVolume)
             }
-        }
+        }*/
     }
 
     fun setNormalizeVolume(normalizeVolume: Boolean) {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.setNormalizeVolume(normalizeVolume)
             getNormalizeVolume()
-        }
+        }*/
     }
 
     fun getSendBackToGoogle() {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.sendBackToGoogle.collect { sendBackToGoogle ->
                 _sendBackToGoogle.emit(sendBackToGoogle)
             }
-        }
+        }*/
     }
 
     fun setSendBackToGoogle(sendBackToGoogle: Boolean) {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.setSendBackToGoogle(sendBackToGoogle)
             getSendBackToGoogle()
-        }
+        }*/
     }
 
     fun getSkipSilent() {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.skipSilent.collect { skipSilent ->
                 _skipSilent.emit(skipSilent)
             }
-        }
+        }*/
     }
 
     fun setSkipSilent(skip: Boolean) {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.setSkipSilent(skip)
             getSkipSilent()
-        }
+        }*/
     }
 
     fun getSavedPlaybackState() {
@@ -1337,7 +1337,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
         netscapeCookie: String? = null,
     ): Boolean {
         val currentCookie = dataStoreManager.cookie.first()
-        val currentPageId = dataStoreManager.pageId.first()
+        val currentPageId = ""//dataStoreManager.pageId.first()
         val currentLoggedIn = dataStoreManager.loggedIn.first() == true
         try {
             runBlocking {
@@ -1390,7 +1390,7 @@ class SettingsViewModel @javax.inject.Inject constructor(
                             }
                     }
                     dataStoreManager.setLoggedIn(true)
-                    dataStoreManager.setCookie(cookie, accountInfoList.first().pageId)
+                    dataStoreManager.setCookie(cookie, "")
                     getAllGoogleAccount()
                     getLoggedIn()
                     true
@@ -1572,18 +1572,18 @@ class SettingsViewModel @javax.inject.Inject constructor(
     }
 
     fun getYoutubeSubtitleLanguage() {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.youtubeSubtitleLanguage.collect { language ->
                 _youtubeSubtitleLanguage.emit(language)
             }
-        }
+        }*/
     }
 
     fun setYoutubeSubtitleLanguage(language: String) {
-        viewModelScope.launch {
+        /*viewModelScope.launch {
             dataStoreManager.setYoutubeSubtitleLanguage(language)
             getYoutubeSubtitleLanguage()
-        }
+        }*/
     }
 
     fun getHelpBuildLyricsDatabase() {
