@@ -35,6 +35,9 @@ import com.metrolist.music.utils.dataStore
 import com.metrolist.music.utils.get
 import com.metrolist.music.utils.reportException
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -243,6 +246,24 @@ class PlayerConnection(
             Timber.tag(TAG).e(e, "Error in playQueue")
             throw e
         }
+    }
+
+
+    val sleepTimerTimeRemaining: Flow<Long>
+        get() = flow {
+            while (true) {
+                val trigger = service.sleepTimer.triggerTime
+                emit(if (trigger == -1L) 0L else (trigger - System.currentTimeMillis()).coerceAtLeast(0L))
+                delay(1000L)
+            }
+        }
+
+    fun stopSleepTimer() {
+        service.sleepTimer.clear()
+    }
+
+    fun startSleepTimer(durationMs: Long) {
+        service.sleepTimer.start((durationMs / 1000L / 60L).toInt().coerceAtLeast(1))
     }
 
     fun startRadioSeamlessly() {

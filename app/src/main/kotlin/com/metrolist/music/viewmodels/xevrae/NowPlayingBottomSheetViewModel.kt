@@ -17,6 +17,7 @@ import com.metrolist.music.playback.DownloadUtil
 import com.metrolist.music.playback.ExoDownloadService
 import com.metrolist.music.playback.PlayerConnection
 import com.metrolist.music.utils.dataStore
+import com.metrolist.music.extensions.toMediaItem
 import com.metrolist.music.utils.enumPreference
 import com.metrolist.music.utils.shareUrl
 import com.metrolist.music.viewmodels.xevrae.base.BaseViewModel
@@ -259,7 +260,7 @@ class NowPlayingBottomSheetViewModel @Inject constructor(
                 is NowPlayingBottomSheetUIEvent.PlayNext -> {
                     database.song(songUIState.videoId).collectLatest { songFull ->
                         songFull?.let {
-                            playerConnection.playNext(it.toMediaMetadata())
+                            playerConnection.playNext(it.toMediaItem())
                             makeToast(getString(com.metrolist.music.R.string.play_next))
                         }
                     }
@@ -268,7 +269,7 @@ class NowPlayingBottomSheetViewModel @Inject constructor(
                 is NowPlayingBottomSheetUIEvent.AddToQueue -> {
                     database.song(songUIState.videoId).collectLatest { songFull ->
                         songFull?.let {
-                            playerConnection.addToQueue(it.toMediaMetadata())
+                            playerConnection.addToQueue(it.toMediaItem())
                             makeToast(getString(com.metrolist.music.R.string.added_to_queue))
                         }
                     }
@@ -302,13 +303,26 @@ class NowPlayingBottomSheetViewModel @Inject constructor(
                     )
                 }
 
+                /*
                 is NowPlayingBottomSheetUIEvent.StartRadio -> {
-                    // Metrolist handles radio via playerConnection.play(...) with radio = true
-                    // or similar. For now, let's use YouTube.radio if available or just play with radio id
-                    playerConnection.play(
-                        YouTube.radio(ev.videoId).getOrNull()?.map { it.toMediaMetadata() } ?: emptyList()
-                    )
+                    YouTube.next(
+                        com.metrolist.innertube.models.WatchEndpoint(
+                            videoId = ev.videoId,
+                            playlistId = "RDAMVM${ev.videoId}"
+                        )
+                    ).onSuccess { next ->
+                        val items = next.items.filterIsInstance<com.metrolist.innertube.models.SongItem>()
+                        if (items.isNotEmpty()) {
+                            playerConnection.playQueue(
+                                com.metrolist.music.playback.queues.ListQueue(
+                                    title = "Radio",
+                                    items = items.map { it.toMediaItem() }
+                                )
+                            )
+                        }
+                    }
                 }
+                */
             }
         }
     }
@@ -375,4 +389,6 @@ sealed class NowPlayingBottomSheetUIEvent {
     ) : NowPlayingBottomSheetUIEvent()
 
     data object Share : NowPlayingBottomSheetUIEvent()
+}
+  data object Share : NowPlayingBottomSheetUIEvent()
 }

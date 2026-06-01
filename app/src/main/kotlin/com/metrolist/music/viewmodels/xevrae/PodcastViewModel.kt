@@ -107,7 +107,7 @@ class PodcastViewModel @Inject constructor(
                         title = page.podcast.title,
                         author = Artist(page.podcast.author?.name ?: "", page.podcast.author?.id ?: ""),
                         authorThumbnail = null,
-                        thumbnail = listOf(Thumbnail(page.podcast.thumbnailUrl ?: "")),
+                        thumbnail = listOf(Thumbnail(page.podcast.thumbnail ?: "")),
                         description = null,
                         listEpisode = page.episodes.map {
                             PodcastBrowse.EpisodeItem(
@@ -193,7 +193,7 @@ class PodcastViewModel @Inject constructor(
                     val metadataList = podcastData.listEpisode.map { episode ->
                         database.getSongByIdBlocking(episode.videoId)?.toMediaMetadata()
                     }.filterNotNull()
-                    playerConnection.play(metadataList)
+                    playerConnection.play()
                 }
             }
 
@@ -202,7 +202,7 @@ class PodcastViewModel @Inject constructor(
                     val metadataList = podcastData.listEpisode.shuffled().map { episode ->
                         database.getSongByIdBlocking(episode.videoId)?.toMediaMetadata()
                     }.filterNotNull()
-                    playerConnection.play(metadataList)
+                    playerConnection.play()
                     playerConnection.player.shuffleModeEnabled = true
                 }
             }

@@ -620,15 +620,15 @@ class SharedViewModel @Inject constructor(
                         is Resource.Success<*> -> if (track != null) {
                             setQueueData(
                                 QueueData.Data(
-                                    listTracks = arrayListOf(track),
-                                    firstPlayedTrack = track,
+                                    listTracks = emptyList(),
+                                    firstPlayedTrack = null,
                                     playlistId = "RDAMVM$videoId",
                                     playlistName = getString(R.string.shared),
                                     playlistType = PlaylistType.RADIO,
                                     continuation = null,
                                 ),
                             )
-                            loadMediaItemFromTrack(null, SONG_CLICK)
+                            // loadMediaItemFromTrack(track, SONG_CLICK)
                         }
 
                         else -> {

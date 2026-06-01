@@ -229,9 +229,10 @@ class PlaylistViewModel @Inject constructor(
                 viewModelScope.launch {
                     val isLiked = liked.value
                     database.transaction {
-                        val entity = playlistByBrowseId(data.id).firstOrNull()
+                        val entity = null // playlistByBrowseId(data.id).firstOrNull()
                         if (entity != null) {
-                            update(entity.copy(bookmarkedAt = if (isLiked) null else LocalDateTime.now()))
+                            // update(entity.copy(bookmarkedAt = if (isLiked) null else LocalDateTime.now()))
+                            // TODO: copy not available
                         } else {
                             insert(PlaylistEntity(
                                 name = data.title,
