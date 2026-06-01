@@ -43,6 +43,15 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.metrolist.music.models.xevrae.NotificationEntity
 import com.metrolist.music.ui.component.CenterLoadingBox
+import com.metrolist.music.ui.component.EndOfPage
+import com.metrolist.music.ui.component.RippleIconButton
+import com.metrolist.music.ui.navigation.xevrae.destination.list.AlbumDestination
+import com.metrolist.music.ui.navigation.xevrae.destination.list.ArtistDestination
+import com.metrolist.music.ui.theme.xevrae.typo
+import com.metrolist.music.viewmodels.xevrae.NotificationViewModel
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 
 fun String.formatTimeAgo(): String {
     return try {
@@ -61,15 +70,6 @@ fun String.formatTimeAgo(): String {
         this
     }
 }
-import com.metrolist.music.ui.component.EndOfPage
-import com.metrolist.music.ui.component.RippleIconButton
-import com.metrolist.music.ui.navigation.xevrae.destination.list.AlbumDestination
-import com.metrolist.music.ui.navigation.xevrae.destination.list.ArtistDestination
-import com.metrolist.music.ui.theme.xevrae.typo
-import com.metrolist.music.viewmodels.xevrae.NotificationViewModel
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

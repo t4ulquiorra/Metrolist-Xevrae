@@ -127,12 +127,12 @@ fun ArtistSongsScreen(
 
             itemsIndexed(
                 items = songs,
-                key = { _, item -> item.id },
+                key = { _, item -> item.song.id },
             ) { index, song ->
                 SongListItem(
                     song = song,
                     showInLibraryIcon = true,
-                    isActive = song.id == mediaMetadata?.id,
+                    isActive = song.song.id == mediaMetadata?.id,
                     isPlaying = isPlaying,
                     trailingContent = {
                         IconButton(
@@ -157,13 +157,13 @@ fun ArtistSongsScreen(
                             .fillMaxWidth()
                             .combinedClickable(
                                 onClick = {
-                                    if (song.id == mediaMetadata?.id) {
+                                    if (song.song.id == mediaMetadata?.id) {
                                         playerConnection.togglePlayPause()
                                     } else {
                                         playerConnection.playQueue(
                                             ListQueue(
                                                 title = queueAllSongsStr,
-                                                items = songs.map { it.toMediaItem() },
+                                                items = songs.map { it.song.toMediaItem() },
                                                 startIndex = index,
                                             ),
                                         )
@@ -206,7 +206,7 @@ fun ArtistSongsScreen(
                 playerConnection.playQueue(
                     ListQueue(
                         title = artist?.artist?.name,
-                        items = songs.shuffled().map { it.toMediaItem() },
+                        items = songs.shuffled().map { it.song.toMediaItem() },
                     ),
                 )
             },

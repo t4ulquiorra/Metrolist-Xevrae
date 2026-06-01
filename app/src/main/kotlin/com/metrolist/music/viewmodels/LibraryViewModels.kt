@@ -63,8 +63,8 @@ import com.metrolist.music.extensions.toEnum
 import com.metrolist.music.extensions.normalizeForSearch
 import com.metrolist.music.extensions.filterExplicitAlbums
 import com.metrolist.music.extensions.filterYoutubeShorts
-import com.metrolist.music.playback.queues.filterExplicit
-import com.metrolist.music.playback.queues.filterVideoSongs
+import com.metrolist.music.extensions.filterExplicit
+import com.metrolist.music.extensions.filterVideoSongs
 import com.metrolist.music.extensions.matchesNormalizedQuery
 import com.metrolist.music.models.toMediaMetadata
 import com.metrolist.music.models.xevrae.ChartItem
@@ -786,7 +786,7 @@ class LibraryViewModel @Inject constructor(
         _listCanvasSong.value = LocalResource.Loading()
         viewModelScope.launch {
             database.likedSongs(SongSortType.CREATE_DATE, true).collectLatest { songs ->
-                _listCanvasSong.value = LocalResource.Success(songs.take(5))
+                _listCanvasSong.value = LocalResource.Success(songs.take(5).map { it.song })
             }
         }
     }
@@ -795,7 +795,7 @@ class LibraryViewModel @Inject constructor(
         _yourLocalPlaylist.value = LocalResource.Loading()
         viewModelScope.launch {
             database.editablePlaylistsByNameAsc().collectLatest { values ->
-                _yourLocalPlaylist.value = LocalResource.Success(values)
+                _yourLocalPlaylist.value = LocalResource.Success(values.map { it.playlist })
             }
         }
     }
@@ -829,7 +829,7 @@ class LibraryViewModel @Inject constructor(
         _recentlyAdded.value = LocalResource.Loading()
         viewModelScope.launch {
             database.getSongById(videoId)?.let { song ->
-                database.update(song.copy(inLibrary = null))
+                database.update(song.song.copy(inLibrary = null))
             }
             delay(500)
             getRecentlyAdded()

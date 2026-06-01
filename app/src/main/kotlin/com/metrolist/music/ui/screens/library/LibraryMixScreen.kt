@@ -305,7 +305,15 @@ fun LibraryMixScreen(
             }
 
         if (normalizedQuery.isBlank()) {
-            matchedItems.distinctBy { it.id }
+            matchedItems.distinctBy { item ->
+                when (item) {
+                    is Song -> item.song.id
+                    is Album -> item.album.id
+                    is Artist -> item.artist.id
+                    is Playlist -> item.playlist.id
+                    else -> ""
+                }
+            }
         } else {
             matchedItems
                 .sortedWith { first, second ->
@@ -325,7 +333,6 @@ fun LibraryMixScreen(
                             is Album -> 3
                             else -> 4
                         }
-
                     if (firstPriority != secondPriority) {
                         firstPriority.compareTo(secondPriority)
                     } else {
@@ -348,7 +355,15 @@ fun LibraryMixScreen(
                         collator.compare(firstName, secondName)
                     }
                 }
-                .distinctBy { it.id }
+                .distinctBy { item ->
+                    when (item) {
+                        is Song -> item.song.id
+                        is Album -> item.album.id
+                        is Artist -> item.artist.id
+                        is Playlist -> item.playlist.id
+                        else -> ""
+                    }
+                }
         }
     }
 
@@ -568,7 +583,15 @@ fun LibraryMixScreen(
 
                     items(
                         items = filteredItems,
-                        key = { it.id },
+                        key = { item ->
+                            when (item) {
+                                is Song -> item.song.id
+                                is Album -> item.album.id
+                                is Artist -> item.artist.id
+                                is Playlist -> item.playlist.id
+                                else -> item.hashCode().toString()
+                            }
+                        },
                         contentType = { CONTENT_TYPE_PLAYLIST },
                     ) { item ->
                         when (item) {
@@ -915,7 +938,15 @@ fun LibraryMixScreen(
 
                     items(
                         items = filteredItems,
-                        key = { it.id },
+                        key = { item ->
+                            when (item) {
+                                is Song -> item.song.id
+                                is Album -> item.album.id
+                                is Artist -> item.artist.id
+                                is Playlist -> item.playlist.id
+                                else -> item.hashCode().toString()
+                            }
+                        },
                         contentType = { CONTENT_TYPE_PLAYLIST },
                     ) { item ->
                         when (item) {

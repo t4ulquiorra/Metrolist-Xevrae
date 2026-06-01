@@ -664,7 +664,7 @@ class SharedViewModel @Inject constructor(
                 )
             }
             withContext(Dispatchers.Main) {
-                playerConnection.addMediaItem(track.toGenericMediaItem(), playWhenReady = type != RECOVER_TRACK_QUEUE)
+                playerConnection.addMediaItem(track.toMediaItem(), playWhenReady = type != RECOVER_TRACK_QUEUE)
             }
 
             when (type) {
@@ -735,7 +735,7 @@ class SharedViewModel @Inject constructor(
                 }
 
                 is UIEvent.UpdateProgress -> {
-                    playerConnection.seekTo(uiEvent.newProgress)
+                    playerConnection.seekTo(uiEvent.newProgress.toLong())
                 }
 
                 UIEvent.Repeat -> {
@@ -779,7 +779,7 @@ class SharedViewModel @Inject constructor(
         viewModelScope.launch {
             localPlaylistRepository.getAllDownloadingLocalPlaylists().collectLatest { playlists ->
                 playlists.forEach { playlist ->
-                    localPlaylistRepository.updateDownloadState(playlist.id, 0, successMessage = getString(R.string.updated)).lastOrNull()
+                    localPlaylistRepository.updateDownloadState(playlist.id.toString(), 0, successMessage = getString(R.string.updated)).lastOrNull()
                 }
             }
         }
@@ -944,7 +944,7 @@ class SharedViewModel @Inject constructor(
                 lines =
                     inputLyrics.lines?.map { line ->
                         line.copy(
-                            words = decodeHtmlEntities(line.words),
+                            words = line.words.replace("&amp;", "&").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\""),
                         )
                     },
             )
@@ -1063,7 +1063,7 @@ class SharedViewModel @Inject constructor(
                                     dataStoreManager,
                                     track,
                                     lyrics,
-                                    dataStoreManager.translationLanguage.first(),
+                                    dataStoreManager.translationLanguage.first() ?: "",
                                 ).collect {
                                     when (it) {
                                         is Resource.Error<*> -> {
@@ -1146,7 +1146,7 @@ class SharedViewModel @Inject constructor(
             val artist =
                 playerConnection.mediaMetadata
                     .value
-                    ?.artist?.toString() ?: ""
+                    ?.artists?.firstOrNull()?.name ?: ""
             resetLyricsVoteState()
             val lyricsProvider = dataStoreManager.lyricsProvider.first()
             when (lyricsProvider) {
@@ -1234,6 +1234,7 @@ class SharedViewModel @Inject constructor(
         artist: String?,
         duration: Int,
     ) {
+        /*
         lyricsCanvasRepository
             .getYouTubeCaption(dataStoreManager.youtubeSubtitleLanguage.first(), videoId)
             .cancellable()
@@ -1277,6 +1278,7 @@ class SharedViewModel @Inject constructor(
                     }
                 }
             }
+         */
     }
 
     private fun getLrclibLyrics(
@@ -1316,7 +1318,7 @@ class SharedViewModel @Inject constructor(
                         else -> {
                             getSavedLyrics(
                                 song.toTrack().copy(
-                                    id = song.id,
+                                    videoId = song.id,
                                     durationSeconds = duration,
                                 ),
                             )
@@ -1379,7 +1381,7 @@ class SharedViewModel @Inject constructor(
         lyrics: Lyrics,
     ) {
         val translationLanguage =
-            dataStoreManager.translationLanguage.first()
+            dataStoreManager.translationLanguage.first() ?: ""
         lyricsCanvasRepository.getXevraeTranslatedLyrics(videoId, translationLanguage).collectLatest { response ->
             val data = response.data
             when (response) {
@@ -1388,7 +1390,7 @@ class SharedViewModel @Inject constructor(
                     updateLyrics(
                         videoId,
                         0,
-                        data,
+                        null,
                         true,
                         LyricsProvider.XEVRAE,
                     )
@@ -1418,7 +1420,7 @@ class SharedViewModel @Inject constructor(
                 lyricsCanvasRepository
                     .getSavedTranslatedLyrics(
                         videoId,
-                        dataStoreManager.translationLanguage.first(),
+                        dataStoreManager.translationLanguage.first() ?: "",
                     ).firstOrNull()
             if (savedTranslatedLyrics != null) {
                 Logger.d(tag, "Get Saved Translated Lyrics")
@@ -1447,7 +1449,7 @@ class SharedViewModel @Inject constructor(
                                         videoId = videoId,
                                         language = dataStoreManager.translationLanguage.first() ?: "",
                                         error = false,
-                                        lines = data.lines,
+                                        lines = null,
                                         syncType = data.syncType,
                                     ),
                                 )
@@ -1474,6 +1476,7 @@ class SharedViewModel @Inject constructor(
         query: String,
         duration: Int? = null,
     ) {
+        /*
         viewModelScope.launch {
             Logger.d("Check SpotifyLyrics", "SpotifyLyrics $query")
             lyricsCanvasRepository.getSpotifyLyrics(dataStoreManager, query, duration).cancellable().collect { response ->
@@ -1504,13 +1507,14 @@ class SharedViewModel @Inject constructor(
                     else -> {
                         getLrclibLyrics(
                             track.toSongEntity(),
-                            track.artists.toListName().firstOrNull() ?: "",
+                            track.artists?.toListName()?.firstOrNull() ?: "",
                             duration ?: 0,
                         )
                     }
                 }
             }
         }
+         */
     }
 
     private fun setLyricsProvider() {

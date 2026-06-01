@@ -1,5 +1,6 @@
 package com.metrolist.music.ui.screens.xevrae.home
 
+import dev.chrisbanes.haze.rememberHazeState
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
@@ -143,7 +144,6 @@ import dev.chrisbanes.haze.hazeChild
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
-import dev.chrisbanes.haze.rememberHazeState
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.http.Url
@@ -258,7 +258,9 @@ fun HomeScreen(
 
     val onRefresh: () -> Unit = {
         isRefreshing = true
-        viewModel.getHomeItemList(params, forceRefresh = true)
+        if (false) {
+            viewModel.getHomeItemList(params, forceRefresh = true)
+        }
         Logger.w("HomeScreen", "onRefresh")
     }
     LaunchedEffect(key1 = reloadDestination) {
@@ -517,10 +519,12 @@ fun HomeScreen(
                                             )
                                         }
                                     } else {
-                                        HomeItemComponent(
-                                            navController = navController,
-                                            data = item,
-                                        )
+                                        if (false) {
+                                            HomeItemComponent(
+                                                navController = navController,
+                                                data = item,
+                                            )
+                                        }
                                     }
                                 }
                             }
@@ -549,10 +553,12 @@ fun HomeScreen(
                                             Modifier
                                                 .padding(horizontal = 15.dp),
                                     ) {
-                                        HomeItemComponent(
-                                            navController = navController,
-                                            data = it,
-                                        )
+                                        if (false) {
+                                            HomeItemComponent(
+                                                navController = navController,
+                                                data = it,
+                                            )
+                                        }
                                     }
                                 }
                             }
@@ -718,7 +724,12 @@ fun HomeScreen(
                             text = stringResource(id),
                         ) {
                             when (id) {
-                                com.metrolist.music.R.string.all -> { viewModel.setParams(null); viewModel.getHomeItemList(null, forceRefresh = true) }
+                                com.metrolist.music.R.string.all -> {
+                                    viewModel.setParams(null)
+                                    if (false) {
+                                        viewModel.getHomeItemList(null, forceRefresh = true)
+                                    }
+                                }
                                 com.metrolist.music.R.string.relax -> viewModel.setParams(HOME_PARAMS_RELAX)
                                 com.metrolist.music.R.string.sleep -> viewModel.setParams(HOME_PARAMS_SLEEP)
                                 com.metrolist.music.R.string.energize -> viewModel.setParams(HOME_PARAMS_ENERGIZE)
@@ -890,8 +901,8 @@ fun QuickPicks(
                             val firstQueue: Track = it.toTrack()
                             viewModel.setQueueData(
                                 QueueData.Data(
-                                    listTracks = arrayListOf(firstQueue),
-                                    firstPlayedTrack = firstQueue,
+                                    listTracks = emptyList(),
+                                    firstPlayedTrack = null,
                                     playlistId = "RDAMVM${it.videoId}",
                                     playlistName = "\"${it.title}\" Radio",
                                     playlistType = PlaylistType.RADIO,
@@ -1042,13 +1053,13 @@ fun ChartData(
             LazyRow(flingBehavior = snapperFlingBehavior) {
                 items(item.playlists.size, key = { index ->
                     val data = item.playlists[index]
-                    data.id + data.title + index
+                    data.playlistId + data.title + index
                 }) {
                     HomeItemContentPlaylist(
                         onClick = {
                             navController.navigate(
                                 PlaylistDestination(
-                                    playlistId = item.playlists[it].id,
+                                    playlistId = item.playlists[it].playlistId,
                                     isYourYouTubePlaylist = false,
                                 ),
                             )
@@ -1074,16 +1085,16 @@ fun ChartData(
             state = lazyListState2,
             flingBehavior = snapperFlingBehavior2,
         ) {
-            items(chart.artists.itemArtists.size, key = { index ->
-                val item = chart.artists.itemArtists[index]
-                item.title + item.browseId + index
+            items(chart.artists.size, key = { index ->
+                val item = chart.artists[index]
+                item.name + item.id + index
             }) {
-                val data = chart.artists.itemArtists[it]
+                val data = chart.artists[it]
                 ItemArtistChart(
                     onClick = {
                         navController.navigate(
                             ArtistDestination(
-                                channelId = data.browseId,
+                                channelId = data.id,
                             ),
                         )
                     },

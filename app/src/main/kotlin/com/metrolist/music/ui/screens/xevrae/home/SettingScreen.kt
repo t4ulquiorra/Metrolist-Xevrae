@@ -1,5 +1,6 @@
 package com.metrolist.music.ui.screens.xevrae.home
 
+import dev.chrisbanes.haze.rememberHazeState
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.fadeIn
@@ -143,7 +144,6 @@ import dev.chrisbanes.haze.hazeChild
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
-import dev.chrisbanes.haze.rememberHazeState
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -185,6 +185,9 @@ fun SettingScreen(
     val dailyStr = stringResource(com.metrolist.music.R.string.daily)
     val weeklyStr = stringResource(com.metrolist.music.R.string.weekly)
     val monthlyStr = stringResource(com.metrolist.music.R.string.monthly)
+    val categoriesSponsorBlockStr = stringResource(com.metrolist.music.R.string.categories_sponsor_block)
+    val backupFrequencyStr = stringResource(com.metrolist.music.R.string.backup_frequency)
+    val keepBackupsStr = stringResource(com.metrolist.music.R.string.keep_backups)
 
     val proxyTypeTitle = stringResource(com.metrolist.music.R.string.proxy_type)
     val platformContext = LocalPlatformContext.current
@@ -221,7 +224,7 @@ fun SettingScreen(
                 FilePickerFileType.All,
             selectionMode = FilePickerSelectionMode.Single,
         ) { file ->
-            file.firstOrNull()?.getPath(pl)?.toKmpUri()?.let {
+            file.firstOrNull()?.getPath(platformContext)?.toKmpUri()?.let {
                 viewModel.restore(it)
             }
         }
@@ -397,7 +400,6 @@ fun SettingScreen(
                     },
                 )
                 val languageTitle = stringResource(com.metrolist.music.R.string.language)
-                val warningTitle = stringResource(com.metrolist.music.R.string.warning)
                 val changeLanguageWarning = stringResource(com.metrolist.music.R.string.change_language_warning)
 
                 SettingItem(
@@ -419,7 +421,7 @@ fun SettingScreen(
                                         val code = SUPPORTED_LANGUAGE.getCodeFromLanguage(state.selectOne?.getSelected() ?: "English")
                                         viewModel.setBasicAlertData(
                                             SettingBasicAlertState(
-                                                title = warningTitle,
+                                                title = "Warning",
                                                 message = changeLanguageWarning,
                                                 confirm =
                                                     changeStr to {
@@ -962,7 +964,6 @@ fun SettingScreen(
                 val youtubeTranscriptStr = stringResource(com.metrolist.music.R.string.youtube_transcript)
                 val lrclibStr = stringResource(com.metrolist.music.R.string.lrclib)
                 val betterLyricsStr = stringResource(com.metrolist.music.R.string.better_lyrics)
-                val unknownStr = stringResource(com.metrolist.music.R.string.unknown)
                 SettingItem(
                     title = mainLyricsProviderTitle,
                     subtitle =
@@ -971,7 +972,7 @@ fun SettingScreen(
                             DataStoreManager.YOUTUBE -> youtubeTranscriptStr
                             DataStoreManager.LRCLIB -> lrclibStr
                             DataStoreManager.BETTER_LYRICS -> betterLyricsStr
-                            else -> unknownStr
+                            else -> "Unknown"
                         },
                     onClick = {
                         viewModel.setAlertData(
@@ -1141,7 +1142,7 @@ fun SettingScreen(
                             DataStoreManager.AI_PROVIDER_OPENAI -> openaiStr
                             DataStoreManager.AI_PROVIDER_GEMINI -> geminiStr
                             DataStoreManager.AI_PROVIDER_CUSTOM_OPENAI -> openaiCompatibleStr
-                            else -> unknownStr
+                            else -> "Unknown"
                         },
                     onClick = {
                         viewModel.setAlertData(
@@ -1410,7 +1411,7 @@ fun SettingScreen(
                     onClick = {
                         viewModel.setAlertData(
                             SettingAlertState(
-                                title = stringResource(com.metrolist.music.R.string.categories_sponsor_block),
+                                title = categoriesSponsorBlockStr,
                                 multipleSelect =
                                     SettingAlertState.SelectData(
                                         listSelect =
@@ -1438,7 +1439,7 @@ fun SettingScreen(
                                                 } ?: listOf(),
                                         )
                                     },
-                                dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                dismiss = cancelStr,
                             ),
                         )
                     },
@@ -1568,7 +1569,7 @@ fun SettingScreen(
                                                 LIMIT_CACHE_SIZE.getDataFromItem(state.selectOne?.getSelected()),
                                             )
                                         },
-                                    dismiss = stringResource(com.metrolist.music.R.string.cancel),
+                                    dismiss = cancelStr,
                                 ),
                             )
                         },
@@ -1817,7 +1818,7 @@ fun SettingScreen(
                                 onClick = {
                                     viewModel.setAlertData(
                                         SettingAlertState(
-                                            title = stringResource(com.metrolist.music.R.string.backup_frequency),
+                                            title = backupFrequencyStr,
                                             selectOne =
                                                 SettingAlertState.SelectData(
                                                     listSelect =
@@ -1849,7 +1850,7 @@ fun SettingScreen(
                                 onClick = {
                                     viewModel.setAlertData(
                                         SettingAlertState(
-                                            title = stringResource(com.metrolist.music.R.string.keep_backups),
+                                            title = keepBackupsStr,
                                             selectOne =
                                                 SettingAlertState.SelectData(
                                                     listSelect =
@@ -2177,7 +2178,7 @@ fun SettingScreen(
                             ) {
                                 viewModel.setBasicAlertData(
                                     SettingBasicAlertState(
-                                        title = warningTitle,
+                                        title = "Warning",
                                         message = logOutWarningStr,
                                         confirm =
                                             logOutStr to {
@@ -2390,7 +2391,7 @@ fun SettingScreen(
 
     if (showThirdPartyLibraries) {
         val libraries by produceLibraries {
-            com.metrolist.music.R.readBytes("files/aboutlibraries.json").decodeToString()
+            TODO("not implemented")
         }
         val lazyListState = rememberLazyListState()
         val canScrollBackward by remember {

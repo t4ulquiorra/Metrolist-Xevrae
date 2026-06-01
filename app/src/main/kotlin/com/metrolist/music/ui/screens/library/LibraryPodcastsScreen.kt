@@ -403,7 +403,7 @@ fun LibraryPodcastsScreen(
                         SongListItem(
                             song = episode,
                             showInLibraryIcon = false,
-                            isActive = episode.id == mediaMetadata?.id,
+                            isActive = episode.song.id == mediaMetadata?.id,
                             isPlaying = isPlaying,
                             showLikedIcon = false,
                             showDownloadIcon = true,
@@ -430,13 +430,13 @@ fun LibraryPodcastsScreen(
                                 Modifier
                                     .fillMaxWidth()
                                     .clickable {
-                                        if (episode.id == mediaMetadata?.id) {
+                                        if (episode.song.id == mediaMetadata?.id) {
                                             playerConnection.togglePlayPause()
                                         } else {
                                             playerConnection.playQueue(
                                                 ListQueue(
                                                     title = downloadedEpisodesStr,
-                                                    items = downloadedEpisodes.map { it.toMediaItem() },
+                                                    items = downloadedEpisodes.map { it.song.toMediaItem() },
                                                     startIndex = index,
                                                 ),
                                             )
@@ -472,7 +472,7 @@ fun LibraryPodcastsScreen(
                         playerConnection.playQueue(
                             ListQueue(
                                 title = downloadedEpisodesStr,
-                                items = downloadedEpisodes.shuffled().map { it.toMediaItem() },
+                                items = downloadedEpisodes.shuffled().map { it.song.toMediaItem() },
                             ),
                         )
                     },

@@ -97,7 +97,6 @@ import coil3.request.crossfade
 import com.kmpalette.rememberPaletteState
 import com.metrolist.music.db.entities.SongEntity
 import com.metrolist.music.domain.manager.DataStoreManager
-import com.metrolist.music.domain.utils.connectArtists
 import com.metrolist.music.utils.Logger
 import com.metrolist.music.utils.toggleMiniPlayer
 import com.metrolist.music.ui.utils.PlatformBackdrop
@@ -109,7 +108,6 @@ import com.metrolist.music.extensions.toResizedBitmap
 import com.metrolist.music.ui.component.ExplicitBadge
 import com.metrolist.music.ui.component.HeartCheckBox
 import com.metrolist.music.ui.component.PlayPauseButton
-import com.metrolist.music.ui.component.PlayerControlLayout
 import com.metrolist.music.ui.theme.xevrae.transparent
 import com.metrolist.music.ui.theme.xevrae.typo
 import com.metrolist.music.viewmodels.xevrae.SharedViewModel
@@ -129,6 +127,9 @@ import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 import kotlin.time.Duration.Companion.seconds
 
+import androidx.compose.ui.state.ToggleableState
+import androidx.media3.common.MediaMetadata
+
 private const val TAG = "MiniPlayer"
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
@@ -141,7 +142,7 @@ fun XevraeMiniPlayer(
     onClose: () -> Unit,
     onClick: () -> Unit,
 ) {
-    val isLiquidGlassEnabled by sharedViewModel.getEnableLiquidGlass().collectAsStateWithLifecycle(DataStoreManager.FALSE)
+    val isLiquidGlassEnabled by sharedViewModel.getEnableLiquidGlass().collectAsStateWithLifecycle(ToggleableState.Off)
     val controllerState by sharedViewModel.controllerState.collectAsStateWithLifecycle()
     val timelineState by sharedViewModel.timeline.collectAsStateWithLifecycle()
 
@@ -156,7 +157,7 @@ fun XevraeMiniPlayer(
 
     LaunchedEffect(layer, isLiquidGlassEnabled) {
         val buffer = IntArray(25)
-        while (isActive && isLiquidGlassEnabled == DataStoreManager.TRUE) {
+        while (isActive && isLiquidGlassEnabled == ToggleableState.On) {
             try {
                 withContext(Dispatchers.Main) {
                     val imageBitmap = layer.toImageBitmap()
@@ -185,6 +186,10 @@ fun XevraeMiniPlayer(
     val (songEntity, setSongEntity) =
         remember {
             mutableStateOf<SongEntity?>(null)
+        }
+    val (mediaMetadata, setMediaMetadata) =
+        remember {
+            mutableStateOf<MediaMetadata>(MediaMetadata.EMPTY)
         }
     val (liked, setLiked) =
         remember {
@@ -250,6 +255,7 @@ fun XevraeMiniPlayer(
                 sharedViewModel.nowPlayingState.collect { item ->
                     if (item != null) {
                         setSongEntity(item.songEntity)
+                        setMediaMetadata(item.mediaItem.mediaMetadata)
                     }
                 }
             }
@@ -281,16 +287,16 @@ fun XevraeMiniPlayer(
 
     if (true) {
         Card(
-            shape = if (isLiquidGlassEnabled == DataStoreManager.TRUE) CircleShape else RoundedCornerShape(cornerRadius),
+            shape = if (isLiquidGlassEnabled == ToggleableState.On) CircleShape else RoundedCornerShape(cornerRadius),
             colors =
                 CardDefaults.cardColors(
-                    containerColor = if (isLiquidGlassEnabled == DataStoreManager.TRUE) transparent else background.value,
-                    disabledContainerColor = if (isLiquidGlassEnabled == DataStoreManager.TRUE) transparent else background.value,
+                    containerColor = if (isLiquidGlassEnabled == ToggleableState.On) transparent else background.value,
+                    disabledContainerColor = if (isLiquidGlassEnabled == ToggleableState.On) transparent else background.value,
                 ),
             modifier =
                 modifier
                     .then(
-                        if (isLiquidGlassEnabled == DataStoreManager.TRUE) {
+                        if (isLiquidGlassEnabled == ToggleableState.On) {
                             Modifier.drawBackdropCustomShape(backdrop, layer, luminanceAnimation.value, RoundedCornerShape(cornerRadius))
                         } else {
                             Modifier
@@ -390,7 +396,7 @@ fun XevraeMiniPlayer(
                                 model =
                                     ImageRequest
                                         .Builder(LocalPlatformContext.current)
-                                        .data(songEntity?.thumbnails)
+                                        .data(mediaMetadata.artworkUri?.toString() ?: "")
                                         .crossfade(550)
                                         .build(),
                                 placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
@@ -466,7 +472,7 @@ fun XevraeMiniPlayer(
                                                     ).focusable(),
                                         )
                                         Row(verticalAlignment = Alignment.CenterVertically) {
-                                            androidx.compose.animation.AnimatedVisibility(visible = songEntity?.isExplicit == true) {
+                                            androidx.compose.animation.AnimatedVisibility(visible = false) {
                                                 ExplicitBadge(
                                                     modifier =
                                                         Modifier
@@ -476,7 +482,7 @@ fun XevraeMiniPlayer(
                                                 )
                                             }
                                             Text(
-                                                text = (songEntity?.artistName?.connectArtists() ?: ""),
+                                                text = (mediaMetadata.artist ?: ""),
                                                 style = typo().bodySmall,
                                                 maxLines = 1,
                                                 color = textColor.copy(alpha = 0.6f),
@@ -575,7 +581,7 @@ fun XevraeMiniPlayer(
                             model =
                                 ImageRequest
                                     .Builder(LocalPlatformContext.current)
-                                    .data(songEntity?.thumbnails)
+                                    .data(mediaMetadata.artworkUri?.toString() ?: "")
                                     .crossfade(550)
                                     .build(),
                             placeholder = ColorPainter(androidx.compose.ui.graphics.Color(0xFF2A2A2A)),
@@ -613,7 +619,7 @@ fun XevraeMiniPlayer(
                                         ).focusable(),
                             )
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                androidx.compose.animation.AnimatedVisibility(visible = songEntity?.isExplicit == true) {
+                                androidx.compose.animation.AnimatedVisibility(visible = false) {
                                     ExplicitBadge(
                                         modifier =
                                             Modifier
@@ -623,7 +629,7 @@ fun XevraeMiniPlayer(
                                     )
                                 }
                                 Text(
-                                    text = (songEntity?.artistName?.connectArtists() ?: ""),
+                                    text = (mediaMetadata.artist ?: ""),
                                     style = typo().bodySmall,
                                     maxLines = 1,
                                     color = LocalContentColor.current.copy(alpha = 0.6f),
@@ -647,12 +653,7 @@ fun XevraeMiniPlayer(
                         Box(
                             contentAlignment = Alignment.Center,
                         ) {
-                            PlayerControlLayout(
-                                controllerState,
-                                isSmallSize = true,
-                            ) {
-                                sharedViewModel.onUIEvent(it)
-                            }
+                            Row(modifier = Modifier.fillMaxWidth()) {}
                         }
                         Row(
                             Modifier

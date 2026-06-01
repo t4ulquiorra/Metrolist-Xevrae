@@ -465,7 +465,7 @@ fun LibrarySongsScreen(
                 SongListItem(
                     song = song,
                     showInLibraryIcon = true,
-                    isActive = song.id == mediaMetadata?.id,
+                    isActive = song.song.id == mediaMetadata?.id,
                     isPlaying = isPlaying,
                     showLikedIcon = true,
                     showDownloadIcon = filter != SongFilter.DOWNLOADED,
@@ -491,13 +491,13 @@ fun LibrarySongsScreen(
                         Modifier
                             .fillMaxWidth()
                             .clickable {
-                                if (song.id == mediaMetadata?.id) {
+                                if (song.song.id == mediaMetadata?.id) {
                                     playerConnection.togglePlayPause()
                                 } else {
                                     playerConnection.playQueue(
                                         ListQueue(
                                             title = queueAllSongsStr,
-                                            items = filteredSongs.map { it.toMediaItem() },
+                                            items = filteredSongs.map { it.song.toMediaItem() },
                                             startIndex = index,
                                         ),
                                     )
@@ -528,7 +528,7 @@ fun LibrarySongsScreen(
                     playerConnection.playQueue(
                         ListQueue(
                             title = queueAllSongsStr,
-                            items = filteredSongs.shuffled().map { it.toMediaItem() },
+                            items = filteredSongs.shuffled().map { it.song.toMediaItem() },
                         ),
                     )
                 }

@@ -81,6 +81,7 @@ fun AppNavigationGraph(
         homeScreenGraph(
             innerPadding = innerPadding,
             navController = navController,
+            latestVersionName = "",
         )
         // Library screen graph
         libraryScreenGraph(
