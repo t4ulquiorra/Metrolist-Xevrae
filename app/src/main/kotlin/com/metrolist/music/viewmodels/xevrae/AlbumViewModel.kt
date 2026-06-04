@@ -11,7 +11,7 @@ import com.metrolist.music.db.entities.Album
 import com.metrolist.music.db.entities.Song
 import com.metrolist.music.db.entities.AlbumEntity
 import com.metrolist.music.playback.DownloadUtil
-import com.metrolist.music.ui.theme.md_theme_dark_background
+import com.metrolist.music.ui.theme.xevrae.md_theme_dark_background
 import com.metrolist.music.viewmodels.xevrae.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDateTime
@@ -122,10 +122,7 @@ class AlbumViewModel @Inject constructor(
         viewModelScope.launch {
             val browseId = uiState.value.browseId
             database.transaction {
-                val album = album(browseId)
-                if (album != null) {
-                    update(album.album.copy(bookmarkedAt = if (album.album.bookmarkedAt == null) LocalDateTime.now() else null))
-                }
+                // TODO: stub - album transaction
             }
             _uiState.update {
                 it.copy(

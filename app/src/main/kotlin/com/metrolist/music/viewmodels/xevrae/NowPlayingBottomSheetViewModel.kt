@@ -99,7 +99,7 @@ class NowPlayingBottomSheetViewModel @Inject constructor(
                                 PlaylistsResult(
                                     browseId = it.id,
                                     title = it.title,
-                                    thumbnails = listOf(Thumbnail(it.thumbnail))
+                                    thumbnails = listOf(Thumbnail(it.thumbnail ?: ""))
                                 )
                             }
                         )
@@ -125,7 +125,7 @@ class NowPlayingBottomSheetViewModel @Inject constructor(
                             PlaylistsResult(
                                 browseId = it.id,
                                 title = it.title,
-                                thumbnails = listOf(Thumbnail(it.thumbnail))
+                                thumbnails = listOf(Thumbnail(it.thumbnail ?: ""))
                             )
                         }
                     )

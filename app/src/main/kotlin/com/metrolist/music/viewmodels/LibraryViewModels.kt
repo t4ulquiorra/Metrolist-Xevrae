@@ -723,17 +723,17 @@ class LibraryViewModel @Inject constructor(
     fun getYouTubePlaylist() {
         _youTubePlaylist.value = LocalResource.Loading()
         viewModelScope.launch {
-            YouTube.library().onSuccess { page ->
+            YouTube.library("FEmusic_liked_playlists").onSuccess { page ->
                 val playlists = page.items.filterIsInstance<PlaylistItem>().map {
                     PlaylistsResult(
                         browseId = it.id,
                         title = it.title,
-                        thumbnails = it.thumbnails?.map { t -> Thumbnail(t.url) }
+                        thumbnails = listOf(Thumbnail(it.thumbnail ?: ""))
                     )
                 }
                 _youTubePlaylist.value = LocalResource.Success(playlists)
             }.onFailure {
-                _youTubePlaylist.value = LocalResource.Error(it.message)
+                _youTubePlaylist.value = LocalResource.Error(it.message ?: "")
             }
         }
     }
@@ -747,12 +747,12 @@ class LibraryViewModel @Inject constructor(
                         PlaylistsResult(
                             browseId = it.id,
                             title = it.title,
-                            thumbnails = it.thumbnails?.map { t -> Thumbnail(t.url) }
+                            thumbnails = listOf(Thumbnail(it.thumbnail ?: ""))
                         )
                     } ?: emptyList()
                 _youTubeMixForYou.value = LocalResource.Success(mixedForYou)
             }.onFailure {
-                _youTubeMixForYou.value = LocalResource.Error(it.message)
+                _youTubeMixForYou.value = LocalResource.Error(it.message ?: "")
             }
         }
     }

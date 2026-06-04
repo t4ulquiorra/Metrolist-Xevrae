@@ -561,7 +561,7 @@ class HomeViewModel @Inject constructor(
         )
         is AlbumItem -> Content(
             title = title,
-            artists = artists?.map { Artist(it.name, it.id ?: "") },
+            artists = artists?.map { com.metrolist.music.models.xevrae.Artist(it.name, it.id ?: "") },
             thumbnails = listOf(Thumbnail(thumbnail)),
             browseId = browseId,
             playlistId = playlistId,
