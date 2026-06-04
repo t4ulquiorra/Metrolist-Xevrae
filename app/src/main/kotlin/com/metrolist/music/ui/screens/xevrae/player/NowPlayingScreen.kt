@@ -2158,7 +2158,7 @@ fun NowPlayingScreenContent(
                                         text = screenDataState.songInfoData?.description ?: "",
                                         onTimeClicked = { raw ->
                                             val timestamp = parseTimestampToMilliseconds(raw)
-                                            if (timestamp != 0.0 && timestamp < timelineState.total) {
+                                            if (timestamp != 0L && timestamp < timelineState.total) {
                                                 sharedViewModel.onUIEvent(
                                                     UIEvent.UpdateProgress(
                                                         ((timestamp * 100) / timelineState.total).toFloat(),

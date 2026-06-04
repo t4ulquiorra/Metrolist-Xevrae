@@ -114,12 +114,12 @@ class AlbumViewModel @Inject constructor(
                 }
                 
                 // Sync with database
+                val existingAlbum = database.albumBlocking(browseId)
                 database.transaction {
-                    val existing = album(browseId).first()
-                    if (existing == null) {
+                    if (existingAlbum == null) {
                         insert(page)
                     } else {
-                        update(existing.album, page, existing.artists)
+                        update(existingAlbum.album, page, existingAlbum.artists)
                     }
                 }
                 
@@ -147,10 +147,10 @@ class AlbumViewModel @Inject constructor(
     fun setAlbumLike() {
         viewModelScope.launch {
             val browseId = uiState.value.browseId
+            val albumForLike = database.albumBlocking(browseId)
             database.transaction {
-                val album = album(browseId).first()
-                if (album != null) {
-                    update(album.album.copy(bookmarkedAt = if (album.album.bookmarkedAt == null) LocalDateTime.now() else null))
+                if (albumForLike != null) {
+                    update(albumForLike.album.copy(bookmarkedAt = if (albumForLike.album.bookmarkedAt == null) LocalDateTime.now() else null))
                 }
             }
         }

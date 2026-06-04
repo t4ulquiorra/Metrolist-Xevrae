@@ -25,6 +25,7 @@ import com.metrolist.music.domain.mediaservice.handler.PlaylistType
 import com.metrolist.music.domain.mediaservice.handler.QueueData
 import com.metrolist.music.utils.SyncUtils
 import com.metrolist.music.viewmodels.xevrae.ArtistScreenState
+import com.metrolist.music.viewmodels.xevrae.ArtistScreenData
 import com.metrolist.music.viewmodels.xevrae.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -132,9 +133,9 @@ class ArtistViewModel @Inject constructor(
                 _artistScreenState.value = ArtistScreenState.Success(screenData)
                 
                 // Sync with database
+                val existingArtist = database.artistBlocking(channelId)
                 database.transaction {
-                    val existing = artist(channelId)
-                    if (existing == null) {
+                    if (existingArtist == null) {
                         insert(ArtistEntity(
                             id = channelId,
                             name = artist.title,
@@ -158,11 +159,11 @@ class ArtistViewModel @Inject constructor(
         _followed.value = shouldFollow
         
         viewModelScope.launch(Dispatchers.IO) {
+            val existingForFollow = database.artistBlocking(channelId)
             database.transaction {
-                val artist = artist(channelId)
-                if (artist != null) {
+                if (existingForFollow != null) {
                     val newBookmark = if (shouldFollow) LocalDateTime.now() else null
-                    update(artist.artist.copy(bookmarkedAt = newBookmark))
+                    update(existingForFollow.artist.copy(bookmarkedAt = newBookmark))
                 } else if (shouldFollow) {
                     val screenData = artistScreenState.value.data
                     insert(ArtistEntity(

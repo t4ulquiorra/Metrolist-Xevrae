@@ -169,7 +169,7 @@ class AlbumViewModel @Inject constructor(
                 listTracks = uiState.listTrack,
                 firstPlayedTrack = track,
                 playlistId = uiState.browseId.replaceFirst("VL", ""),
-                playlistName = "${getString(com.metrolist.music.R.string.album)} \"${uiState.title}\"",
+                playlistName = "${getString(com.metrolist.music.R.string.album)} \"${uiState.value.title}\"",
                 playlistType = PlaylistType.PLAYLIST,
             ),
         )
@@ -189,7 +189,7 @@ class AlbumViewModel @Inject constructor(
                 listTracks = shuffleList,
                 firstPlayedTrack = shuffleList[randomIndex],
                 playlistId = uiState.value.browseId.replaceFirst("VL", ""),
-                playlistName = "${getString(com.metrolist.music.R.string.album)} \"${uiState.title}\"",
+                playlistName = "${getString(com.metrolist.music.R.string.album)} \"${uiState.value.title}\"",
                 playlistType = PlaylistType.PLAYLIST,
             ),
         )

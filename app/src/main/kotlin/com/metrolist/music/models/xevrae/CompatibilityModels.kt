@@ -138,6 +138,16 @@ data class SongInfoEntity(
     val artist: String,
     val thumbnail: String?,
     val duration: Long,
+    // Extended Xevrae fields
+    val authorId: String? = null,
+    val authorThumbnail: String? = null,
+    val author: String? = null,
+    val subscribers: String? = null,
+    val uploadDate: String? = null,
+    val viewCount: Long? = null,
+    val like: Long? = null,
+    val dislike: Long? = null,
+    val description: String? = null,
 )
 
 data class DownloadProgress(
