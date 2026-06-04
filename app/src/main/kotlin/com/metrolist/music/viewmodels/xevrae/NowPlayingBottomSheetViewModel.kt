@@ -38,6 +38,7 @@ import androidx.media3.exoplayer.offline.DownloadService
 import androidx.core.net.toUri
 import androidx.media3.common.PlaybackParameters
 import com.metrolist.innertube.YouTube
+import com.metrolist.innertube.models.PlaylistItem
 import com.metrolist.music.models.toMediaMetadata
 import timber.log.Timber
 
@@ -74,14 +75,14 @@ class NowPlayingBottomSheetViewModel @Inject constructor(
                 }
             }
             launch {
-                database.playlists().collectLatest { list ->
+                database.playlistsByNameAsc().collectLatest { list ->
                     _uiState.update { state ->
                         state.copy(
                             listLocalPlaylist = list.map { 
                                 LocalPlaylistEntity(
                                     id = it.playlist.id.removePrefix("LP").toLongOrNull() ?: 0L,
                                     title = it.playlist.name,
-                                    thumbnail = it.songPreview.firstOrNull()?.song?.thumbnailUrl
+                                    thumbnail = null
                                 )
                             }
                         )
@@ -91,9 +92,7 @@ class NowPlayingBottomSheetViewModel @Inject constructor(
             launch {
                 // In Metrolist we don't have a direct "library playlist" repo like Xevrae
                 // We'll use YouTube.libraryPlaylists()
-                runCatching {
-                    YouTube.library("FEmusic_liked_playlists")
-                }.onSuccess { libraryPage ->
+                YouTube.library("FEmusic_liked_playlists").onSuccess { libraryPage ->
                     _uiState.update { state ->
                         state.copy(
                             listYouTubePlaylist = libraryPage.items.filterIsInstance<PlaylistItem>().map {
@@ -119,9 +118,7 @@ class NowPlayingBottomSheetViewModel @Inject constructor(
         // Playlists are tracked via flows in init, so we don't need manual reset
         // unless we want to force refresh YouTube playlists
         viewModelScope.launch {
-             runCatching {
-                YouTube.library("FEmusic_liked_playlists")
-            }.onSuccess { libraryPage ->
+             YouTube.library("FEmusic_liked_playlists").onSuccess { libraryPage ->
                 _uiState.update { state ->
                     state.copy(
                         listYouTubePlaylist = libraryPage.items.filterIsInstance<PlaylistItem>().map {
@@ -144,7 +141,7 @@ class NowPlayingBottomSheetViewModel @Inject constructor(
                 title = it.title,
                 thumbnailUrl = it.thumbnailUrl,
                 albumId = null,
-                albumName = it.albumTitle?.toString(),
+                albumName = null,
                 duration = it.duration
             )
         } ?: return)

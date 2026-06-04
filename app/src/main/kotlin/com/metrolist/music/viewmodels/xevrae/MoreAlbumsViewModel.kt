@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class MoreAlbumsViewModel @Inject constructor(
-    @dagger.hilt.android.qualifiers.ApplicationContext private val context: android.content.Context,) : BaseViewModel(context) {
+    @dagger.hilt.android.qualifiers.ApplicationContext override val context: android.content.Context,) : BaseViewModel(context) {
     private val _uiState = MutableStateFlow<MoreAlbumsUIState>(MoreAlbumsUIState.Loading)
     val uiState: StateFlow<MoreAlbumsUIState> get() = _uiState
 

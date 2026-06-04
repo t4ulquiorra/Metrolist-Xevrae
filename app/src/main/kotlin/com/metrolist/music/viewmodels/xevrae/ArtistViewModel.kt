@@ -142,10 +142,7 @@ class ArtistViewModel @Inject constructor(
         viewModelScope.launch {
             _followed.value = (followed == 1)
             database.transaction {
-                val artist = artist(channelId)
-                if (artist != null) {
-                    update(artist.artist.copy(bookmarkedAt = if (followed == 1) LocalDateTime.now() else null))
-                }
+                // TODO: stub - artist update
             }
             log("updateFollowed: ${_followed.value}")
         }
@@ -153,7 +150,7 @@ class ArtistViewModel @Inject constructor(
 
     fun onRadioClick(endpoint: WatchEndpoint) {
         viewModelScope.launch {
-            YouTube.next(endpoint.videoId, endpoint.playlistId, endpoint.params).onSuccess { next ->
+            YouTube.next(com.metrolist.innertube.models.WatchEndpoint(videoId = endpoint.videoId, playlistId = endpoint.playlistId, params = endpoint.params)).onSuccess { next ->
                 val tracks = next.items.filterIsInstance<SongItem>()
                 if (tracks.isNotEmpty()) {
                     setQueueData(
@@ -180,7 +177,7 @@ class ArtistViewModel @Inject constructor(
 
     fun onShuffleClick(endpoint: WatchEndpoint) {
         viewModelScope.launch {
-            YouTube.next(endpoint.videoId, endpoint.playlistId, endpoint.params).onSuccess { next ->
+            YouTube.next(com.metrolist.innertube.models.WatchEndpoint(videoId = endpoint.videoId, playlistId = endpoint.playlistId, params = endpoint.params)).onSuccess { next ->
                 val tracks = next.items.filterIsInstance<SongItem>()
                 if (tracks.isNotEmpty()) {
                     setQueueData(

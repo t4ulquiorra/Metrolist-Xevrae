@@ -34,10 +34,12 @@ import com.metrolist.music.utils.dataStore
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
+import androidx.datastore.preferences.core.edit
 
 val ANALYTICS_DAY_RANGE_KEY = stringPreferencesKey("analytics_day_range")
 
 @HiltViewModel
+@OptIn(kotlin.time.ExperimentalTime::class)
 class AnalyticsViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val database: MusicDatabase,
