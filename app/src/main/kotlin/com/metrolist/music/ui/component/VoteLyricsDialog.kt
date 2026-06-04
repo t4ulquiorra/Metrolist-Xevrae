@@ -4,8 +4,13 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun VoteLyricsDialog(
-    onDismiss: () -> Unit,
-    onVote: (Boolean) -> Unit = {},
+    canVoteLyrics: Boolean = false,
+    canVoteTranslatedLyrics: Boolean = false,
+    lyricsVoteState: Any? = null,
+    translatedLyricsVoteState: Any? = null,
+    onVoteLyrics: (Boolean) -> Unit = {},
+    onVoteTranslatedLyrics: (Boolean) -> Unit = {},
+    onDismiss: () -> Unit = {},
 ) {
     // Stub — lyrics voting dialog
 }

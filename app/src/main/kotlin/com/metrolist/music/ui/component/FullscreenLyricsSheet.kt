@@ -1,17 +1,22 @@
 package com.metrolist.music.ui.component
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavController
+import com.metrolist.music.viewmodels.xevrae.SharedViewModel
 
 @Composable
 fun FullscreenLyricsSheet(
-    onDismiss: () -> Unit,
-    sliderPositionProvider: () -> Long?,
-    modifier: Modifier = Modifier,
+    sharedViewModel: SharedViewModel,
+    navController: NavController,
+    color: Color = Color.Transparent,
+    shouldHaze: Boolean = false,
+    onDismiss: () -> Unit = {},
 ) {
+    val screenDataState = sharedViewModel.nowPlayingScreenData.value
     LyricsView(
-        sliderPositionProvider = sliderPositionProvider,
-        modifier = modifier,
+        lyricsData = screenDataState.lyricsData,
+        timeLine = sharedViewModel.timeline,
         showLyrics = true,
     )
 }

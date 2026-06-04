@@ -251,8 +251,11 @@ constructor(
 
     fun deletePlaylist(id: String) {
         viewModelScope.launch {
-            database.transaction {
-                playlistByBrowseId(id)?.let { delete(it) }
+            val playlist = database.playlistByBrowseId(id).first()
+            if (playlist != null) {
+                database.transaction {
+                    delete(playlist.playlist)
+                }
             }
         }
     }

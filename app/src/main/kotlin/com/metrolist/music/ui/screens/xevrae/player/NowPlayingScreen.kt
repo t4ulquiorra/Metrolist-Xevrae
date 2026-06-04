@@ -180,6 +180,7 @@ import com.metrolist.music.viewmodels.xevrae.NowPlayingBottomSheetUIEvent
 import com.metrolist.music.viewmodels.xevrae.NowPlayingBottomSheetViewModel
 import com.metrolist.music.viewmodels.xevrae.SharedViewModel
 import com.metrolist.music.viewmodels.xevrae.UIEvent
+import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeChild
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.materials.CupertinoMaterials
@@ -723,9 +724,7 @@ fun NowPlayingScreenContent(
         )
     }
 
-    val hazeState =
-        rememberHazeState(
-        )
+    val hazeState = remember { HazeState() }
 
     if (screenDataState.lyricsData != null && controllerState.isPlaying) {
         KeepScreenOn()
