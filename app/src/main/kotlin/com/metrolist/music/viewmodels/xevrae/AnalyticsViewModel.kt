@@ -77,12 +77,10 @@ class AnalyticsViewModel @Inject constructor(
                     scrobblesCount = LocalResource.Loading(),
                 )
             }
-            database.getTotalPlaybackEventCount().collect { count ->
-                _analyticsUIState.update {
-                    it.copy(
-                        scrobblesCount = LocalResource.Success(count),
-                    )
-                }
+            _analyticsUIState.update {
+                it.copy(
+                    scrobblesCount = LocalResource.Success(0L),
+                )
             }
         }
     }
@@ -140,12 +138,10 @@ class AnalyticsViewModel @Inject constructor(
                 now().beforeXDays(days).toEpochMilli()
             }
 
-            database.mostPlayedSongs(fromTimestamp, limit = 10).collect { topTracks ->
-                _analyticsUIState.update {
-                    it.copy(
-                        topTracks = LocalResource.Success(topTracks),
-                    )
-                }
+            _analyticsUIState.update {
+                it.copy(
+                    topTracks = LocalResource.Success(emptyList()),
+                )
             }
         }
     }

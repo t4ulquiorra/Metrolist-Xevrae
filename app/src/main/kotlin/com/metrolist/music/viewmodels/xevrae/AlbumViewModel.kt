@@ -97,7 +97,7 @@ class AlbumViewModel @Inject constructor(
                 
                 getAlbumFlow(browseId)
             }.onFailure { res ->
-                log("Error: ${res.message}", LogLevel.ERROR)
+                android.util.Log.e("AlbumVM","Error: ${res.message}")
                 makeToast(getString(com.metrolist.music.R.string.error) + ": ${res.message}")
                 if (uiState.value.loadState != LocalPlaylistState.PlaylistLoadState.Success) {
                     _uiState.update {

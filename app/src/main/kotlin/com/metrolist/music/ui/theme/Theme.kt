@@ -29,7 +29,6 @@ import com.materialkolor.score.Score
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.rememberHazeState
 
 import com.metrolist.music.ui.theme.xevrae.DarkColors
 
@@ -44,7 +43,7 @@ fun MetrolistTheme(
     themeColor: Color = DefaultThemeColor,
     content: @Composable () -> Unit,
 ) {
-    val hazeState = rememberHazeState()
+    val hazeState = remember { HazeState() }
     val context = LocalContext.current
     // Determine if system dynamic colors should be used (Android S+ and default theme color)
     val useSystemDynamicColor = (themeColor == Color(0xFFED5564) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)

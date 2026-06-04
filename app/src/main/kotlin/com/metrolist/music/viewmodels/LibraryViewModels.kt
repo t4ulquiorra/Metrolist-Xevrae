@@ -774,12 +774,7 @@ class LibraryViewModel @Inject constructor(
     }
 
     fun getFavoritePodcasts() {
-        viewModelScope.launch {
-            database.podcasts().collectLatest { podcasts ->
-                // Map podcast entities to XevraePlaylist if applicable
-                _favoritePodcasts.value = LocalResource.Success(emptyList())
-            }
-        }
+        _favoritePodcasts.value = LocalResource.Success(emptyList())
     }
 
     fun getCanvasSong() {
@@ -879,7 +874,7 @@ class LibraryDynamicPlaylistViewModel @Inject constructor(
 
     private fun getMostPlayedSong() {
         viewModelScope.launch {
-            database.mostPlayedSongs().collectLatest { mostPlayedSong ->
+            database.mostPlayedSongs(0L).collectLatest { mostPlayedSong ->
                 _listMostPlayedSong.value = mostPlayedSong.map { it.song }
             }
         }
@@ -906,7 +901,10 @@ class LibraryDynamicPlaylistViewModel @Inject constructor(
             }.filterNotNull()
 
             val startIndex = metadataList.indexOfFirst { it.id == videoId }.coerceAtLeast(0)
-            playerConnection.play(metadataList, startIndex)
+            playerConnection.player.setMediaItems(metadataList.map { it.toMediaItem() })
+            playerConnection.player.seekTo(startIndex, 0)
+            playerConnection.player.prepare()
+            playerConnection.player.play()
         }
     }
 
@@ -927,7 +925,9 @@ class LibraryDynamicPlaylistViewModel @Inject constructor(
                 database.getSongByIdBlocking(song.id)?.toMediaMetadata()
             }.filterNotNull()
             
-            playerConnection.play(metadataList)
+            playerConnection.player.setMediaItems(metadataList.map { it.toMediaItem() })
+            playerConnection.player.prepare()
+            playerConnection.player.play()
         }
     }
 
@@ -940,7 +940,9 @@ class LibraryDynamicPlaylistViewModel @Inject constructor(
                 database.getSongByIdBlocking(song.id)?.toMediaMetadata()
             }.filterNotNull()
             
-            playerConnection.play(metadataList)
+            playerConnection.player.setMediaItems(metadataList.map { it.toMediaItem() })
+            playerConnection.player.prepare()
+            playerConnection.player.play()
             playerConnection.player.shuffleModeEnabled = true
         }
     }

@@ -1,6 +1,5 @@
 package com.metrolist.music.ui.screens.xevrae.home
 
-import dev.chrisbanes.haze.rememberHazeState
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
@@ -243,7 +242,7 @@ fun HomeScreen(
     }
 
     val hazeState =
-        rememberHazeState()
+        remember { HazeState() }
 
     LaunchedEffect(scrollState) {
         snapshotFlow { scrollState.firstVisibleItemIndex }

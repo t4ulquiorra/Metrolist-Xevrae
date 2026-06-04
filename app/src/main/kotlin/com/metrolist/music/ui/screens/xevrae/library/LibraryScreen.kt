@@ -1,6 +1,5 @@
 package com.metrolist.music.ui.screens.xevrae.library
 
-import dev.chrisbanes.haze.rememberHazeState
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.expandHorizontally
@@ -115,7 +114,7 @@ fun LibraryScreen(
     val libraryStr = stringResource(com.metrolist.music.R.string.library)
 
     val hazeState =
-        rememberHazeState()
+        remember { HazeState() }
 
     var topAppBarHeight by remember {
         mutableStateOf(0.dp)

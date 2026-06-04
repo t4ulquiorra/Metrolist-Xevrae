@@ -46,7 +46,6 @@ import dev.chrisbanes.haze.hazeChild
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
-import dev.chrisbanes.haze.rememberHazeState
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 
@@ -60,7 +59,7 @@ fun SpotifyLoginScreen(
     hideBottomNavigation: () -> Unit,
     showBottomNavigation: () -> Unit,
 ) {
-    val hazeState = rememberHazeState()
+    val hazeState = remember { HazeState() }
     val spotifyStatus by viewModel.spotifyStatus.collectAsStateWithLifecycle()
 
     val fullSpotifyCookies by viewModel.fullSpotifyCookies.collectAsStateWithLifecycle()

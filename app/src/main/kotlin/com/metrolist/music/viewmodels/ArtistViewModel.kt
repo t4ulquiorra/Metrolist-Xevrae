@@ -133,7 +133,7 @@ class ArtistViewModel @Inject constructor(
                 
                 // Sync with database
                 database.transaction {
-                    val existing = artist(channelId).firstOrNull()
+                    val existing = artist(channelId)
                     if (existing == null) {
                         insert(ArtistEntity(
                             id = channelId,
@@ -159,7 +159,7 @@ class ArtistViewModel @Inject constructor(
         
         viewModelScope.launch(Dispatchers.IO) {
             database.transaction {
-                val artist = artist(channelId).firstOrNull()
+                val artist = artist(channelId)
                 if (artist != null) {
                     val newBookmark = if (shouldFollow) LocalDateTime.now() else null
                     update(artist.artist.copy(bookmarkedAt = newBookmark))
@@ -183,7 +183,7 @@ class ArtistViewModel @Inject constructor(
 
     fun onRadioClick(endpoint: WatchEndpoint) {
         viewModelScope.launch {
-            YouTube.next(endpoint.videoId, endpoint.playlistId, endpoint.params).onSuccess { next ->
+            YouTube.next(endpoint).onSuccess { next ->
                 val tracks = next.items.filterIsInstance<SongItem>()
                 if (tracks.isNotEmpty()) {
                     setQueueData(
@@ -210,7 +210,7 @@ class ArtistViewModel @Inject constructor(
 
     fun onShuffleClick(endpoint: WatchEndpoint) {
         viewModelScope.launch {
-            YouTube.next(endpoint.videoId, endpoint.playlistId, endpoint.params).onSuccess { next ->
+            YouTube.next(endpoint).onSuccess { next ->
                 val tracks = next.items.filterIsInstance<SongItem>()
                 if (tracks.isNotEmpty()) {
                     setQueueData(

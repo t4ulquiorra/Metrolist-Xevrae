@@ -359,7 +359,7 @@ class HomeViewModel @Inject constructor(
                     )
                     _newRelease.value = listOf(HomeItem(
                         title = getString(com.metrolist.music.R.string.new_release),
-                        contents = page.newReleaseAlbums.map { it.toContent() }
+                        contents = page.newReleaseAlbums.mapNotNull { it.toContent() }
                     ))
                     _exploreMoodItem.value = Mood(
                         genres = page.moodAndGenres.map { Genre(it.endpoint.params ?: "", it.title) },
@@ -551,13 +551,13 @@ class HomeViewModel @Inject constructor(
     private fun YTItem.toContent() = when (this) {
         is SongItem -> Content(
             title = title,
-            artists = artists.map { Artist(it.name, it.id ?: "") },
+            artists = artists.map { com.metrolist.music.models.xevrae.Artist(it.name, it.id ?: "") },
             album = album?.let { Album(it.name, it.id) },
             thumbnails = listOf(Thumbnail(thumbnail)),
             videoId = id,
             isExplicit = explicit,
             durationSeconds = duration,
-            radio = endpoint?.watchPlaylistEndpoint?.params
+            radio = endpoint?.params
         )
         is AlbumItem -> Content(
             title = title,
@@ -574,7 +574,7 @@ class HomeViewModel @Inject constructor(
         )
         is PlaylistItem -> Content(
             title = title,
-            artists = author?.let { listOf(Artist(it.name, it.id ?: "")) },
+            artists = author?.let { listOf(com.metrolist.music.models.xevrae.Artist(it.name, it.id ?: "")) },
             thumbnails = thumbnail?.let { listOf(Thumbnail(it)) } ?: emptyList(),
             playlistId = id
         )

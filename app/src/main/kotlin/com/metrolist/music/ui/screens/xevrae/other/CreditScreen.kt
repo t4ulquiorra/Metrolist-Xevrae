@@ -43,7 +43,6 @@ import dev.chrisbanes.haze.hazeChild
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
 import dev.chrisbanes.haze.materials.HazeMaterials
-import dev.chrisbanes.haze.rememberHazeState
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 
@@ -53,7 +52,7 @@ fun CreditScreen(
     paddingValues: PaddingValues,
     navController: NavController,
 ) {
-    val hazeState = rememberHazeState()
+    val hazeState = remember { HazeState() }
     Column(
         modifier =
             Modifier
