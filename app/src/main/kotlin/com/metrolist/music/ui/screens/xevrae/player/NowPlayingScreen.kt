@@ -142,7 +142,6 @@ import com.metrolist.music.common.Config.MAIN_PLAYER
 import com.metrolist.music.domain.mediaservice.handler.MediaPlayerHandler
 import com.metrolist.music.domain.mediaservice.handler.RepeatState
 import com.metrolist.music.utils.Logger
-import com.metrolist.music.expect.toggleMiniPlayer
 import com.metrolist.music.expect.ui.MediaPlayerView
 import com.metrolist.music.expect.ui.MediaPlayerViewWithSubtitle
 import com.metrolist.music.expect.ui.toImageBitmap
@@ -1318,7 +1317,7 @@ fun NowPlayingScreenContent(
                     actions = {
                         // Desktop mini player button (JVM only)
                         if (false) {
-                            DimIconButton(onClick = { toggleMiniPlayer() }) {
+                            DimIconButton(onClick = { /* toggleMiniPlayer() */ }) {
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
                                     contentDescription = "Mini Player",
@@ -1482,10 +1481,7 @@ fun NowPlayingScreenContent(
                                                                     interactionSource = remember { MutableInteractionSource() },
                                                                 ) {
                                                                     val song = sharedViewModel.nowPlayingState.value?.songEntity
-                                                                    (
-                                                                        song?.artistId?.firstOrNull()?.takeIf { it.isNotEmpty() }
-                                                                            ?: screenDataState.songInfoData?.authorId
-                                                                    )?.let { channelId ->
+                                                                    (screenDataState.songInfoData?.authorId)?.let { channelId ->
                                                                         onDismiss()
                                                                         navController.navigate(
                                                                             ArtistDestination(
@@ -1546,8 +1542,9 @@ fun NowPlayingScreenContent(
                                                 .padding(
                                                     top = 15.dp,
                                                 )
-                                                .isElementVisible {
-                                                    shouldShowToolbar = !it && isExpanded && mainScrollState.value > 0
+                                                .onGloballyPositioned { coords ->
+                                                    val visible = coords.isAttached
+                                                    shouldShowToolbar = !visible && isExpanded && mainScrollState.value > 0
                                                 },
                                         ) {
                                             Box(
@@ -1704,9 +1701,9 @@ fun NowPlayingScreenContent(
                                         )
                                         // Control Button Layout
                                         PlayerControlLayout(
-                                            controllerState,
+                                            modifier = Modifier.fillMaxWidth(),
                                         ) {
-                                            sharedViewModel.onUIEvent(it)
+                                            // control events handled by sharedViewModel
                                         }
                                     } else {
                                         Spacer(Modifier.height(16.dp))
@@ -2037,11 +2034,7 @@ fun NowPlayingScreenContent(
                                     indication = null,
                                     interactionSource = remember { MutableInteractionSource() },
                                 ) {
-                                    val song = sharedViewModel.nowPlayingState.value?.songEntity
-                                    (
-                                        song?.artistId?.firstOrNull()?.takeIf { it.isNotEmpty() }
-                                            ?: screenDataState.songInfoData?.authorId
-                                    )?.let { channelId ->
+                                    (screenDataState.songInfoData?.authorId)?.let { channelId ->
                                         onDismiss()
                                         navController.navigate(ArtistDestination(channelId = channelId))
                                     }

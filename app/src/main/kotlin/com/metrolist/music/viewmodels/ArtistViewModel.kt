@@ -237,36 +237,3 @@ class ArtistViewModel @Inject constructor(
     }
 }
 
-data class ArtistScreenData(
-    val title: String? = null,
-    val imageUrl: String? = null,
-    val subscribers: String? = null,
-    val playCount: String? = null,
-    val isChannel: Boolean = false,
-    val channelId: String? = null,
-    val radioParam: WatchEndpoint? = null,
-    val shuffleParam: WatchEndpoint? = null,
-    val description: String? = null,
-    val listSongParam: String? = null,
-    val popularSongs: List<SongItem> = emptyList(),
-    val singles: Singles? = null,
-    val albums: Albums? = null,
-    val video: Videos? = null,
-    val related: Related? = null,
-    val featuredOn: List<PlaylistItem> = emptyList(),
-)
-
-sealed class ArtistScreenState(
-    val data: ArtistScreenData = ArtistScreenData(),
-    val message: String? = null,
-) {
-    data object Loading : ArtistScreenState()
-
-    class Success(
-        data: ArtistScreenData,
-    ) : ArtistScreenState(data)
-
-    class Error(
-        message: String,
-    ) : ArtistScreenState(message = message)
-}

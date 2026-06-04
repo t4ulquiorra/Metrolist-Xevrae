@@ -119,7 +119,7 @@ class AlbumViewModel @Inject constructor(
                     if (existingAlbum == null) {
                         insert(page)
                     } else {
-                        update(existingAlbum.album, page, existingAlbum.artists)
+                        insert(page)
                     }
                 }
                 
@@ -150,7 +150,7 @@ class AlbumViewModel @Inject constructor(
             val albumForLike = database.albumBlocking(browseId)
             database.transaction {
                 if (albumForLike != null) {
-                    update(albumForLike.album.copy(bookmarkedAt = if (albumForLike.album.bookmarkedAt == null) LocalDateTime.now() else null))
+                    update(albumForLike.album.copy(bookmarkedAt = if (albumForLike.album.bookmarkedAt == null) java.time.LocalDateTime.now() else null))
                 }
             }
         }

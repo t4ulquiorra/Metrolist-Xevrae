@@ -166,14 +166,14 @@ class AlbumViewModel @Inject constructor(
         val uiState = _uiState.value
         setQueueData(
             QueueData.Data(
-                listTracks = uiState.listTrack,
+                listTracks = uiState.value.listTrack,
                 firstPlayedTrack = track,
-                playlistId = uiState.browseId.replaceFirst("VL", ""),
+                playlistId = uiState.value.browseId.replaceFirst("VL", ""),
                 playlistName = "${getString(com.metrolist.music.R.string.album)} \"${uiState.value.title}\"",
                 playlistType = PlaylistType.PLAYLIST,
             ),
         )
-        val index = uiState.listTrack.indexOf(track)
+        val index = uiState.value.listTrack.indexOf(track)
         loadMediaItem(track, "ALBUM_CLICK", if (index == -1) 0 else index)
     }
 

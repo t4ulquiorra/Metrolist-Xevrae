@@ -252,7 +252,7 @@ constructor(
     fun deletePlaylist(id: String) {
         viewModelScope.launch {
             database.transaction {
-                playlistByBrowseId(id)?.let { delete(it.playlist) }
+                playlistByBrowseId(id)?.let { delete(it) }
             }
         }
     }
