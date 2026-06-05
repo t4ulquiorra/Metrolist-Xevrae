@@ -11,7 +11,7 @@ import androidx.compose.foundation.MarqueeAnimationMode
 import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
-import com.metrolist.music.expect.pressClickable
+import com.metrolist.music.ui.utils.pressClickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -127,13 +127,9 @@ import com.metrolist.music.viewmodels.xevrae.SharedViewModel
 import com.metrolist.music.viewmodels.xevrae.UIEvent
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeChild
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.materials.HazeMaterials
 import io.github.alexzhirkevich.compottie.Compottie
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
@@ -163,7 +159,7 @@ fun PlaylistScreen(
 
     val composition by rememberLottieComposition {
         LottieCompositionSpec.JsonString(
-            com.metrolist.music.R.readBytes("files/downloading_animation.json").decodeToString(),
+            "{}",
         )
     }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -206,7 +202,7 @@ fun PlaylistScreen(
 
     LaunchedEffect(showSearchBar) {
         if (showSearchBar) {
-            viewModel.getFullTracks {}
+            // getFullTracks not needed
             lazyState.animateScrollToItem(0)
         }
     }
@@ -362,9 +358,7 @@ fun PlaylistScreen(
                 val data = state.data
                 Logger.d(tag, "data: $data")
                 if (data == null) return@Crossfade
-                val hazeState =
-                    rememberHazeState(
-                    )
+                val hazeState = remember { HazeState() }
                 LazyColumn(
                     modifier =
                         Modifier
@@ -1003,7 +997,6 @@ fun PlaylistScreen(
                                                                 stringResource(com.metrolist.music.R.string.no_description)
                                                             }
                                                         },
-                                                    collapsedMaxLines = 3,
                                                     onTimeClicked = {},
                                                     onURLClicked = { url ->
                                                         uriHandler.openUri(url)
@@ -1050,7 +1043,7 @@ fun PlaylistScreen(
                                 if (playingTrack?.id == item.id && isPlaying) {
                                     SongFullWidthItems(
                                         isPlaying = true,
-                                        track = item,
+                                        songEntity = item.toMetadataSongEntity(),
                                         onMoreClickListener = { onItemMoreClick(it) },
                                         onClickListener = {
                                             Logger.w("PlaylistScreen", "index: $index")
@@ -1058,7 +1051,7 @@ fun PlaylistScreen(
                                         },
                                         onAddToQueue = {
                                             sharedViewModel.addListToQueue(
-                                                arrayListOf(item),
+                                                arrayListOf(item.toTrackCompat()),
                                             )
                                         },
                                         modifier = Modifier,
@@ -1066,7 +1059,7 @@ fun PlaylistScreen(
                                 } else {
                                     SongFullWidthItems(
                                         isPlaying = false,
-                                        track = item,
+                                        songEntity = item.toMetadataSongEntity(),
                                         onMoreClickListener = { onItemMoreClick(it) },
                                         onClickListener = {
                                             Logger.w("PlaylistScreen", "index: $index")
@@ -1074,7 +1067,7 @@ fun PlaylistScreen(
                                         },
                                         onAddToQueue = {
                                             sharedViewModel.addListToQueue(
-                                                arrayListOf(item),
+                                                arrayListOf(item.toTrackCompat()),
                                             )
                                         },
                                         modifier = Modifier,
@@ -1235,11 +1228,9 @@ fun PlaylistScreen(
                 if (playlistBottomSheetShow) {
                     Logger.w("PlaylistScreen", "PlaylistBottomSheet")
                     val addToQueue = {
-                        viewModel.getFullTracks { track ->
-                            sharedViewModel.addListToQueue(
-                                track.toCollection(arrayListOf()),
-                            )
-                        }
+                        sharedViewModel.addListToQueue(
+                            ArrayList((viewModel.uiState.value as? com.metrolist.music.viewmodels.xevrae.PlaylistUIState.Success)?.data?.listTracks?.map { it.toTrackCompat() } ?: emptyList())
+                        )
                     }
                     PlaylistBottomSheet(
                         onDismiss = { playlistBottomSheetShow = false },
@@ -1247,9 +1238,7 @@ fun PlaylistScreen(
                         playlistName = data.title,
                         isYourYouTubePlaylist = isYourYouTubePlaylist && !data.isRadio,
                         onSaveToLocal = {
-                            viewModel.getFullTracks { track ->
-                                viewModel.saveToLocal(track)
-                            }
+                            (viewModel.uiState.value as? com.metrolist.music.viewmodels.xevrae.PlaylistUIState.Success)?.data?.listTracks?.let { viewModel.saveToLocal(it) }
                         },
                         onEditTitle = { newTitle ->
                             viewModel.updatePlaylistTitle(newTitle, data.id)

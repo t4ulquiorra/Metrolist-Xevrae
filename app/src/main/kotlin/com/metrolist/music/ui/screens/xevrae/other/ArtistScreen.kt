@@ -657,8 +657,8 @@ fun ArtistScreen(
                                         Spacer(Modifier.size(10.dp))
                                     }
                                     items(state.data.related?.results ?: emptyList()) { related ->
-                                        HomeItemArtist(
-                                            onClick = {
+                                        ArtistFullWidthItems(
+                                            onClickListener = { _ ->
                                                 navController.navigate(
                                                     ArtistDestination(
                                                         channelId = related.browseId,
@@ -721,7 +721,6 @@ fun ArtistScreen(
                             DescriptionView(
                                 modifier = Modifier.padding(16.dp),
                                 text = state.data.description ?: stringResource(com.metrolist.music.R.string.no_description),
-                                limitLine = 5,
                                 onTimeClicked = {},
                                 onURLClicked = { url ->
                                     urlHandler.openUri(url)

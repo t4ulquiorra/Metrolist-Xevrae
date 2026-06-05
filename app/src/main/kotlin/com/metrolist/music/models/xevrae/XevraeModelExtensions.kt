@@ -178,3 +178,21 @@ fun com.metrolist.innertube.models.SongItem.toMetadataSongEntity(): com.metrolis
         explicit = explicit,
         duration = duration ?: -1,
     )
+
+fun com.metrolist.innertube.models.SongItem.toTrackCompat(): Track =
+    Track(
+        album = album?.let { Album(it.name, it.id) },
+        artists = artists.map { Artist(it.name, it.id ?: "") },
+        duration = duration?.toString(),
+        durationSeconds = duration,
+        isAvailable = true,
+        isExplicit = explicit,
+        likeStatus = null,
+        thumbnails = listOf(Thumbnail(thumbnail)),
+        title = title,
+        videoId = id,
+        videoType = musicVideoType,
+        category = null,
+        feedbackTokens = null,
+        resultType = null,
+    )

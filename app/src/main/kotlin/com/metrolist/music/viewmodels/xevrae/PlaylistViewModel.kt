@@ -277,6 +277,18 @@ class PlaylistViewModel @Inject constructor(
     }
 }
 
+    fun getFullTracks(onDone: (List<com.metrolist.innertube.models.SongItem>) -> Unit) {
+        viewModelScope.launch {
+            val tracks = (_uiState.value as? PlaylistUIState.Success)?.data?.listTracks ?: emptyList()
+            onDone(tracks)
+        }
+    }
+
+    fun saveToLocal(tracks: List<com.metrolist.innertube.models.SongItem>) {
+        // Stub — save to local playlist
+    }
+}
+
 sealed class PlaylistUIState(
     val data: PlaylistState? = null,
     val message: String? = null,
@@ -304,10 +316,3 @@ sealed class PlaylistUIEvent {
 enum class ListState {
     IDLE, LOADING, PAGINATING, ERROR, PAGINATION_EXHAUST
 }
-
-    fun getFullTracks(onDone: (List<com.metrolist.innertube.models.SongItem>) -> Unit) {
-        viewModelScope.launch {
-            val tracks = uiState.value.data?.listTracks ?: emptyList()
-            onDone(tracks)
-        }
-    }

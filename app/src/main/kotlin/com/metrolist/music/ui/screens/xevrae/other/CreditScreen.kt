@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.metrolist.music.expect.openUrl
+import com.metrolist.music.ui.utils.openUrl
 import com.metrolist.music.ui.component.RippleIconButton
 import com.metrolist.music.ui.theme.xevrae.typo
 import com.metrolist.music.models.xevrae.VersionManager
@@ -67,7 +67,7 @@ fun CreditScreen(
 
         // App icon
         Image(
-            painter = painterResource(com.metrolist.music.R.drawable.app_icon),
+            painter = painterResource(com.metrolist.music.R.drawable.ic_launcher_foreground),
             contentDescription = "App Icon",
             modifier =
                 Modifier
