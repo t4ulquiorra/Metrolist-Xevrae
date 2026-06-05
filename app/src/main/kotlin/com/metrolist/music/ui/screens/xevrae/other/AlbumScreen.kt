@@ -1,5 +1,7 @@
 package com.metrolist.music.ui.screens.xevrae.other
 
+import com.metrolist.music.extensions.getStringBlocking
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.fadeIn
@@ -105,8 +107,11 @@ import com.metrolist.music.viewmodels.xevrae.AlbumViewModel
 import com.metrolist.music.viewmodels.xevrae.LocalPlaylistState
 import com.metrolist.music.viewmodels.xevrae.SharedViewModel
 import com.metrolist.music.viewmodels.xevrae.UIEvent
+import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
 import io.github.alexzhirkevich.compottie.Compottie
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
@@ -145,7 +150,7 @@ fun AlbumScreen(
 
     val composition by rememberLottieComposition {
         LottieCompositionSpec.JsonString(
-            com.metrolist.music.R.readBytes("files/downloading_animation.json").decodeToString(),
+            "{}",
         )
     }
 
@@ -164,9 +169,7 @@ fun AlbumScreen(
         shouldHideTopBar = !firstItemVisible
     }
     val paletteState = rememberPaletteState()
-    val hazeState =
-        rememberHazeState(
-        )
+    val hazeState = remember { HazeState() }
     var bitmap by remember {
         mutableStateOf<ImageBitmap?>(null)
     }
@@ -325,8 +328,8 @@ fun AlbumScreen(
                                                             .memoryCacheKey(uiState.thumbnail)
                                                             .crossfade(false)
                                                             .build(),
-                                                    placeholder = painterResource(com.metrolist.music.R.drawable.holder),
-                                                    error = painterResource(com.metrolist.music.R.drawable.holder),
+                                                    placeholder = painterResource(com.metrolist.music.R.drawable.ic_launcher_foreground),
+                                                    error = painterResource(com.metrolist.music.R.drawable.ic_launcher_foreground),
                                                     contentDescription = null,
                                                     contentScale = ContentScale.Crop,
                                                     onSuccess = {
@@ -473,8 +476,8 @@ fun AlbumScreen(
                                                     .diskCacheKey(uiState.thumbnail)
                                                     .crossfade(true)
                                                     .build(),
-                                            placeholder = painterResource(com.metrolist.music.R.drawable.holder),
-                                            error = painterResource(com.metrolist.music.R.drawable.holder),
+                                            placeholder = painterResource(com.metrolist.music.R.drawable.ic_launcher_foreground),
+                                            error = painterResource(com.metrolist.music.R.drawable.ic_launcher_foreground),
                                             contentDescription = null,
                                             contentScale = ContentScale.FillHeight,
                                             onSuccess = {
@@ -616,9 +619,7 @@ fun AlbumScreen(
                                                                                 .fillMaxSize()
                                                                                 .clickable {
                                                                                     viewModel.makeToast(
-                                                                                        runBlocking {
-                                                                                            getString(com.metrolist.music.R.string.downloaded)
-                                                                                        },
+                                                                                        com.metrolist.music.extensions.getStringBlocking(com.metrolist.music.R.string.downloaded),
                                                                                     )
                                                                                 },
                                                                         contentAlignment = Alignment.Center,
@@ -639,9 +640,7 @@ fun AlbumScreen(
                                                                                 .fillMaxSize()
                                                                                 .clickable {
                                                                                     viewModel.makeToast(
-                                                                                        runBlocking {
-                                                                                            getString(com.metrolist.music.R.string.downloading)
-                                                                                        },
+                                                                                        com.metrolist.music.extensions.getStringBlocking(com.metrolist.music.R.string.downloading),
                                                                                     )
                                                                                 },
                                                                         contentAlignment = Alignment.Center,
@@ -720,9 +719,7 @@ fun AlbumScreen(
                                                                                 CircleShape,
                                                                             ).clickable {
                                                                                 viewModel.makeToast(
-                                                                                    runBlocking {
-                                                                                        getString(com.metrolist.music.R.string.downloaded)
-                                                                                    },
+                                                                                    com.metrolist.music.extensions.getStringBlocking(com.metrolist.music.R.string.downloaded),
                                                                                 )
                                                                             },
                                                                 ) {
@@ -747,9 +744,7 @@ fun AlbumScreen(
                                                                                 CircleShape,
                                                                             ).clickable {
                                                                                 viewModel.makeToast(
-                                                                                    runBlocking {
-                                                                                        getString(com.metrolist.music.R.string.downloading)
-                                                                                    },
+                                                                                    com.metrolist.music.extensions.getStringBlocking(com.metrolist.music.R.string.downloading),
                                                                                 )
                                                                             },
                                                                 ) {
@@ -838,9 +833,9 @@ fun AlbumScreen(
                                 SongFullWidthItems(
                                     isPlaying = item.id == playingVideoId,
 
-                                    songEntity = item.toSongEntity(),
+                                    songEntity = item.toMetadataSongEntity(),
                                     onMoreClickListener = {
-                                        chosenSong = item
+                                        chosenSong = item.toTrackCompat()
                                         showBottomSheet = true
                                     },
                                     onClickListener = {
@@ -970,7 +965,7 @@ fun AlbumScreen(
                         onSaveToLocal = {},
                         onAddToQueue = {
                             sharedViewModel.addListToQueue(
-                                uiState.listTrack.map { it.toTrackCompat() }.toCollection(arrayListOf()),
+                                uiState.value.listTrack.map { it.toTrackCompat() }.toCollection(arrayListOf()),
                             )
                         },
                     )

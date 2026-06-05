@@ -1232,7 +1232,7 @@ fun PlaylistScreen(
                     Logger.w("PlaylistScreen", "PlaylistBottomSheet")
                     val addToQueue = {
                         sharedViewModel.addListToQueue(
-                            ArrayList((viewModel.uiState.value as? com.metrolist.music.viewmodels.xevrae.PlaylistUIState.Success)?.data?.listTracks?.map { it.toTrackCompat() } ?: emptyList() ?: emptyList())
+                            ArrayList(viewModel.tracks.value.map { it.toTrackCompat() })
                         )
                     }
                     PlaylistBottomSheet(
@@ -1241,7 +1241,7 @@ fun PlaylistScreen(
                         playlistName = data.title,
                         isYourYouTubePlaylist = isYourYouTubePlaylist && !data.isRadio,
                         onSaveToLocal = {
-                            (viewModel.uiState.value as? com.metrolist.music.viewmodels.xevrae.PlaylistUIState.Success)?.data?.listTracks?.let { viewModel.saveToLocal(it) }
+                            viewModel.saveToLocal(viewModel.tracks.value)
                         },
                         onEditTitle = { newTitle ->
                             viewModel.updatePlaylistTitle(newTitle, data.id)

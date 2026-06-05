@@ -269,10 +269,9 @@ class PlaylistViewModel @Inject constructor(
         // Implementation for saving to local playlist in Metrolist
     }
 
-    fun getFullTracks(onDone: (List<com.metrolist.innertube.models.SongItem>) -> Unit) {
+    fun getFullTracks(onDone: (List<SongItem>) -> Unit) {
         viewModelScope.launch {
-            val tracks = (_uiState.value as? PlaylistUIState.Success)?.data?.listTracks ?: emptyList()
-            onDone(tracks)
+            onDone(tracks.value)
         }
     }
 

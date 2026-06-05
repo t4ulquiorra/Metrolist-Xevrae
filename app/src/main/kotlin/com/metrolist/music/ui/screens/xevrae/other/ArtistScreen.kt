@@ -199,9 +199,9 @@ fun ArtistScreen(
                                                         .pressClickable {
                                                                                                                         viewModel.setQueueData(
                                                                 QueueData.Data(
-                                                                    listTracks = listOf(canvas.second),
-                                                                    firstPlayedTrack = canvas.second,
-                                                                    playlistId = "RDAMVM${canvas.second.id}",
+                                                                    listTracks = listOf(canvas.second.toTrack().toSongItem()),
+                                                                    firstPlayedTrack = canvas.second.toTrack().toSongItem(),
+                                                                    playlistId = "RDAMVM${canvas.second.toTrack().videoId}",
                                                                     playlistName = "\"${(state.data.title ?: "")}\" ${
                                                                         getStringBlocking(
                                                                             com.metrolist.music.R.string.popular,
