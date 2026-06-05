@@ -99,6 +99,7 @@ import com.kmpalette.rememberPaletteState
 import com.metrolist.music.models.xevrae.DownloadState
 import com.metrolist.music.models.xevrae.Track
 import com.metrolist.music.models.xevrae.toSongEntity
+import com.metrolist.music.models.xevrae.toMetadataSongEntity
 import com.metrolist.music.models.xevrae.toTrackCompat as songItemToTrackCompat
 import com.metrolist.music.utils.Logger
 import com.metrolist.music.expect.ui.drawBackdropCustomShape
