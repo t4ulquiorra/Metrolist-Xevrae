@@ -58,6 +58,7 @@ import com.metrolist.music.models.xevrae.Artist
 import com.metrolist.music.domain.mediaservice.handler.PlaylistType
 import com.metrolist.music.domain.mediaservice.handler.QueueData
 import com.metrolist.music.models.xevrae.toSongEntity
+import com.metrolist.music.models.xevrae.toTrackCompat
 import com.metrolist.music.models.xevrae.toTrack
 import com.metrolist.music.expect.pressClickable
 import com.metrolist.music.expect.ui.MediaPlayerView
@@ -353,7 +354,7 @@ fun ArtistScreen(
                                         },
                                         onAddToQueue = {
                                             sharedViewModel.addListToQueue(
-                                                arrayListOf(song),
+                                                arrayListOf(song.toTrackCompat()),
                                             )
                                         },
                                     )
@@ -514,7 +515,7 @@ fun ArtistScreen(
                                     )
                                     TextButton(
                                         onClick = {
-                                            val videoListParam = state.data.video?.videoListParam
+                                            val videoListParam = state.data.video?.moreEndpoint
                                             if (videoListParam != null) {
                                                 navController.navigate(
                                                     PlaylistDestination(
@@ -541,7 +542,7 @@ fun ArtistScreen(
                                     item {
                                         Spacer(Modifier.size(10.dp))
                                     }
-                                    items(state.data.video?.video ?: emptyList()) { video ->
+                                    items(state.data.video?.results ?: emptyList()) { video ->
                                         HomeItemVideo(
                                             onClick = {
                                                 val firstQueue: Track = video
@@ -556,7 +557,7 @@ fun ArtistScreen(
                                                     ),
                                                 )
                                                 viewModel.loadMediaItem(
-                                                    firstQueue,
+                                                    video,
                                                     type = Config.VIDEO_CLICK,
                                                 )
                                             },
@@ -575,7 +576,7 @@ fun ArtistScreen(
                                                     thumbnails = listOf(com.metrolist.music.models.xevrae.Thumbnail(video.thumbnail)),
                                                     title = video.title,
                                                     videoId = video.id,
-                                                    views = video.musicVideoType,
+                                                    views = null,
                                                 ),
                                         )
                                     }
@@ -661,14 +662,14 @@ fun ArtistScreen(
                                             onClickListener = {
                                                 navController.navigate(
                                                     ArtistDestination(
-                                                        channelId = related.browseId ?: "",
+                                                        channelId = (related as? com.metrolist.innertube.models.ArtistItem)?.id ?: "",
                                                     ),
                                                 )
                                             },
                                             data = com.metrolist.music.db.entities.ArtistEntity(
-                                                id = related.browseId ?: "",
-                                                name = related.title ?: "",
-                                                thumbnailUrl = related.thumbnails?.firstOrNull()?.url,
+                                                id = (related as? com.metrolist.innertube.models.ArtistItem)?.id ?: "",
+                                                name = (related as? com.metrolist.innertube.models.ArtistItem)?.title ?: "",
+                                                thumbnailUrl = (related as? com.metrolist.innertube.models.ArtistItem)?.thumbnail,
                                                 channelId = related.browseId,
                                             ),
                                         )

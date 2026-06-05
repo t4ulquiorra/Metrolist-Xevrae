@@ -247,7 +247,7 @@ fun PlaylistScreen(
     val isPlaying by sharedViewModel.controllerState.map { it.isPlaying }.collectAsState(initial = false)
 
     var currentItem by remember {
-        mutableStateOf<Track?>(null)
+        mutableStateOf<com.metrolist.innertube.models.SongItem?>(null)
     }
 
     var itemBottomSheetShow by remember {
