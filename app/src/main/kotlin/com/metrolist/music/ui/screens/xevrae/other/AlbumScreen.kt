@@ -77,6 +77,7 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.kmpalette.rememberPaletteState
 import com.metrolist.music.models.xevrae.DownloadState
+import com.metrolist.music.models.xevrae.toTrackCompat
 import com.metrolist.music.models.xevrae.Track
 import com.metrolist.music.models.xevrae.toSongEntity
 import com.metrolist.music.expect.ui.drawBackdropCustomShape
@@ -829,15 +830,15 @@ fun AlbumScreen(
                     }
                     items(count = uiState.trackCount, key = { index ->
                         val item = uiState.listTrack.getOrNull(index)
-                        item?.videoId + "item_$index"
+                        item?.id + "item_$index"
                     }) { index ->
                         val item = uiState.listTrack.getOrNull(index)
                         if (item != null) {
                             Column(modifier = Modifier.animateItem()) {
                                 SongFullWidthItems(
-                                    isPlaying = item.videoId == playingVideoId,
-                                    index = index,
-                                    track = item,
+                                    isPlaying = item.id == playingVideoId,
+
+                                    songEntity = item.toSongEntity(),
                                     onMoreClickListener = {
                                         chosenSong = item
                                         showBottomSheet = true
@@ -847,7 +848,7 @@ fun AlbumScreen(
                                     },
                                     onAddToQueue = {
                                         sharedViewModel.addListToQueue(
-                                            arrayListOf(item),
+                                            arrayListOf(item.toTrackCompat()),
                                         )
                                     },
                                     modifier = Modifier,
@@ -969,7 +970,7 @@ fun AlbumScreen(
                         onSaveToLocal = {},
                         onAddToQueue = {
                             sharedViewModel.addListToQueue(
-                                uiState.listTrack.toCollection(arrayListOf()),
+                                uiState.listTrack.map { it.toTrackCompat() }.toCollection(arrayListOf()),
                             )
                         },
                     )

@@ -197,12 +197,11 @@ fun ArtistScreen(
                                                             shape = RoundedCornerShape(4.dp),
                                                         ).clip(RoundedCornerShape(4.dp))
                                                         .pressClickable {
-                                                            val firstQueue: Track = canvas.second.toTrack()
-                                                            viewModel.setQueueData(
+                                                                                                                        viewModel.setQueueData(
                                                                 QueueData.Data(
-                                                                    listTracks = arrayListOf(firstQueue),
-                                                                    firstPlayedTrack = firstQueue,
-                                                                    playlistId = "RDAMVM${firstQueue.videoId}",
+                                                                    listTracks = listOf(canvas.second),
+                                                                    firstPlayedTrack = canvas.second,
+                                                                    playlistId = "RDAMVM${canvas.second.id}",
                                                                     playlistName = "\"${(state.data.title ?: "")}\" ${
                                                                         getStringBlocking(
                                                                             com.metrolist.music.R.string.popular,
@@ -348,7 +347,7 @@ fun ArtistScreen(
                                                 ),
                                             )
                                             viewModel.loadMediaItem(
-                                                firstQueue,
+                                                song,
                                                 type = Config.SONG_CLICK,
                                             )
                                         },
@@ -545,12 +544,11 @@ fun ArtistScreen(
                                     items(state.data.video?.results ?: emptyList()) { video ->
                                         HomeItemVideo(
                                             onClick = {
-                                                val firstQueue: Track = video
-                                                viewModel.setQueueData(
+                                                                                                viewModel.setQueueData(
                                                     QueueData.Data(
-                                                        listTracks = arrayListOf(firstQueue),
-                                                        firstPlayedTrack = firstQueue,
-                                                        playlistId = "RDAMVM${video.videoId}",
+                                                        listTracks = listOf(video),
+                                                        firstPlayedTrack = video,
+                                                        playlistId = "RDAMVM${video.id}",
                                                         playlistName = (state.data.title ?: "") + getStringBlocking(com.metrolist.music.R.string.videos),
                                                         playlistType = PlaylistType.RADIO,
                                                         continuation = null,
@@ -670,7 +668,7 @@ fun ArtistScreen(
                                                 id = (related as? com.metrolist.innertube.models.ArtistItem)?.id ?: "",
                                                 name = (related as? com.metrolist.innertube.models.ArtistItem)?.title ?: "",
                                                 thumbnailUrl = (related as? com.metrolist.innertube.models.ArtistItem)?.thumbnail,
-                                                channelId = related.browseId,
+                                                channelId = (related as? com.metrolist.innertube.models.ArtistItem)?.id,
                                             ),
                                         )
                                     }

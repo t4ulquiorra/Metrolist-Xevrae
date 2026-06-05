@@ -14,3 +14,10 @@ fun HomeItemVideo(
     modifier: Modifier = Modifier,
 ) { Box(modifier = modifier.fillMaxWidth().clickable { onClick() }) }
 
+
+@Composable
+fun HomeItemArtist(
+    onClick: () -> Unit,
+    data: com.metrolist.music.models.xevrae.Content,
+    modifier: Modifier = Modifier,
+) { Box(modifier = modifier.fillMaxWidth().clickable { onClick() }) }
