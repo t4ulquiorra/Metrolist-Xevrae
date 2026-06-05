@@ -59,6 +59,7 @@ import com.metrolist.music.domain.mediaservice.handler.PlaylistType
 import com.metrolist.music.domain.mediaservice.handler.QueueData
 import com.metrolist.music.models.xevrae.toSongEntity
 import com.metrolist.music.models.xevrae.toTrackCompat
+import com.metrolist.music.models.xevrae.toSongItem
 import com.metrolist.music.models.xevrae.toTrack
 import com.metrolist.music.ui.utils.pressClickable
 import com.metrolist.music.expect.ui.MediaPlayerView

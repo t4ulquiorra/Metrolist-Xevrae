@@ -9,10 +9,19 @@ enum class DevLogInType {
 }
 
 @Composable
+fun DevLogInBottomSheet(
+    onDismiss: () -> Unit,
+    onDone: (cookie: String, netscapeCookie: String) -> Unit,
+    type: DevLogInType,
+) {
+    // Stub
+}
+
+@Composable
 fun DevCookieLogInBottomSheet(
     onDismiss: () -> Unit,
     type: DevLogInType,
-    cookies: String = "",
+    cookies: List<Pair<String, String?>> = emptyList(),
 ) {
-    // Stub — developer cookie login bottom sheet
+    // Stub
 }

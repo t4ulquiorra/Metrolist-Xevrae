@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -88,7 +89,7 @@ fun SpotifyLoginScreen(
     LaunchedEffect(spotifyStatus) {
         if (spotifyStatus) {
             settingsViewModel.setSpotifyLogIn(true)
-            viewModel.makeToast(getString(com.metrolist.music.R.string.login_success))
+            viewModel.makeToast(getStringBlocking(com.metrolist.music.R.string.login_success))
             navController.navigateUp()
         }
     }

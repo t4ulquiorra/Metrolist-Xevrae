@@ -196,3 +196,16 @@ fun com.metrolist.innertube.models.SongItem.toTrackCompat(): Track =
         feedbackTokens = null,
         resultType = null,
     )
+
+fun com.metrolist.innertube.models.SongItem.toSongEntity(): com.metrolist.music.db.entities.SongEntity =
+    com.metrolist.music.db.entities.SongEntity(
+        id = id,
+        title = title.orEmpty(),
+        artistsText = artists?.joinToString { it.name } ?: "",
+        thumbnailUrl = thumbnail?.url,
+        duration = duration,
+        liked = false,
+        totalPlayTime = 0,
+        downloadState = 0,
+        inLibrary = null,
+    )

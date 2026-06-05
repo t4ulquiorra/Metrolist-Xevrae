@@ -1,5 +1,7 @@
 package com.metrolist.music.ui.screens.xevrae.login
 
+import com.metrolist.music.extensions.getStringBlocking
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -116,10 +118,10 @@ fun LoginScreen(
                                 coroutineScope.launch {
                                     val success = settingsViewModel.addAccount(cookie, netscapeCookie)
                                     if (success) {
-                                        viewModel.makeToast(getString(com.metrolist.music.R.string.login_success))
+                                        viewModel.makeToast(getStringBlocking(com.metrolist.music.R.string.login_success))
                                         navController.navigateUp()
                                     } else {
-                                        viewModel.makeToast(getString(com.metrolist.music.R.string.login_failed))
+                                        viewModel.makeToast(getStringBlocking(com.metrolist.music.R.string.login_failed))
                                     }
                                 }
                             },
@@ -143,10 +145,10 @@ fun LoginScreen(
                         createWebViewCookieManager().removeAllCookies()
 
                         if (success) {
-                            viewModel.makeToast(getString(com.metrolist.music.R.string.login_success))
+                            viewModel.makeToast(getStringBlocking(com.metrolist.music.R.string.login_success))
                             navController.navigateUp()
                         } else {
-                            viewModel.makeToast(getString(com.metrolist.music.R.string.login_failed))
+                            viewModel.makeToast(getStringBlocking(com.metrolist.music.R.string.login_failed))
                         }
                     }
                 }

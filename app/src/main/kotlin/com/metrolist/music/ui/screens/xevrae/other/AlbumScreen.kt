@@ -107,11 +107,9 @@ import com.metrolist.music.viewmodels.xevrae.AlbumViewModel
 import com.metrolist.music.viewmodels.xevrae.LocalPlaylistState
 import com.metrolist.music.viewmodels.xevrae.SharedViewModel
 import com.metrolist.music.viewmodels.xevrae.UIEvent
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeChild
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
 import io.github.alexzhirkevich.compottie.Compottie
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
@@ -833,7 +831,7 @@ fun AlbumScreen(
                                 SongFullWidthItems(
                                     isPlaying = item.id == playingVideoId,
 
-                                    songEntity = item.toMetadataSongEntity(),
+                                    songEntity = item.toSongEntity(),
                                     onMoreClickListener = {
                                         chosenSong = item.toTrackCompat()
                                         showBottomSheet = true
@@ -965,7 +963,7 @@ fun AlbumScreen(
                         onSaveToLocal = {},
                         onAddToQueue = {
                             sharedViewModel.addListToQueue(
-                                uiState.value.listTrack.map { it.toTrackCompat() }.toCollection(arrayListOf()),
+                                uiState.listTrack.map { it.toTrackCompat() }.toCollection(arrayListOf()),
                             )
                         },
                     )
