@@ -193,8 +193,7 @@ fun LibraryScreen(
                 }
                 LazyColumn(
                     contentPadding =
-                        PaddingValues(top = innerPadding.calculateTopPadding() + topAppBarHeight,
-                        , bottom = innerPadding.calculateBottomPadding()),
+                        PaddingValues(top = innerPadding.calculateTopPadding() + topAppBarHeight, bottom = innerPadding.calculateBottomPadding()),
                     state = state,
                 ) {
                     item {
