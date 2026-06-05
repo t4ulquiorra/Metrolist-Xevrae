@@ -12,6 +12,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.clickable
 import com.metrolist.music.ui.utils.pressClickable
+import com.metrolist.music.models.xevrae.toMetadataSongEntity
+import com.metrolist.music.models.xevrae.toTrackCompat
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -1229,7 +1231,7 @@ fun PlaylistScreen(
                     Logger.w("PlaylistScreen", "PlaylistBottomSheet")
                     val addToQueue = {
                         sharedViewModel.addListToQueue(
-                            ArrayList((viewModel.uiState.value as? com.metrolist.music.viewmodels.xevrae.PlaylistUIState.Success)?.data?.listTracks?.map { it.toTrackCompat() } ?: emptyList())
+                            ArrayList((viewModel.uiState.value as? com.metrolist.music.viewmodels.xevrae.PlaylistUIState.Success)?.data?.listTracks?.map { it.toTrackCompat() } ?: emptyList() ?: emptyList())
                         )
                     }
                     PlaylistBottomSheet(

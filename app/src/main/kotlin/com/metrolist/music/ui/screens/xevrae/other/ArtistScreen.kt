@@ -567,15 +567,15 @@ fun ArtistScreen(
                                             data =
                                                 Content(
                                                     album = null,
-                                                    artists = video.artists,
+                                                    artists = video.artists.map { com.metrolist.music.models.xevrae.Artist(it.name, it.id ?: "") },
                                                     description = null,
-                                                    isExplicit = video.isExplicit,
+                                                    isExplicit = video.explicit,
                                                     playlistId = null,
                                                     browseId = null,
-                                                    thumbnails = video.thumbnails ?: emptyList(),
+                                                    thumbnails = listOf(com.metrolist.music.models.xevrae.Thumbnail(video.thumbnail)),
                                                     title = video.title,
-                                                    videoId = video.videoId,
-                                                    views = video.videoType,
+                                                    videoId = video.id,
+                                                    views = video.musicVideoType,
                                                 ),
                                         )
                                     }
@@ -658,34 +658,19 @@ fun ArtistScreen(
                                     }
                                     items(state.data.related?.results ?: emptyList()) { related ->
                                         ArtistFullWidthItems(
-                                            onClickListener = { _ ->
+                                            onClickListener = {
                                                 navController.navigate(
                                                     ArtistDestination(
-                                                        channelId = related.browseId,
+                                                        channelId = related.browseId ?: "",
                                                     ),
                                                 )
                                             },
-                                            data =
-                                                Content(
-                                                    album = null,
-                                                    artists =
-                                                        listOf(
-                                                            Artist(
-                                                                id = related.browseId,
-                                                                name = related.title,
-                                                            ),
-                                                        ),
-                                                    description = related.subscribers,
-                                                    isExplicit = null,
-                                                    playlistId = null,
-                                                    browseId = related.browseId,
-                                                    thumbnails = related.thumbnails,
-                                                    title = related.title,
-                                                    videoId = null,
-                                                    views = null,
-                                                    durationSeconds = null,
-                                                    radio = null,
-                                                ),
+                                            data = com.metrolist.music.db.entities.ArtistEntity(
+                                                id = related.browseId ?: "",
+                                                name = related.title ?: "",
+                                                thumbnailUrl = related.thumbnails?.firstOrNull()?.url,
+                                                channelId = related.browseId,
+                                            ),
                                         )
                                     }
                                     item {

@@ -25,6 +25,8 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,6 +41,7 @@ import com.metrolist.music.ui.utils.openUrl
 import com.metrolist.music.ui.component.RippleIconButton
 import com.metrolist.music.ui.theme.xevrae.typo
 import com.metrolist.music.models.xevrae.VersionManager
+import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeChild
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
@@ -53,6 +56,7 @@ fun CreditScreen(
     navController: NavController,
 ) {
     val hazeState = remember { HazeState() }
+    val context = LocalContext.current
     Column(
         modifier =
             Modifier
@@ -116,7 +120,7 @@ fun CreditScreen(
             // GitHub button
             TextButton(
                 onClick = {
-                    openUrl("https://xevrae.org")
+                    openUrl(context, "https://xevrae.org")
                 },
                 modifier =
                     Modifier
@@ -130,7 +134,7 @@ fun CreditScreen(
             // GitHub button
             TextButton(
                 onClick = {
-                    openUrl("https://github.com/t4ulquiorra/Xevrae")
+                    openUrl(context, "https://github.com/t4ulquiorra/Xevrae")
                 },
                 modifier =
                     Modifier
@@ -144,7 +148,7 @@ fun CreditScreen(
             // Issue tracker button
             TextButton(
                 onClick = {
-                    openUrl("https://github.com/t4ulquiorra/Xevrae/issues")
+                    openUrl(context, "https://github.com/t4ulquiorra/Xevrae/issues")
                 },
                 modifier =
                     Modifier
@@ -158,7 +162,7 @@ fun CreditScreen(
             // Buy me a coffee button
             TextButton(
                 onClick = {
-                    openUrl("https://github.com/sponsors/t4ulquiorra")
+                    openUrl(context, "https://github.com/sponsors/t4ulquiorra")
                 },
                 modifier =
                     Modifier

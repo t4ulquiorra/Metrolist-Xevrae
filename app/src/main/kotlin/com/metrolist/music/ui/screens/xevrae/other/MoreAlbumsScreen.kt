@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -40,6 +41,7 @@ import com.metrolist.music.ui.navigation.xevrae.destination.list.MoreAlbumsDesti
 import com.metrolist.music.ui.theme.xevrae.typo
 import com.metrolist.music.viewmodels.xevrae.MoreAlbumsUIState
 import com.metrolist.music.viewmodels.xevrae.MoreAlbumsViewModel
+import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeChild
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
