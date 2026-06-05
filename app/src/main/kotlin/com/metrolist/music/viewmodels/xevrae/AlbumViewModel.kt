@@ -49,7 +49,7 @@ class AlbumViewModel @Inject constructor(
             _uiState.update { it.copy(browseId = browseId) }
             
             // Get local data first
-            database.album(browseId).collectLatest { album ->
+            database.albumFlow(browseId).collectLatest { album ->
                 if (album != null) {
                     _uiState.update {
                         it.copy(
@@ -120,7 +120,7 @@ class AlbumViewModel @Inject constructor(
 
     fun setAlbumLike() {
         viewModelScope.launch {
-            val browseId = uiState.browseId
+            val browseId = uiState.value.browseId
             database.transaction {
                 // TODO: stub - album transaction
             }
@@ -137,7 +137,7 @@ class AlbumViewModel @Inject constructor(
         collectDownloadStateJob?.cancel()
         job =
             viewModelScope.launch {
-                database.album(browseId).collectLatest { album ->
+                database.albumFlow(browseId).collectLatest { album ->
                     if (album != null) {
                         _uiState.update {
                             it.copy(
@@ -151,7 +151,7 @@ class AlbumViewModel @Inject constructor(
             viewModelScope.launch {
                 downloadUtil.downloads.collectLatest { downloads ->
                     var count = 0
-                    uiState.listTrack.forEach { track ->
+                    uiState.value.listTrack.forEach { track ->
                         if (downloads[track.id]?.state == androidx.media3.exoplayer.offline.Download.STATE_COMPLETED) {
                             count++
                         }
@@ -178,18 +178,18 @@ class AlbumViewModel @Inject constructor(
     }
 
     fun shuffle() {
-        if (uiState.listTrack.isEmpty()) {
+        if (uiState.value.listTrack.isEmpty()) {
             makeToast(getString(com.metrolist.music.R.string.playlist_is_empty))
             return
         }
-        val shuffleList = uiState.listTrack.shuffled()
+        val shuffleList = uiState.value.listTrack.shuffled()
         val randomIndex = shuffleList.indices.random()
         setQueueData(
             QueueData.Data(
                 listTracks = shuffleList,
                 firstPlayedTrack = shuffleList[randomIndex],
-                playlistId = uiState.browseId.replaceFirst("VL", ""),
-                playlistName = "${getString(com.metrolist.music.R.string.album)} \"${uiState.title}\"",
+                playlistId = uiState.value.browseId.replaceFirst("VL", ""),
+                playlistName = "${getString(com.metrolist.music.R.string.album)} \"${uiState.value.title}\"",
                 playlistType = PlaylistType.PLAYLIST,
             ),
         )
@@ -198,7 +198,7 @@ class AlbumViewModel @Inject constructor(
 
     fun downloadFullAlbum() {
         viewModelScope.launch {
-            val songs = uiState.listTrack
+            val songs = uiState.value.listTrack
             if (songs.isEmpty()) {
                 makeToast(getString(com.metrolist.music.R.string.playlist_is_empty))
                 return@launch

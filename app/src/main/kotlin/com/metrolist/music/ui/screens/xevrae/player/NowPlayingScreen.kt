@@ -139,8 +139,6 @@ import coil3.request.crossfade
 import coil3.toBitmap
 import com.kmpalette.rememberPaletteState
 import com.metrolist.music.common.Config.MAIN_PLAYER
-import com.metrolist.music.domain.mediaservice.handler.MediaPlayerHandler
-import com.metrolist.music.domain.mediaservice.handler.RepeatState
 import com.metrolist.music.utils.Logger
 import com.metrolist.music.expect.ui.MediaPlayerView
 import com.metrolist.music.expect.ui.MediaPlayerViewWithSubtitle
@@ -252,7 +250,6 @@ fun NowPlayingScreen(
 @Composable
 fun NowPlayingScreenContent(
     sharedViewModel: SharedViewModel = hiltViewModel(viewModelStoreOwner = LocalActivity.current as ComponentActivity),
-    mediaPlayerHandler: MediaPlayerHandler = hiltViewModel(),
     navController: NavController,
     isExpanded: Boolean,
     dismissIcon: ImageVector,
@@ -281,11 +278,11 @@ fun NowPlayingScreenContent(
     }
     // ⚠️ Use track.videoId (already prefix-stripped at MediaServiceHandlerImpl.kt:386).
     // Do NOT use mediaItem.mediaId — it carries the "Video" prefix for video items.
-    val nowPlayingVideoId: String? = nowPlayingState?.track?.videoId
+    val nowPlayingVideoId: String? = nowPlayingState?.track?.videoId ?: nowPlayingState?.songEntity?.id
     val currentOrderIndex by remember(artworkQueue, nowPlayingVideoId) {
         derivedStateOf { deriveOrderIndex(artworkQueue, nowPlayingVideoId) }
     }
-    val isRepeatOne = controllerState.repeatState is RepeatState.One
+    val isRepeatOne = controllerState.repeatState == com.metrolist.music.models.xevrae.RepeatState.One
     // Single PagerState — the unified ArtworkPager renders BOTH the fullscreen canvas
     // background and the centered square thumbnail in each page.
     val artworkPagerState =
@@ -340,7 +337,7 @@ fun NowPlayingScreenContent(
                             sharedViewModel.onUIEvent(UIEvent.SkipToPrevious)
                         }
                         is ArtworkSeekAction.Skip -> {
-                            mediaPlayerHandler.playMediaItemInMediaSource(action.index)
+                            sharedViewModel.onUIEvent(UIEvent.Next)
                         }
                         ArtworkSeekAction.NoOp -> {
                             Unit
@@ -796,7 +793,7 @@ fun NowPlayingScreenContent(
                     beyondViewportPageCount = 1,
                     userScrollEnabled = !isRepeatOne && artworkQueue.isNotEmpty(),
                     key = { idx ->
-                        val vid = artworkQueue.getOrNull(idx)?.videoId.orEmpty()
+                        val vid = artworkQueue.getOrNull(idx)?.id.orEmpty()
                         "artwork_${vid}_$idx"
                     },
                 ) { page ->
@@ -806,11 +803,11 @@ fun NowPlayingScreenContent(
 
                     val pagePaletteState = rememberPaletteState()
                     val pageStartColor =
-                        remember(pageTrack?.videoId) {
+                        remember(pageTrack?.id) {
                             Animatable(md_theme_dark_background)
                         }
                     val palettePageScope = rememberCoroutineScope()
-                    LaunchedEffect(pagePaletteState, pageTrack?.videoId) {
+                    LaunchedEffect(pagePaletteState, pageTrack?.id) {
                         snapshotFlow { pagePaletteState.palette }
                             .distinctUntilChanged()
                             .collectLatest { palette ->
@@ -845,9 +842,7 @@ fun NowPlayingScreenContent(
                         if (!isCurrentArtworkPage && pageTrack != null) {
                             if (blurBg) {
                                 val backdropUrl =
-                                    pageTrack.thumbnails
-                                        ?.maxByOrNull { it.width * it.height }
-                                        ?.url
+                                    pageTrack.thumbnail
                                 AsyncImage(
                                     model =
                                         ImageRequest
@@ -1213,9 +1208,7 @@ fun NowPlayingScreenContent(
                                                 ),
                                     ) {
                                         val adjacentThumbUrl =
-                                            pageTrack.thumbnails
-                                                ?.maxByOrNull { it.width * it.height }
-                                                ?.url
+                                            pageTrack.thumbnail
                                         AsyncImage(
                                             model =
                                                 ImageRequest
