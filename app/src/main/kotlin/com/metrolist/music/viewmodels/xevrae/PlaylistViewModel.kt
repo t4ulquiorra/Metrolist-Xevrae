@@ -276,9 +276,6 @@ class PlaylistViewModel @Inject constructor(
         }
     }
 
-    fun saveToLocal(tracks: List<com.metrolist.innertube.models.SongItem>) {
-        // Stub — save to local playlist
-    }
 
     fun updatePlaylistTitle(
         title: String,
@@ -286,6 +283,7 @@ class PlaylistViewModel @Inject constructor(
     ) {
         // YouTube API for updating playlist title is not yet available in Metrolist's innertube
     }
+}
 
 sealed class PlaylistUIState(
     val data: PlaylistState? = null,
