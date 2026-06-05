@@ -14,9 +14,3 @@ fun HomeItemVideo(
     modifier: Modifier = Modifier,
 ) { Box(modifier = modifier.fillMaxWidth().clickable { onClick() }) }
 
-@Composable
-fun ArtistFullWidthItems(
-    onClickListener: () -> Unit,
-    data: com.metrolist.music.db.entities.ArtistEntity,
-    modifier: Modifier = Modifier,
-) { Box(modifier = modifier.fillMaxWidth().clickable { onClickListener() }) }

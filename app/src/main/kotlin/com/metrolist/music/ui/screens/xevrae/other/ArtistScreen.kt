@@ -60,7 +60,7 @@ import com.metrolist.music.domain.mediaservice.handler.QueueData
 import com.metrolist.music.models.xevrae.toSongEntity
 import com.metrolist.music.models.xevrae.toTrackCompat
 import com.metrolist.music.models.xevrae.toTrack
-import com.metrolist.music.expect.pressClickable
+import com.metrolist.music.ui.utils.pressClickable
 import com.metrolist.music.expect.ui.MediaPlayerView
 import com.metrolist.music.extensions.getStringBlocking
 import com.metrolist.music.extensions.rgbFactor
@@ -68,6 +68,7 @@ import com.metrolist.music.ui.component.CenterLoadingBox
 import com.metrolist.music.ui.component.CollapsingToolbarParallaxEffect
 import com.metrolist.music.ui.component.DescriptionView
 import com.metrolist.music.ui.component.EndOfPage
+import com.metrolist.music.ui.component.ArtistFullWidthItems
 import com.metrolist.music.ui.component.HomeItemArtist
 import com.metrolist.music.ui.component.HomeItemContentPlaylist
 import com.metrolist.music.ui.component.HomeItemVideo
@@ -103,11 +104,11 @@ fun ArtistScreen(
     val isFollowed by viewModel.followed.collectAsStateWithLifecycle()
     val canvasUrl by viewModel.canvasUrl.collectAsStateWithLifecycle()
 
-    val playingTrack by sharedViewModel.nowPlayingState.map { it?.track?.videoId }.collectAsState(null)
+    val playingTrack by sharedViewModel.nowPlayingState.map { it?.track?.id }.collectAsState(null)
 
     // Choosing song to show Bottom sheet
     var choosingTrack by remember {
-        mutableStateOf<Track?>(null)
+        mutableStateOf<com.metrolist.innertube.models.SongItem?>(null)
     }
     var showBottomSheet by remember {
         mutableStateOf(false)
@@ -212,7 +213,7 @@ fun ArtistScreen(
                                                                 ),
                                                             )
                                                             viewModel.loadMediaItem(
-                                                                firstQueue,
+                                                                canvas.second,
                                                                 type = Config.SONG_CLICK,
                                                             )
                                                         },
@@ -259,7 +260,7 @@ fun ArtistScreen(
                                         if (state.data.shuffleParam != null) {
                                             viewModel.onShuffleClick(state.data.shuffleParam)
                                         } else {
-                                            viewModel.makeToast(runBlocking { getString(com.metrolist.music.R.string.error) })
+                                            viewModel.makeToast(getStringBlocking(com.metrolist.music.R.string.error))
                                         }
                                     },
                                 ) {
@@ -271,7 +272,7 @@ fun ArtistScreen(
                                         if (state.data.radioParam != null) {
                                             viewModel.onRadioClick(state.data.radioParam)
                                         } else {
-                                            viewModel.makeToast(runBlocking { getString(com.metrolist.music.R.string.error) })
+                                            viewModel.makeToast(getStringBlocking(com.metrolist.music.R.string.error))
                                         }
                                     },
                                     colors =
@@ -313,7 +314,7 @@ fun ArtistScreen(
                                             if (id != null) {
                                                 navController.navigate(PlaylistDestination(id))
                                             } else {
-                                                viewModel.makeToast(runBlocking { getString(com.metrolist.music.R.string.error) })
+                                                viewModel.makeToast(getStringBlocking(com.metrolist.music.R.string.error))
                                             }
                                         },
                                         colors =
@@ -328,20 +329,19 @@ fun ArtistScreen(
                                 }
                                 state.data.popularSongs.forEach { song ->
                                     SongFullWidthItems(
-                                        track = song,
-                                        isPlaying = song.videoId == playingTrack,
+                                        songEntity = song.toSongEntity(),
+                                        isPlaying = song.id == playingTrack,
                                         modifier = Modifier.fillMaxWidth(),
                                         onMoreClickListener = {
                                             choosingTrack = song
                                             showBottomSheet = true
                                         },
                                         onClickListener = {
-                                            val firstQueue: Track = song
                                             viewModel.setQueueData(
                                                 QueueData.Data(
-                                                    listTracks = arrayListOf(firstQueue),
-                                                    firstPlayedTrack = firstQueue,
-                                                    playlistId = "RDAMVM${song.videoId}",
+                                                    listTracks = listOf(song),
+                                                    firstPlayedTrack = song,
+                                                    playlistId = "RDAMVM${song.id}",
                                                     playlistName = "\"${state.data.title ?: ""}\" ${getStringBlocking(com.metrolist.music.R.string.popular)}",
                                                     playlistType = PlaylistType.RADIO,
                                                     continuation = null,
@@ -499,7 +499,7 @@ fun ArtistScreen(
                         // Videos
                         AnimatedVisibility(
                             state.data.video != null &&
-                                state.data.video.video
+                                state.data.video.results
                                     .isNotEmpty(),
                         ) {
                             Column {
@@ -515,7 +515,7 @@ fun ArtistScreen(
                                     )
                                     TextButton(
                                         onClick = {
-                                            val videoListParam = state.data.video?.moreEndpoint
+                                            val videoListParam = state.data.video?.params
                                             if (videoListParam != null) {
                                                 navController.navigate(
                                                     PlaylistDestination(
@@ -563,7 +563,7 @@ fun ArtistScreen(
                                             },
                                             onLongClick = {
                                                 choosingTrack = video
-                                                showBottomSheet = true
+                                            showBottomSheet = true
                                             },
                                             data =
                                                 Content(
