@@ -275,6 +275,12 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    fun deleteSearchHistory() {
+        viewModelScope.launch {
+            database.clearSearchHistory()
+        }
+    }
+
     fun insertSearchHistory(query: String) {
         viewModelScope.launch(Dispatchers.IO) {
             database.insert(SearchHistory(query = query))

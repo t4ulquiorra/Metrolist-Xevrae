@@ -335,8 +335,8 @@ fun SearchScreen(
                                             val firstTrack: Track = (item as? SongsResult)?.toTrack() ?: (item as VideosResult).toTrack()
                                             searchViewModel.setQueueData(
                                                 QueueData.Data(
-                                                    listTracks = arrayListOf(firstTrack),
-                                                    firstPlayedTrack = firstTrack,
+                                                    listTracks = arrayListOf(firstTrack).toSongItemList(),
+                                                    firstPlayedTrack = arrayListOf(firstTrack).toSongItemList().firstOrNull(),
                                                     playlistId = "RDAMVM${firstTrack.videoId}",
                                                     playlistName = "\"${searchText}\" ${getStringBlocking(com.metrolist.music.R.string.in_search)}",
                                                     playlistType = PlaylistType.RADIO,
@@ -465,7 +465,7 @@ fun SearchScreen(
                                         Modifier
                                             .fillMaxWidth()
                                             .pressClickable {
-                                                searchText = historyItem
+                                                searchText = historyItem.toString()
                                                 focusManager.clearFocus()
                                                 isSearchSubmitted = true
                                                 searchViewModel.insertSearchHistory(historyItem)
@@ -641,18 +641,18 @@ fun SearchScreen(
                                                             when (result) {
                                                                 is SongsResult -> {
                                                                     SongFullWidthItems(
-                                                                        track = result.toTrack(),
+                                                                        songEntity = result.toTrack().toSongEntity(),
                                                                         isPlaying = result.videoId == currentVideoId,
                                                                         modifier = Modifier,
-                                                                        onMoreClickListener = {
+                                                                        onMoreClickListener = { _ ->
                                                                             onMoreClick(result.toTrack().toSongEntity())
                                                                         },
                                                                         onClickListener = {
                                                                             val firstTrack = result.toTrack()
                                                                             searchViewModel.setQueueData(
                                                                                 QueueData.Data(
-                                                                                    listTracks = arrayListOf(firstTrack),
-                                                                                    firstPlayedTrack = firstTrack,
+                                                                                    listTracks = arrayListOf(firstTrack).toSongItemList(),
+                                                    firstPlayedTrack = arrayListOf(firstTrack).toSongItemList().firstOrNull(),
                                                                                     playlistId = "RDAMVM${result.videoId}",
                                                                                     playlistName =
                                                                                         "\"${searchText}\" ${
@@ -664,7 +664,7 @@ fun SearchScreen(
                                                                                     continuation = null,
                                                                                 ),
                                                                             )
-                                                                            searchViewModel.loadMediaItem(firstTrack, Config.SONG_CLICK)
+                                                                            searchViewModel.loadMediaItem(firstTrack.toSongItem(), Config.SONG_CLICK)
                                                                         },
                                                                         onAddToQueue = {
                                                                             sharedViewModel.addListToQueue(
@@ -676,18 +676,18 @@ fun SearchScreen(
 
                                                                 is VideosResult -> {
                                                                     SongFullWidthItems(
-                                                                        track = result.toTrack(),
+                                                                        songEntity = result.toTrack().toSongEntity(),
                                                                         isPlaying = result.videoId == currentVideoId,
                                                                         modifier = Modifier,
-                                                                        onMoreClickListener = {
+                                                                        onMoreClickListener = { _ ->
                                                                             onMoreClick(result.toTrack().toSongEntity())
                                                                         },
                                                                         onClickListener = {
                                                                             val firstTrack = result.toTrack()
                                                                             searchViewModel.setQueueData(
                                                                                 QueueData.Data(
-                                                                                    listTracks = arrayListOf(firstTrack),
-                                                                                    firstPlayedTrack = firstTrack,
+                                                                                    listTracks = arrayListOf(firstTrack).toSongItemList(),
+                                                    firstPlayedTrack = arrayListOf(firstTrack).toSongItemList().firstOrNull(),
                                                                                     playlistId = "RDAMVM${result.videoId}",
                                                                                     playlistName =
                                                                                         "\"${searchText}\" ${
@@ -699,7 +699,7 @@ fun SearchScreen(
                                                                                     continuation = null,
                                                                                 ),
                                                                             )
-                                                                            searchViewModel.loadMediaItem(firstTrack, Config.VIDEO_CLICK)
+                                                                            searchViewModel.loadMediaItem(firstTrack.toSongItem(), Config.VIDEO_CLICK)
                                                                         },
                                                                         onAddToQueue = {
                                                                             sharedViewModel.addListToQueue(
@@ -711,7 +711,10 @@ fun SearchScreen(
 
                                                                 is AlbumsResult -> {
                                                                     PlaylistFullWidthItems(
-                                                                        data = result,
+                                                                        data = com.metrolist.music.db.entities.PlaylistEntity(
+                                                                            id = result.browseId,
+                                                                            name = result.title,
+                                                                        ),
                                                                         onClickListener = {
                                                                             navController.navigate(
                                                                                 AlbumDestination(
@@ -724,7 +727,12 @@ fun SearchScreen(
 
                                                                 is ArtistsResult -> {
                                                                     ArtistFullWidthItems(
-                                                                        data = result,
+                                                                        data = com.metrolist.music.db.entities.ArtistEntity(
+                                                                            id = result.browseId,
+                                                                            name = result.artist,
+                                                                            thumbnailUrl = result.thumbnails?.lastOrNull()?.url,
+                                                                            channelId = result.browseId,
+                                                                        ),
                                                                         onClickListener = {
                                                                             navController.navigate(
                                                                                 ArtistDestination(
@@ -737,7 +745,10 @@ fun SearchScreen(
 
                                                                 is PlaylistsResult -> {
                                                                     PlaylistFullWidthItems(
-                                                                        data = result,
+                                                                        data = com.metrolist.music.db.entities.PlaylistEntity(
+                                                                            id = result.browseId,
+                                                                            name = result.title,
+                                                                        ),
                                                                         onClickListener = {
                                                                             if (result.resultType == "Podcast") {
                                                                                 navController.navigate(
@@ -847,15 +858,15 @@ fun SuggestItemRow(
                 }
 
                 is AlbumsResult -> {
-                    searchResult.thumbnails.lastOrNull()?.url
+                    searchResult.thumbnails?.lastOrNull()?.url
                 }
 
                 is ArtistsResult -> {
-                    searchResult.thumbnails.lastOrNull()?.url
+                    searchResult.thumbnails?.lastOrNull()?.url
                 }
 
                 is PlaylistsResult -> {
-                    searchResult.thumbnails.lastOrNull()?.url
+                    searchResult.thumbnails?.lastOrNull()?.url
                 }
 
                 is VideosResult -> {
@@ -941,8 +952,8 @@ fun SuggestItemRow(
                 when (searchResult) {
                     is SongsResult -> searchResult.artists?.map { it.name }?.connectArtists()
                     is AlbumsResult -> searchResult.artists.map { it.name }.connectArtists()
-                    is PlaylistsResult -> searchResult.author.ifEmpty { "YouTube Music" }
-                    is ArtistsResult -> stringResource(com.metrolist.music.R.string.artists)
+                    is PlaylistsResult -> searchResult.author?.ifEmpty { "YouTube Music" } ?: "YouTube Music"
+                    is ArtistsResult -> (searchResult as ArtistsResult).artist
                     is VideosResult -> searchResult.artists?.map { it.name }?.connectArtists()
                     else -> null
                 } ?: "Unknown"

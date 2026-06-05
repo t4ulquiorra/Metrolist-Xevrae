@@ -117,3 +117,6 @@ fun NonLazyGrid(
         }
     }
 }
+
+fun Modifier.pressClickable(onClick: () -> Unit): Modifier =
+    this.clickable(onClick = onClick)
