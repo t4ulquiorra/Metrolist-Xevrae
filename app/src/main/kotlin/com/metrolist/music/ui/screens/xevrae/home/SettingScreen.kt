@@ -141,11 +141,8 @@ import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeChild
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.materials.HazeMaterials
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.map
@@ -305,7 +302,7 @@ fun SettingScreen(
     val isCheckingUpdate by sharedViewModel.isCheckingUpdate.collectAsStateWithLifecycle()
 
     val hazeState =
-        remember { HazeState()
+        remember { HazeState() }
 
     val checkingStr = stringResource(com.metrolist.music.R.string.checking)
     val lastCheckedStr = stringResource(com.metrolist.music.R.string.last_checked_at)

@@ -106,7 +106,7 @@ import com.metrolist.music.ui.component.CenterLoadingBox
 import com.metrolist.music.ui.component.Chip
 import com.metrolist.music.ui.component.DropdownButton
 import com.metrolist.music.ui.component.EndOfPage
-import com.metrolist.music.ui.component.HomeItem as HomeItemComponent
+import com.metrolist.music.ui.component.HomeItem
 import com.metrolist.music.ui.component.HomeItemContentPlaylist
 import com.metrolist.music.ui.component.HomeShimmer
 import com.metrolist.music.ui.component.ItemArtistChart
@@ -141,11 +141,8 @@ import com.metrolist.music.viewmodels.xevrae.ListState
 import com.metrolist.music.viewmodels.xevrae.SharedViewModel
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeChild
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.materials.HazeMaterials
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -262,7 +259,7 @@ fun HomeScreen(
     val onRefresh: () -> Unit = {
         isRefreshing = true
         if (false) {
-            viewModel.getHomeItemList(params, forceRefresh = true)
+            Unit // viewModel.getHomeItemList(params, forceRefresh = true)
         }
         Logger.w("HomeScreen", "onRefresh")
     }
@@ -523,7 +520,7 @@ fun HomeScreen(
                                         }
                                     } else {
                                         if (false) {
-                                            HomeItemComponent(
+                                            HomeItem(
                                                 navController = navController,
                                                 data = item,
                                             )
@@ -557,7 +554,7 @@ fun HomeScreen(
                                                 .padding(horizontal = 15.dp),
                                     ) {
                                         if (false) {
-                                            HomeItemComponent(
+                                            HomeItem(
                                                 navController = navController,
                                                 data = it,
                                             )
@@ -730,7 +727,7 @@ fun HomeScreen(
                                 com.metrolist.music.R.string.all -> {
                                     viewModel.setParams(null)
                                     if (false) {
-                                        viewModel.getHomeItemList(null, forceRefresh = true)
+                                        Unit // viewModel.getHomeItemList(null, forceRefresh = true)
                                     }
                                 }
                                 com.metrolist.music.R.string.relax -> viewModel.setParams(HOME_PARAMS_RELAX)
