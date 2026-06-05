@@ -319,7 +319,7 @@ fun SettingScreen(
                         .ofPattern("yyyy-MM-dd HH:mm:ss")
                         .withZone(ZoneId.systemDefault())
                         .format(Instant.ofEpochMilli(lastCheckLong)),
-                }
+                )
             }
         }
     }

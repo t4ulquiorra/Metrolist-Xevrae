@@ -482,7 +482,7 @@ fun XevraeMiniPlayer(
                                                 )
                                             }
                                             Text(
-                                                text = (mediaMetadata.artist ?: ""),
+                                                text = mediaMetadata.artists.joinToString { it.name },
                                                 style = typo().bodySmall,
                                                 maxLines = 1,
                                                 color = textColor.copy(alpha = 0.6f),
@@ -629,7 +629,7 @@ fun XevraeMiniPlayer(
                                     )
                                 }
                                 Text(
-                                    text = (mediaMetadata.artist ?: ""),
+                                    text = mediaMetadata.artists.joinToString { it.name },
                                     style = typo().bodySmall,
                                     maxLines = 1,
                                     color = LocalContentColor.current.copy(alpha = 0.6f),

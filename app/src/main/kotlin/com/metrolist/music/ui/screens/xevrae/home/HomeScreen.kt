@@ -106,7 +106,6 @@ import com.metrolist.music.ui.component.CenterLoadingBox
 import com.metrolist.music.ui.component.Chip
 import com.metrolist.music.ui.component.DropdownButton
 import com.metrolist.music.ui.component.EndOfPage
-import com.metrolist.music.ui.component.HomeItem
 import com.metrolist.music.ui.component.HomeItemContentPlaylist
 import com.metrolist.music.ui.component.HomeShimmer
 import com.metrolist.music.ui.component.ItemArtistChart
@@ -519,12 +518,7 @@ fun HomeScreen(
                                             )
                                         }
                                     } else {
-                                        if (false) {
-                                            HomeItem(
-                                                navController = navController,
-                                                data = item,
-                                            )
-                                        }
+                                        Unit
                                     }
                                 }
                             }
@@ -553,12 +547,7 @@ fun HomeScreen(
                                             Modifier
                                                 .padding(horizontal = 15.dp),
                                     ) {
-                                        if (false) {
-                                            HomeItem(
-                                                navController = navController,
-                                                data = it,
-                                            )
-                                        }
+                                        Unit
                                     }
                                 }
                             }
