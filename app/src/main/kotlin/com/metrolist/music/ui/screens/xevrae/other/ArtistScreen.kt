@@ -188,7 +188,6 @@ fun ArtistScreen(
                                                     Modifier
                                                         .width(28.dp)
                                                         .height(ButtonDefaults.MinHeight)
-                                                        .align(Alignment.CenterVertically)
                                                         .border(
                                                             width = 0.5.dp,
                                                             color =

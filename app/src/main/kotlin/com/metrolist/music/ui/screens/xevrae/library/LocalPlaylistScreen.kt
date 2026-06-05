@@ -8,7 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.metrolist.music.viewmodels.xevrae.LocalPlaylistViewModel
+import com.metrolist.music.viewmodels.LocalPlaylistViewModel
 import com.metrolist.music.viewmodels.xevrae.SharedViewModel
 
 @Composable
