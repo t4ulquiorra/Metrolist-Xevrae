@@ -1,5 +1,7 @@
 package com.metrolist.music.ui.component
 
+import com.metrolist.music.models.xevrae.HomeItem
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi

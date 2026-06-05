@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun LyricsView(
-    lyricsData: com.metrolist.music.models.xevrae.LyricsData? = null,
+    lyricsData: com.metrolist.music.viewmodels.xevrae.SharedViewModel.LyricsData? = null,
     timeLine: StateFlow<com.metrolist.music.models.xevrae.TimeLine>? = null,
     sliderPositionProvider: (() -> Long?)? = null,
     modifier: Modifier = Modifier,

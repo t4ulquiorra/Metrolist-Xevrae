@@ -436,7 +436,7 @@ fun LibraryPodcastsScreen(
                                             playerConnection.playQueue(
                                                 ListQueue(
                                                     title = downloadedEpisodesStr,
-                                                    items = downloadedEpisodes.map { it.song.toMediaItem() },
+                                                    items = downloadedEpisodes.map { it.toMediaItem() },
                                                     startIndex = index,
                                                 ),
                                             )
@@ -472,7 +472,7 @@ fun LibraryPodcastsScreen(
                         playerConnection.playQueue(
                             ListQueue(
                                 title = downloadedEpisodesStr,
-                                items = downloadedEpisodes.shuffled().map { it.song.toMediaItem() },
+                                items = downloadedEpisodes.shuffled().map { it.toMediaItem() },
                             ),
                         )
                     },

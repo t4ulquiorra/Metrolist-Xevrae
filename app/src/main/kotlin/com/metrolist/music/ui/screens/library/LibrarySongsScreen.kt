@@ -497,7 +497,7 @@ fun LibrarySongsScreen(
                                     playerConnection.playQueue(
                                         ListQueue(
                                             title = queueAllSongsStr,
-                                            items = filteredSongs.map { it.song.toMediaItem() },
+                                            items = filteredSongs.map { it.toMediaItem() },
                                             startIndex = index,
                                         ),
                                     )
@@ -528,7 +528,7 @@ fun LibrarySongsScreen(
                     playerConnection.playQueue(
                         ListQueue(
                             title = queueAllSongsStr,
-                            items = filteredSongs.shuffled().map { it.song.toMediaItem() },
+                            items = filteredSongs.shuffled().map { it.toMediaItem() },
                         ),
                     )
                 }
