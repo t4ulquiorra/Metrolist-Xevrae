@@ -369,7 +369,7 @@ fun PodcastScreen(
                                             DescriptionView(
                                                 modifier = Modifier.padding(top = 8.dp),
                                                 text = data.description ?: stringResource(com.metrolist.music.R.string.no_description),
-                                                limitLine = 3,
+                                                collapsedMaxLines = 3,
                                                 onTimeClicked = {},
                                                 onURLClicked = { url ->
                                                     uriHandler.openUri(url)

@@ -713,10 +713,13 @@ fun SearchScreen(
 
                                                                 is AlbumsResult -> {
                                                                     PlaylistFullWidthItems(
-                                                                        data = com.metrolist.music.db.entities.PlaylistEntity(
-                                                                            id = result.browseId,
-                                                                            name = result.title,
-                                                                        ),
+                                                                        data = com.metrolist.music.models.xevrae.XevraePlaylist(
+                                                            entity = com.metrolist.music.db.entities.PlaylistEntity(
+                                                                id = result.browseId,
+                                                                name = result.title,
+                                                            ),
+                                                            type = com.metrolist.music.models.xevrae.PlaylistType.Type.YOUTUBE_PLAYLIST,
+                                                        ),
                                                                         onClickListener = {
                                                                             navController.navigate(
                                                                                 AlbumDestination(
@@ -747,10 +750,13 @@ fun SearchScreen(
 
                                                                 is PlaylistsResult -> {
                                                                     PlaylistFullWidthItems(
-                                                                        data = com.metrolist.music.db.entities.PlaylistEntity(
-                                                                            id = result.browseId,
-                                                                            name = result.title,
-                                                                        ),
+                                                                        data = com.metrolist.music.models.xevrae.XevraePlaylist(
+                                                            entity = com.metrolist.music.db.entities.PlaylistEntity(
+                                                                id = result.browseId,
+                                                                name = result.title,
+                                                            ),
+                                                            type = com.metrolist.music.models.xevrae.PlaylistType.Type.YOUTUBE_PLAYLIST,
+                                                        ),
                                                                         onClickListener = {
                                                                             if (result.resultType == "Podcast") {
                                                                                 navController.navigate(

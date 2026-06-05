@@ -304,3 +304,10 @@ sealed class PlaylistUIEvent {
 enum class ListState {
     IDLE, LOADING, PAGINATING, ERROR, PAGINATION_EXHAUST
 }
+
+    fun getFullTracks(onDone: (List<com.metrolist.innertube.models.SongItem>) -> Unit) {
+        viewModelScope.launch {
+            val tracks = uiState.value.data?.listTracks ?: emptyList()
+            onDone(tracks)
+        }
+    }

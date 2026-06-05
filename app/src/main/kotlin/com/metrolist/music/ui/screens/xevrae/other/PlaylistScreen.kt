@@ -125,10 +125,15 @@ import com.metrolist.music.viewmodels.xevrae.PlaylistUIState
 import com.metrolist.music.viewmodels.xevrae.PlaylistViewModel
 import com.metrolist.music.viewmodels.xevrae.SharedViewModel
 import com.metrolist.music.viewmodels.xevrae.UIEvent
+import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
+import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.materials.HazeMaterials
 import io.github.alexzhirkevich.compottie.Compottie
 import io.github.alexzhirkevich.compottie.LottieCompositionSpec
@@ -262,7 +267,7 @@ fun PlaylistScreen(
         )
     }
     val onItemMoreClick: (videoId: String) -> Unit = { videoId ->
-        currentItem = tracks.firstOrNull { it.videoId == videoId }
+        currentItem = tracks.firstOrNull { it.id == videoId }
         if (currentItem != null) {
             itemBottomSheetShow = true
         }
@@ -281,9 +286,7 @@ fun PlaylistScreen(
         shouldHideTopBar = !firstItemVisible
     }
     val paletteState = rememberPaletteState()
-    val hazeState =
-        rememberHazeState(
-        )
+    val hazeState = remember { HazeState() }
     var bitmap by remember {
         mutableStateOf<ImageBitmap?>(null)
     }
@@ -470,8 +473,8 @@ fun PlaylistScreen(
                                                                 .memoryCacheKey(data.thumbnail)
                                                                 .crossfade(false)
                                                                 .build(),
-                                                        placeholder = painterResource(com.metrolist.music.R.drawable.holder),
-                                                        error = painterResource(com.metrolist.music.R.drawable.holder),
+                                                        placeholder = painterResource(com.metrolist.music.R.drawable.ic_launcher_foreground),
+                                                        error = painterResource(com.metrolist.music.R.drawable.ic_launcher_foreground),
                                                         contentDescription = null,
                                                         contentScale = ContentScale.Crop,
                                                         onSuccess = {
@@ -523,17 +526,17 @@ fun PlaylistScreen(
                                                                         .defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
                                                                 contentPadding = PaddingValues(vertical = 1.dp),
                                                                 onClick = {
-                                                                    if (data.author.id.isNotEmpty()) {
+                                                                    if (data.author?.id?.isNotEmpty() == true) {
                                                                         navController.navigate(
                                                                             ArtistDestination(
-                                                                                data.author.id,
+                                                                                data.author?.id ?: "",
                                                                             ),
                                                                         )
                                                                     }
                                                                 },
                                                             ) {
                                                                 Text(
-                                                                    text = data.author.name,
+                                                                    text = data.author?.name ?: "",
                                                                     style = typo().titleSmall,
                                                                     color = Color.White,
                                                                     textAlign = TextAlign.Center,
@@ -639,8 +642,8 @@ fun PlaylistScreen(
                                                         .diskCacheKey(data.thumbnail)
                                                         .crossfade(true)
                                                         .build(),
-                                                placeholder = painterResource(com.metrolist.music.R.drawable.holder),
-                                                error = painterResource(com.metrolist.music.R.drawable.holder),
+                                                placeholder = painterResource(com.metrolist.music.R.drawable.ic_launcher_foreground),
+                                                error = painterResource(com.metrolist.music.R.drawable.ic_launcher_foreground),
                                                 contentDescription = null,
                                                 contentScale = ContentScale.FillHeight,
                                                 onSuccess = {
@@ -682,17 +685,17 @@ fun PlaylistScreen(
                                                                         .defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
                                                                 contentPadding = PaddingValues(vertical = 1.dp),
                                                                 onClick = {
-                                                                    if (data.author.id.isNotEmpty()) {
+                                                                    if (data.author?.id?.isNotEmpty() == true) {
                                                                         navController.navigate(
                                                                             ArtistDestination(
-                                                                                data.author.id,
+                                                                                data.author?.id ?: "",
                                                                             ),
                                                                         )
                                                                     }
                                                                 },
                                                             ) {
                                                                 Text(
-                                                                    text = data.author.name,
+                                                                    text = data.author?.name ?: "",
                                                                     style = typo().labelSmall,
                                                                     color = Color.White,
                                                                 )
@@ -1000,7 +1003,7 @@ fun PlaylistScreen(
                                                                 stringResource(com.metrolist.music.R.string.no_description)
                                                             }
                                                         },
-                                                    limitLine = 3,
+                                                    collapsedMaxLines = 3,
                                                     onTimeClicked = {},
                                                     onURLClicked = { url ->
                                                         uriHandler.openUri(url)
@@ -1039,12 +1042,12 @@ fun PlaylistScreen(
                     }
                     items(count = filteredTrack.size, key = { index ->
                         val item = filteredTrack.getOrNull(index)
-                        (item?.videoId ?: "") + "item_$index"
+                        (item?.id ?: "") + "item_$index"
                     }) { index ->
                         val item = filteredTrack.getOrNull(index)
                         if (item != null) {
                             Column(modifier = Modifier.animateItem()) {
-                                if (playingTrack?.videoId == item.videoId && isPlaying) {
+                                if (playingTrack?.id == item.id && isPlaying) {
                                     SongFullWidthItems(
                                         isPlaying = true,
                                         track = item,

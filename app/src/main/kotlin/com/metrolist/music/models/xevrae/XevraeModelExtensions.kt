@@ -169,3 +169,12 @@ fun PodcastBrowse.EpisodeItem.toTrack(): Track =
         feedbackTokens = null,
         resultType = null,
     )
+
+fun com.metrolist.innertube.models.SongItem.toMetadataSongEntity(): com.metrolist.music.db.entities.SongEntity =
+    com.metrolist.music.db.entities.SongEntity(
+        id = id,
+        title = title,
+        thumbnailUrl = thumbnail,
+        explicit = explicit,
+        duration = duration ?: -1,
+    )

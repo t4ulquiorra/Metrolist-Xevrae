@@ -287,7 +287,7 @@ fun NowPlayingScreenContent(
     }
     // ⚠️ Use track.videoId (already prefix-stripped at MediaServiceHandlerImpl.kt:386).
     // Do NOT use mediaItem.mediaId — it carries the "Video" prefix for video items.
-    val nowPlayingVideoId: String? = nowPlayingState?.songEntity?.id ?: nowPlayingState?.track?.videoId
+    val nowPlayingVideoId: String? = nowPlayingState?.songEntity?.id ?: nowPlayingState?.track?.id
     val currentOrderIndex by remember(artworkQueue, nowPlayingVideoId) {
         derivedStateOf { deriveOrderIndex(artworkQueue, nowPlayingVideoId) }
     }
