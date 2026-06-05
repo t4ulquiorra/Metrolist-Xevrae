@@ -80,11 +80,8 @@ import com.metrolist.music.ui.theme.xevrae.typo
 import com.metrolist.music.viewmodels.LibraryViewModel
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeChild
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.materials.HazeMaterials
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -242,7 +239,7 @@ fun LibraryScreen(
             LibraryChipType.YOUTUBE_MUSIC_PLAYLIST -> {
                 GridLibraryPlaylist(
                     navController,
-                    PaddingValues(top = innerPadding.calculateTopPadding() + topAppBarHeight, bottom = innerPadding.calculateBottomPadding(), start = innerPadding.calculateStartPadding(androidx.compose.ui.unit.LayoutDirection.Ltr), end = innerPadding.calculateEndPadding(androidx.compose.ui.unit.LayoutDirection.Ltr)),
+                    innerPadding.copy(top = topAppBarHeight),
                     youTubePlaylist,
                     emptyText = com.metrolist.music.R.string.no_YouTube_playlists,
                     onScrolling = onScrolling,
@@ -254,7 +251,7 @@ fun LibraryScreen(
             LibraryChipType.YOUTUBE_MIX_FOR_YOU -> {
                 GridLibraryPlaylist(
                     navController,
-                    PaddingValues(top = innerPadding.calculateTopPadding() + topAppBarHeight, bottom = innerPadding.calculateBottomPadding(), start = innerPadding.calculateStartPadding(androidx.compose.ui.unit.LayoutDirection.Ltr), end = innerPadding.calculateEndPadding(androidx.compose.ui.unit.LayoutDirection.Ltr)),
+                    innerPadding.copy(top = topAppBarHeight),
                     youTubeMixForYou,
                     emptyText = com.metrolist.music.R.string.no_mixes_found,
                     onScrolling = onScrolling,
@@ -266,7 +263,7 @@ fun LibraryScreen(
             LibraryChipType.LOCAL_PLAYLIST -> {
                 GridLibraryPlaylist(
                     navController,
-                    PaddingValues(top = innerPadding.calculateTopPadding() + topAppBarHeight, bottom = innerPadding.calculateBottomPadding(), start = innerPadding.calculateStartPadding(androidx.compose.ui.unit.LayoutDirection.Ltr), end = innerPadding.calculateEndPadding(androidx.compose.ui.unit.LayoutDirection.Ltr)),
+                    innerPadding.copy(top = topAppBarHeight),
                     yourLocalPlaylist,
                     onScrolling = onScrolling,
                     emptyText = com.metrolist.music.R.string.no_playlists_added,
@@ -281,7 +278,7 @@ fun LibraryScreen(
             LibraryChipType.FAVORITE_PLAYLIST -> {
                 GridLibraryPlaylist(
                     navController,
-                    PaddingValues(top = innerPadding.calculateTopPadding() + topAppBarHeight, bottom = innerPadding.calculateBottomPadding(), start = innerPadding.calculateStartPadding(androidx.compose.ui.unit.LayoutDirection.Ltr), end = innerPadding.calculateEndPadding(androidx.compose.ui.unit.LayoutDirection.Ltr)),
+                    innerPadding.copy(top = topAppBarHeight),
                     favoritePlaylist,
                     emptyText = com.metrolist.music.R.string.no_favorite_playlists,
                     onScrolling = onScrolling,
@@ -293,7 +290,7 @@ fun LibraryScreen(
             LibraryChipType.DOWNLOADED_PLAYLIST -> {
                 GridLibraryPlaylist(
                     navController,
-                    PaddingValues(top = innerPadding.calculateTopPadding() + topAppBarHeight, bottom = innerPadding.calculateBottomPadding(), start = innerPadding.calculateStartPadding(androidx.compose.ui.unit.LayoutDirection.Ltr), end = innerPadding.calculateEndPadding(androidx.compose.ui.unit.LayoutDirection.Ltr)),
+                    innerPadding.copy(top = topAppBarHeight),
                     downloadedPlaylist,
                     emptyText = com.metrolist.music.R.string.no_playlists_downloaded,
                     onScrolling = onScrolling,
@@ -305,7 +302,7 @@ fun LibraryScreen(
             LibraryChipType.FAVORITE_PODCAST -> {
                 GridLibraryPlaylist(
                     navController,
-                    PaddingValues(top = innerPadding.calculateTopPadding() + topAppBarHeight, bottom = innerPadding.calculateBottomPadding(), start = innerPadding.calculateStartPadding(androidx.compose.ui.unit.LayoutDirection.Ltr), end = innerPadding.calculateEndPadding(androidx.compose.ui.unit.LayoutDirection.Ltr)),
+                    innerPadding.copy(top = topAppBarHeight),
                     favoritePodcasts,
                     emptyText = com.metrolist.music.R.string.no_favorite_podcasts,
                     onScrolling = onScrolling,
@@ -317,7 +314,7 @@ fun LibraryScreen(
             LibraryChipType.CHART -> {
                 GridLibraryPlaylist(
                     navController,
-                    PaddingValues(top = innerPadding.calculateTopPadding() + topAppBarHeight, bottom = innerPadding.calculateBottomPadding(), start = innerPadding.calculateStartPadding(androidx.compose.ui.unit.LayoutDirection.Ltr), end = innerPadding.calculateEndPadding(androidx.compose.ui.unit.LayoutDirection.Ltr)),
+                    innerPadding.copy(top = topAppBarHeight),
                     chartPlaylists,
                     emptyText = com.metrolist.music.R.string.no_charts_found,
                     onScrolling = onScrolling,

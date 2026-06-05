@@ -139,9 +139,13 @@ import com.mohamedrejeb.calf.io.getPath
 import com.mohamedrejeb.calf.picker.FilePickerFileType
 import com.mohamedrejeb.calf.picker.FilePickerSelectionMode
 import com.mohamedrejeb.calf.picker.rememberFilePickerLauncher
+import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
+import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.materials.HazeMaterials
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.map
@@ -229,7 +233,7 @@ fun SettingScreen(
         }
 
     // Open equalizer
-    val resultLauncher = openEqResult(viewModel.getAudioSessionId())
+    val resultLauncher = openEqResult(0)
 
     val enableTranslucentNavBar by viewModel.translucentBottomBar.collectAsStateWithLifecycle(initialValue = false)
     val language by viewModel.language.collectAsStateWithLifecycle()
@@ -301,8 +305,7 @@ fun SettingScreen(
     val isCheckingUpdate by sharedViewModel.isCheckingUpdate.collectAsStateWithLifecycle()
 
     val hazeState =
-        rememberHazeState(
-        )
+        remember { HazeState()
 
     val checkingStr = stringResource(com.metrolist.music.R.string.checking)
     val lastCheckedStr = stringResource(com.metrolist.music.R.string.last_checked_at)
@@ -319,7 +322,7 @@ fun SettingScreen(
                         .ofPattern("yyyy-MM-dd HH:mm:ss")
                         .withZone(ZoneId.systemDefault())
                         .format(Instant.ofEpochMilli(lastCheckLong)),
-                )
+                }
             }
         }
     }

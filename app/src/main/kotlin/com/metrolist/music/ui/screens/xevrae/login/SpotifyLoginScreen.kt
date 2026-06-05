@@ -45,11 +45,8 @@ import com.metrolist.music.viewmodels.xevrae.LogInViewModel
 import com.metrolist.music.viewmodels.xevrae.SettingsViewModel
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.hazeChild
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.materials.ExperimentalHazeMaterialsApi
-import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.materials.HazeMaterials
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
