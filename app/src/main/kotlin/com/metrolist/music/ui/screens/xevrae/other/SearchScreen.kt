@@ -10,7 +10,6 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import com.metrolist.music.ui.utils.pressClickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -88,6 +87,9 @@ import com.metrolist.music.models.xevrae.connectArtists
 import com.metrolist.music.models.xevrae.toSongEntity
 import com.metrolist.music.models.xevrae.toTrack
 import com.metrolist.music.extensions.getStringBlocking
+import com.metrolist.music.models.xevrae.toSongItemList
+import com.metrolist.music.models.xevrae.toSongItem
+import com.metrolist.music.ui.utils.pressClickable
 import com.metrolist.music.ui.component.ArtistFullWidthItems
 import com.metrolist.music.ui.component.Chip
 import com.metrolist.music.ui.component.EndOfPage
@@ -468,16 +470,16 @@ fun SearchScreen(
                                                 searchText = historyItem.toString()
                                                 focusManager.clearFocus()
                                                 isSearchSubmitted = true
-                                                searchViewModel.insertSearchHistory(historyItem)
+                                                searchViewModel.insertSearchHistory(historyItem.toString())
                                                 when (searchScreenState.searchType) {
-                                                    SearchType.ALL -> searchViewModel.searchAll(historyItem)
-                                                    SearchType.SONGS -> searchViewModel.searchSongs(historyItem)
-                                                    SearchType.VIDEOS -> searchViewModel.searchVideos(historyItem)
-                                                    SearchType.ALBUMS -> searchViewModel.searchAlbums(historyItem)
-                                                    SearchType.ARTISTS -> searchViewModel.searchArtists(historyItem)
-                                                    SearchType.PLAYLISTS -> searchViewModel.searchPlaylists(historyItem)
-                                                    SearchType.FEATURED_PLAYLISTS -> searchViewModel.searchFeaturedPlaylist(historyItem)
-                                                    SearchType.PODCASTS -> searchViewModel.searchPodcast(historyItem)
+                                                    SearchType.ALL -> searchViewModel.searchAll(historyItem.toString())
+                                                    SearchType.SONGS -> searchViewModel.searchSongs(historyItem.toString())
+                                                    SearchType.VIDEOS -> searchViewModel.searchVideos(historyItem.toString())
+                                                    SearchType.ALBUMS -> searchViewModel.searchAlbums(historyItem.toString())
+                                                    SearchType.ARTISTS -> searchViewModel.searchArtists(historyItem.toString())
+                                                    SearchType.PLAYLISTS -> searchViewModel.searchPlaylists(historyItem.toString())
+                                                    SearchType.FEATURED_PLAYLISTS -> searchViewModel.searchFeaturedPlaylist(historyItem.toString())
+                                                    SearchType.PODCASTS -> searchViewModel.searchPodcast(historyItem.toString())
                                                 }
                                             }.padding(horizontal = 12.dp),
                                     verticalAlignment = Alignment.CenterVertically,
@@ -951,9 +953,9 @@ fun SuggestItemRow(
             val subtitle =
                 when (searchResult) {
                     is SongsResult -> searchResult.artists?.map { it.name }?.connectArtists()
-                    is AlbumsResult -> searchResult.artists.map { it.name }.connectArtists()
+                    is AlbumsResult -> searchResult.title
                     is PlaylistsResult -> searchResult.author?.ifEmpty { "YouTube Music" } ?: "YouTube Music"
-                    is ArtistsResult -> (searchResult as ArtistsResult).artist
+                    is ArtistsResult -> (searchResult as? ArtistsResult)?.artist ?: ""
                     is VideosResult -> searchResult.artists?.map { it.name }?.connectArtists()
                     else -> null
                 } ?: "Unknown"

@@ -354,11 +354,13 @@ fun PlaylistFullWidthItems(
     val title = when (data) {
         is PlaylistEntity -> data.name
         is AlbumEntity -> data.title
+        is com.metrolist.music.models.xevrae.XevraePlaylist -> data.entity?.name ?: data.albumEntity?.title ?: ""
         else -> ""
     }
     val thumb = when (data) {
         is PlaylistEntity -> data.thumbnailUrl
         is AlbumEntity -> data.thumbnailUrl
+        is com.metrolist.music.models.xevrae.XevraePlaylist -> data.entity?.thumbnailUrl ?: data.albumEntity?.thumbnailUrl
         else -> null
     }
     Row(

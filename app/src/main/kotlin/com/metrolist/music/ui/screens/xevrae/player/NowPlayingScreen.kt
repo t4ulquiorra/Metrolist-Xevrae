@@ -197,6 +197,15 @@ import kotlin.math.abs
 import kotlin.math.roundToLong
 
 private const val TAG = "NowPlayingScreen"
+
+private fun deriveOrderIndex(
+    queue: List<com.metrolist.innertube.models.SongItem>,
+    videoId: String?,
+): Int {
+    if (videoId == null) return 0
+    val idx = queue.indexOfFirst { it.id == videoId }
+    return if (idx == -1) 0 else idx
+}
 private val RICH_SYNC_TIMESTAMP_REGEX = Regex("""<\d{2}:\d{2}\.\d{2,3}>\s*""")
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalHazeMaterialsApi::class)

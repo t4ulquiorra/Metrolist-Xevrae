@@ -55,9 +55,17 @@ class SearchViewModel @Inject constructor(
     private val _searchScreenUIState = MutableStateFlow<SearchScreenUIState>(SearchScreenUIState.Empty)
     val searchScreenUIState: StateFlow<SearchScreenUIState> = _searchScreenUIState.asStateFlow()
 
+    private val _searchHistory = MutableStateFlow<List<String>>(emptyList())
+    val searchHistory: StateFlow<List<String>> = _searchHistory.asStateFlow()
+
     private val continuations = mutableMapOf<SearchType, String?>()
 
     init {
+        viewModelScope.launch {
+            database.searchHistory().collect { history ->
+                _searchHistory.value = history.map { it.query }
+            }
+        }
         val initialQuery = savedStateHandle.get<String>("query")
         if (initialQuery != null) {
             val decodedQuery = try {

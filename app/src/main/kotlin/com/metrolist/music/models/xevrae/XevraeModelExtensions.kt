@@ -132,6 +132,8 @@ fun LyricsEntity.toLyrics(): Lyrics = Lyrics(
     syncType = null
 )
 
+
+
 fun Track.toSongItem(): com.metrolist.innertube.models.SongItem =
     com.metrolist.innertube.models.SongItem(
         id = videoId,
@@ -140,13 +142,30 @@ fun Track.toSongItem(): com.metrolist.innertube.models.SongItem =
             com.metrolist.innertube.models.Artist(name = it.name, id = it.id)
         } ?: emptyList(),
         album = album?.let {
-            com.metrolist.innertube.models.AlbumRef(name = it.name, id = it.id)
+            com.metrolist.innertube.models.Album(name = it.name, id = it.id)
         },
         duration = durationSeconds,
         thumbnail = thumbnails?.lastOrNull()?.url ?: "",
         explicit = isExplicit,
-        endpoint = null,
     )
 
 fun ArrayList<Track>.toSongItemList(): List<com.metrolist.innertube.models.SongItem> =
     map { it.toSongItem() }
+
+fun PodcastBrowse.EpisodeItem.toTrack(): Track =
+    Track(
+        album = null,
+        artists = listOf(author),
+        duration = durationString,
+        durationSeconds = null,
+        isAvailable = true,
+        isExplicit = false,
+        likeStatus = null,
+        thumbnails = thumbnail,
+        title = title,
+        videoId = videoId,
+        videoType = null,
+        category = null,
+        feedbackTokens = null,
+        resultType = null,
+    )
