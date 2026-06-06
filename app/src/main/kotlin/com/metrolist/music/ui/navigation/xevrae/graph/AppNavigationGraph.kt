@@ -1,5 +1,6 @@
 package com.metrolist.music.ui.navigation.xevrae.graph
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
@@ -9,14 +10,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -27,11 +31,14 @@ import com.metrolist.music.ui.navigation.xevrae.destination.home.HomeDestination
 import com.metrolist.music.ui.navigation.xevrae.destination.library.LibraryDestination
 import com.metrolist.music.ui.navigation.xevrae.destination.player.FullscreenDestination
 import com.metrolist.music.ui.navigation.xevrae.destination.search.SearchDestination
+import com.metrolist.music.ui.screens.ListenTogetherScreen
 import com.metrolist.music.ui.screens.Screens
+import com.metrolist.music.ui.screens.xevrae.XevraeMiniPlayer
 import com.metrolist.music.ui.screens.xevrae.home.HomeScreen
 import com.metrolist.music.ui.screens.xevrae.library.LibraryScreen
 import com.metrolist.music.ui.screens.xevrae.other.SearchScreen
 import com.metrolist.music.ui.screens.xevrae.player.FullscreenPlayer
+import com.metrolist.music.ui.utils.rememberBackdrop
 import com.metrolist.music.viewmodels.xevrae.SharedViewModel
 
 @Composable
@@ -63,6 +70,10 @@ fun AppNavigationGraph(
             currentRoute != null
         }
     }
+
+    val controllerState by sharedViewModel.controllerState.collectAsStateWithLifecycle()
+    val isShowMiniPlayer = controllerState.mediaItem.mediaId.isNotEmpty()
+    val backdrop = rememberBackdrop()
 
     if (isLandscape) {
         Row(modifier = Modifier.fillMaxSize()) {
@@ -105,6 +116,21 @@ fun AppNavigationGraph(
                 buildNavGraph(innerPadding, navController, hideNavBar, showNavBar, showNowPlayingSheet, onScrolling)
             }
             if (showNavigation) {
+                AnimatedVisibility(
+                    visible = isShowMiniPlayer,
+                    enter = fadeIn() + slideInHorizontally { it },
+                    exit = fadeOut() + slideOutHorizontally { it },
+                ) {
+                    XevraeMiniPlayer(
+                        modifier = Modifier
+                            .height(60.dp)
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp),
+                        backdrop = backdrop,
+                        onClick = { navController.navigate(FullscreenDestination) },
+                        onClose = { sharedViewModel.stopPlayer() },
+                    )
+                }
                 AppNavigationBar(
                     navigationItems = navigationItems,
                     currentRoute = currentRoute,
@@ -146,6 +172,9 @@ private fun androidx.navigation.NavGraphBuilder.buildNavGraph(
             hideNavBar = hideNavBar,
             showNavBar = { showNavBar(true); showNowPlayingSheet() },
         )
+    }
+    composable("listen_together") {
+        ListenTogetherScreen(navController = navController)
     }
     homeScreenGraph(innerPadding = innerPadding, navController = navController, latestVersionName = "")
     libraryScreenGraph(innerPadding = innerPadding, navController = navController)
