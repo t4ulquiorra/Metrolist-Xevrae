@@ -344,6 +344,7 @@ class SharedViewModel @Inject constructor(
                 }
         }
         viewModelScope.launch {
+            awaitConnection()
             val tickerJob =
                 launch {
                     while (true) {
