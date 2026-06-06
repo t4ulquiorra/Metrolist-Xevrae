@@ -465,9 +465,9 @@ fun PlayerMenu(
                                     },
                                     onClick = {
                                         if (isPodcast) {
-                                            navController.navigate(PodcastDestination(podcastId = mediaMetadata.album.id))
+                                            navController.navigate(PodcastDestination(podcastId = mediaMetadata.album.id ?: ""))
                                         } else {
-                                            navController.navigate(AlbumDestination(browseId = mediaMetadata.album.id))
+                                            navController.navigate(AlbumDestination(browseId = mediaMetadata.album.id ?: ""))
                                         }
                                         playerBottomSheetState.collapseSoft()
                                         onDismiss()
