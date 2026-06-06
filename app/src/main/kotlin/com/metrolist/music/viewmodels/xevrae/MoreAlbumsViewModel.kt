@@ -6,6 +6,7 @@ import com.metrolist.innertube.models.AlbumItem
 import com.metrolist.music.models.xevrae.AlbumsResult
 import com.metrolist.music.models.xevrae.Thumbnail
 import com.metrolist.music.viewmodels.xevrae.base.BaseViewModel
+import com.metrolist.music.playback.PlayerConnectionProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +15,9 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class MoreAlbumsViewModel @Inject constructor(
-    @dagger.hilt.android.qualifiers.ApplicationContext private val appContext: android.content.Context,) : BaseViewModel(appContext) {
+    @dagger.hilt.android.qualifiers.ApplicationContext private val appContext: android.content.Context,
+    playerConnectionProvider: com.metrolist.music.playback.PlayerConnectionProvider,
+) : BaseViewModel(appContext, playerConnectionProvider) {
     private val _uiState = MutableStateFlow<MoreAlbumsUIState>(MoreAlbumsUIState.Loading)
     val uiState: StateFlow<MoreAlbumsUIState> get() = _uiState
 
