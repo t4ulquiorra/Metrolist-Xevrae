@@ -18,7 +18,7 @@ import com.metrolist.music.ui.screens.xevrae.home.SettingScreen
 import com.metrolist.music.ui.screens.xevrae.home.analytics.AnalyticsScreen
 import com.metrolist.music.ui.screens.xevrae.other.CreditScreen
 
-import com.metrolist.music.ui.screens.settings.SettingsScreen
+import com.metrolist.music.ui.screens.xevrae.home.SettingScreen
 
 fun NavGraphBuilder.homeScreenGraph(
     innerPadding: PaddingValues,
@@ -50,9 +50,8 @@ fun NavGraphBuilder.homeScreenGraph(
         )
     }
     composable<SettingsDestination> {
-        SettingsScreen(
+        SettingScreen(
             navController = navController,
-            latestVersionName = latestVersionName,
         )
     }
     composable<AnalyticsDestination> {
