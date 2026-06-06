@@ -3,6 +3,8 @@
  * Licensed under GPL-3.0 | See git history for contributors
  */
 
+@file:OptIn(kotlin.time.ExperimentalTime::class)
+
 package com.metrolist.music.extensions
 
 import com.metrolist.music.db.entities.SearchHistory
