@@ -165,6 +165,7 @@ import com.metrolist.music.playback.DownloadUtil
 import com.metrolist.music.playback.MusicService
 import com.metrolist.music.playback.MusicService.MusicBinder
 import com.metrolist.music.playback.PlayerConnection
+import com.metrolist.music.playback.PlayerConnectionProvider
 import com.metrolist.music.playback.queues.YouTubeQueue
 import com.metrolist.music.ui.component.AccountSettingsDialog
 import com.metrolist.music.ui.component.AdaptiveScaffold
@@ -249,6 +250,9 @@ class MainActivity : ComponentActivity() {
     private var pendingIntent: Intent? = null
     private var latestVersionName by mutableStateOf(BuildConfig.VERSION_NAME)
 
+    @Inject
+    lateinit var playerConnectionProvider: PlayerConnectionProvider
+
     // Keep PlayerConnection as regular property - NOT mutableStateOf to prevent UI recomposition
     // when it becomes null during onStop. Only update the snapshot for Compose when needed.
     private var playerConnection: PlayerConnection? = null
@@ -269,6 +273,7 @@ class MainActivity : ComponentActivity() {
                     try {
                         playerConnection = PlayerConnection(this@MainActivity, service, database, lifecycleScope)
                         playerConnectionSnapshot = playerConnection
+                        playerConnectionProvider.connection = playerConnection
                         Timber.tag("MainActivity").d("PlayerConnection created successfully")
                         // Connect Listen Together manager to player
                         listenTogetherManager.setPlayerConnection(playerConnection)
@@ -280,6 +285,7 @@ class MainActivity : ComponentActivity() {
                             try {
                                 playerConnection = PlayerConnection(this@MainActivity, service, database, lifecycleScope)
                                 playerConnectionSnapshot = playerConnection
+                                playerConnectionProvider.connection = playerConnection
                                 listenTogetherManager.setPlayerConnection(playerConnection)
                             } catch (e2: Exception) {
                                 Timber.tag("MainActivity").e(e2, "Failed to create PlayerConnection on retry")

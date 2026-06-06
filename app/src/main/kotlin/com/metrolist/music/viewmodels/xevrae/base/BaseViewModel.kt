@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.metrolist.music.playback.PlayerConnection
+import com.metrolist.music.playback.PlayerConnectionProvider
 import com.metrolist.music.utils.Logger
 import com.metrolist.music.utils.LogLevel
 import javax.inject.Inject
@@ -21,7 +22,11 @@ abstract class BaseViewModel(
     protected val context: Context
 ) : ViewModel() {
     @Inject
-    internal lateinit var playerConnection: PlayerConnection
+    internal lateinit var playerConnectionProvider: PlayerConnectionProvider
+
+    protected val playerConnection: PlayerConnection
+        get() = playerConnectionProvider.connection
+            ?: throw IllegalStateException("PlayerConnection not yet initialized")
     private val _nowPlayingVideoId: MutableStateFlow<String> = MutableStateFlow("")
 
     /**
