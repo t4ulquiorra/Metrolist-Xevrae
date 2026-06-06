@@ -3,9 +3,9 @@
  * Licensed under GPL-3.0 | See git history for contributors
  */
 
-@file:OptIn(kotlin.time.ExperimentalTime::class)
-
 package com.metrolist.music.extensions
+
+import kotlinx.datetime.Clock
 
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
@@ -20,7 +20,7 @@ import com.metrolist.music.db.entities.SearchHistory
 
 fun List<SearchHistory>.toQueryList(): List<String> = map { it.query }
 
-fun now(): LocalDateTime = kotlinx.datetime.Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+fun now(): LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
 
 fun LocalDateTime.isBefore(other: LocalDateTime): Boolean = this < other
