@@ -5,6 +5,9 @@
 
 package com.metrolist.music.extensions
 
+import android.app.Activity
+import android.content.ContextWrapper
+
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
@@ -33,9 +36,6 @@ fun Context.isInternetConnected(): Boolean {
     val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
     return networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ?: false
 }
-
-import android.app.Activity
-import android.content.ContextWrapper
 
 fun findActivity(context: android.content.Context): Activity {
     var ctx = context

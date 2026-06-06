@@ -1,6 +1,7 @@
 package com.metrolist.music.extensions
 
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
@@ -21,3 +22,21 @@ fun Modifier.isElementVisible(onVisibilityChanged: (Boolean) -> Unit): Modifier 
     this.onGloballyPositioned { coords ->
         onVisibilityChanged(coords.isAttached)
     }
+
+@Composable
+fun LazyGridState.isScrollingUp(): androidx.compose.runtime.State<Boolean> {
+    var previousIndex by remember(this) { androidx.compose.runtime.mutableIntStateOf(firstVisibleItemIndex) }
+    var previousScrollOffset by remember(this) { androidx.compose.runtime.mutableIntStateOf(firstVisibleItemScrollOffset) }
+    return remember(this) {
+        derivedStateOf {
+            if (previousIndex != firstVisibleItemIndex) {
+                previousIndex > firstVisibleItemIndex
+            } else {
+                previousScrollOffset >= firstVisibleItemScrollOffset
+            }.also {
+                previousIndex = firstVisibleItemIndex
+                previousScrollOffset = firstVisibleItemScrollOffset
+            }
+        }
+    }
+}

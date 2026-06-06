@@ -599,6 +599,29 @@ class HomeViewModel @Inject constructor(
         }
     )
 
+    fun markWrappedAsSeen() { /* stub */ }
+
+    fun loadMoreYouTubeItems(continuation: String?) {
+        if (continuation == null) return
+        viewModelScope.launch {
+            YouTube.home(continuation = continuation).onSuccess { page ->
+                homePage.update { current ->
+                    current?.copy(
+                        sections = (current.sections + page.sections),
+                        continuation = page.continuation,
+                    )
+                }
+            }
+        }
+    }
+
+    fun toggleChip(chip: HomePage.Chip?) {
+        selectedChip.value = if (selectedChip.value == chip) null else chip
+    }
+
+    fun getRandomItem(): Any? =
+        homePage.value?.sections?.flatMap { it.items }?.randomOrNull()
+
     companion object {
         val ShouldShowLogInAlertKey = booleanPreferencesKey("shouldShowLogInRequiredAlert")
         val ChartKey = stringPreferencesKey("chartKey")
@@ -616,29 +639,3 @@ class HomeViewModel @Inject constructor(
         const val HOME_PARAMS_FOCUS = "ggM8SgQIBxABSgQIBRABSgQICRABSgQIChABSgQIDRABSgQICBABSgQIBBABSgQIDhABSgQIAxABSgQIBhAD"
     }
 }
-
-    fun markWrappedAsSeen() {
-        // stub
-    }
-
-    fun loadMoreYouTubeItems(continuation: String?) {
-        if (continuation == null) return
-        viewModelScope.launch {
-            YouTube.getHomePage(continuation).onSuccess { page ->
-                homePage.update { current ->
-                    current?.copy(
-                        sections = (current.sections + page.sections).distinctBy { it.label },
-                        continuation = page.continuation,
-                    )
-                }
-            }
-        }
-    }
-
-    fun toggleChip(chip: HomePage.Chip?) {
-        selectedChip.value = if (selectedChip.value == chip) null else chip
-    }
-
-    fun getRandomItem(): Any? {
-        return homePage.value?.sections?.flatMap { it.items }?.randomOrNull()
-    }

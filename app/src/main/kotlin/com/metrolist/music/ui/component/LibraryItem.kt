@@ -119,7 +119,7 @@ fun LibraryItem(
                                         val song = item as SongEntity
                                         SongFullWidthItems(
                                             songEntity = song,
-                                            isPlaying = song.videoId == state.type.playingVideoId,
+                                            isPlaying = song.id == state.type.playingVideoId,
                                             onMoreClickListener = {
                                                 selectedSong = song
                                                 showBottomSheet = true
@@ -194,9 +194,9 @@ fun LibraryItem(
                                         model =
                                             ImageRequest
                                                 .Builder(LocalContext.current)
-                                                .data(song.canvasThumbUrl)
+                                                .data(song.thumbnailUrl)
                                                 .diskCachePolicy(CachePolicy.ENABLED)
-                                                .diskCacheKey(song.canvasThumbUrl)
+                                                .diskCacheKey(song.thumbnailUrl)
                                                 .crossfade(true)
                                                 .build(),
                                         placeholder = ColorPainter(Color(0xFF2A2A2A)),
@@ -232,7 +232,7 @@ fun LibraryItem(
                                                     ).focusable(),
                                         )
                                         Row(verticalAlignment = Alignment.CenterVertically) {
-                                            if (song.isExplicit) {
+                                            if (song.explicit) {
                                                 ExplicitBadge(
                                                     modifier =
                                                         Modifier
@@ -241,7 +241,7 @@ fun LibraryItem(
                                                 )
                                             }
                                             Text(
-                                                text = (song.artistName?.connectArtists() ?: ""),
+                                                text = (""),
                                                 style = typo().bodySmall,
                                                 maxLines = 1,
                                                 modifier =

@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class LocalPlaylistDestination(
-    val id: Long,
+    val id: String,
 )

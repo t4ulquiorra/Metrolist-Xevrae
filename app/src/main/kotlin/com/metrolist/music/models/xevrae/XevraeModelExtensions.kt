@@ -175,9 +175,10 @@ fun com.metrolist.innertube.models.SongItem.toMetadataSongEntity(): com.metrolis
         id = id,
         title = title,
         thumbnailUrl = thumbnail,
-        explicit = explicit,
         duration = duration ?: -1,
+        explicit = explicit,
     )
+
 
 fun com.metrolist.innertube.models.SongItem.toTrackCompat(): Track =
     Track(
@@ -200,12 +201,9 @@ fun com.metrolist.innertube.models.SongItem.toTrackCompat(): Track =
 fun com.metrolist.innertube.models.SongItem.toSongEntity(): com.metrolist.music.db.entities.SongEntity =
     com.metrolist.music.db.entities.SongEntity(
         id = id,
-        title = title.orEmpty(),
-        artistsText = artists?.joinToString { it.name } ?: "",
-        thumbnailUrl = thumbnail?.url,
-        duration = duration,
-        liked = false,
-        totalPlayTime = 0,
-        downloadState = 0,
-        inLibrary = null,
+        title = title,
+        thumbnailUrl = thumbnail,
+        duration = duration ?: -1,
+        explicit = explicit,
     )
+
