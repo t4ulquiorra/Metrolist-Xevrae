@@ -941,9 +941,7 @@ class MainActivity : ComponentActivity() {
                     val isListenTogetherScreen =
                         currentRoute == Screens.ListenTogether.route ||
                             currentRoute == "listen_together_from_topbar"
-                    shouldShowTopBar = currentRoute in topLevelScreens &&
-                        currentRoute != "settings" &&
-                        !(isListenTogetherScreen && listenTogetherInTopBar)
+                    shouldShowTopBar = false // xevrae uses its own header
                 }
 
                 val coroutineScope = rememberCoroutineScope()
