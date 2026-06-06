@@ -5,27 +5,22 @@
 
 package com.metrolist.music.extensions
 
-import kotlinx.datetime.Clock
 
-import kotlinx.datetime.DateTimeUnit
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atTime
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
-import kotlinx.datetime.toLocalDateTime
 
 import com.metrolist.music.db.entities.SearchHistory
 
 fun List<SearchHistory>.toQueryList(): List<String> = map { it.query }
 
-fun now(): LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+fun now(): java.time.LocalDateTime = java.time.LocalDateTime.now()
 
 
-fun LocalDateTime.isBefore(other: LocalDateTime): Boolean = this < other
+fun java.time.LocalDateTime.isBefore2(other: java.time.LocalDateTime): Boolean = this.isBefore(other)
 
-fun LocalDateTime.isAfter(other: LocalDateTime): Boolean = this > other
+fun java.time.LocalDateTime.isAfter2(other: java.time.LocalDateTime): Boolean = this.isAfter(other)
 
 fun LocalDateTime.plusSeconds(seconds: Long): LocalDateTime =
     this
