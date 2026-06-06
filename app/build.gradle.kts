@@ -399,6 +399,7 @@ dependencies {
     implementation(libs.ktor.serialization.json)
     implementation(libs.ktor.serialization.protobuf)
     implementation(libs.kotlinx.serialization.protobuf)
+    implementation(libs.kotlinx.datetime)
     implementation(libs.brotli)
 
     // Protobuf for message serialization (lite version for Android)
