@@ -278,7 +278,7 @@ fun LibraryItem(
                                                 is PlaylistsResult -> {
                                                     navController.navigate(
                                                         PlaylistDestination(
-                                                            item.id,
+                                                            item.browseId,
                                                             isYourYouTubePlaylist = true,
                                                         ),
                                                     )

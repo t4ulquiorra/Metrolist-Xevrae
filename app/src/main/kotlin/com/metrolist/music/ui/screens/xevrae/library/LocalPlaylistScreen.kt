@@ -13,7 +13,7 @@ import com.metrolist.music.viewmodels.xevrae.SharedViewModel
 
 @Composable
 fun LocalPlaylistScreen(
-    id: Long,
+    id: String,
     sharedViewModel: SharedViewModel = hiltViewModel(),
     viewModel: LocalPlaylistViewModel = hiltViewModel(),
     navController: NavController,
