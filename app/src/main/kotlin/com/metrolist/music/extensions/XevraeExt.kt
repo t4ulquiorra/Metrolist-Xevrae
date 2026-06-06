@@ -1,14 +1,9 @@
-/**
- * Metrolist Project (C) 2026
- * Licensed under GPL-3.0 | See git history for contributors
- */
-
 @file:OptIn(kotlin.time.ExperimentalTime::class)
 
 package com.metrolist.music.extensions
 
 import com.metrolist.music.db.entities.SearchHistory
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
