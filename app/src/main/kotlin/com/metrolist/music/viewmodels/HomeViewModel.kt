@@ -30,6 +30,7 @@ import com.metrolist.innertube.pages.ExplorePage
 import com.metrolist.innertube.pages.HomePage
 import com.metrolist.innertube.utils.completed
 import com.metrolist.music.constants.ContentCountryKey
+import com.metrolist.music.playback.PlayerConnectionProvider
 import com.metrolist.music.constants.ContentLanguageKey
 import com.metrolist.music.constants.HideExplicitKey
 import com.metrolist.music.constants.HideVideoSongsKey
@@ -98,7 +99,8 @@ class HomeViewModel @Inject constructor(
     val wrappedManager: WrappedManager,
     private val wrappedAudioService: WrappedAudioService,
     private val savedStateHandle: SavedStateHandle,
-) : BaseViewModel(context) {
+    playerConnectionProvider: PlayerConnectionProvider,
+) : BaseViewModel(context, playerConnectionProvider) {
 
     // --- Metrolist Original Flows ---
     val isRefreshing = MutableStateFlow(false)

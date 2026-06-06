@@ -15,6 +15,7 @@ import com.metrolist.innertube.models.PlaylistItem
 import com.metrolist.innertube.models.SongItem
 import com.metrolist.innertube.pages.MoodAndGenres
 import com.metrolist.music.models.xevrae.MoodContent
+import com.metrolist.music.playback.PlayerConnectionProvider
 import com.metrolist.music.models.xevrae.MoodItem
 import com.metrolist.music.models.xevrae.MoodsMomentObject
 import com.metrolist.music.models.xevrae.Thumbnail
@@ -30,7 +31,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MoodViewModel @Inject constructor(
     @ApplicationContext context: Context,
-) : BaseViewModel(context) {
+    playerConnectionProvider: PlayerConnectionProvider,
+) : BaseViewModel(context, playerConnectionProvider) {
 
     // --- Metrolist Original State ---
     val moodAndGenres = MutableStateFlow<List<MoodAndGenres>?>(null)

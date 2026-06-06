@@ -8,6 +8,7 @@ import com.metrolist.innertube.models.PlaylistItem
 import com.metrolist.innertube.models.SongItem
 import com.metrolist.innertube.models.WatchEndpoint
 import com.metrolist.music.db.MusicDatabase
+import com.metrolist.music.playback.PlayerConnectionProvider
 import com.metrolist.music.db.entities.ArtistEntity
 import com.metrolist.music.db.entities.SongEntity
 import com.metrolist.music.models.xevrae.Albums
@@ -33,7 +34,8 @@ import kotlinx.coroutines.launch
 class ArtistViewModel @Inject constructor(
     @dagger.hilt.android.qualifiers.ApplicationContext context: android.content.Context,
     private val database: MusicDatabase,
-) : BaseViewModel(context) {
+    playerConnectionProvider: PlayerConnectionProvider,
+) : BaseViewModel(context, playerConnectionProvider) {
     // It is dynamic and can be changed by the user, so separate it from the ArtistScreenData
     private var _canvasUrl: MutableStateFlow<Pair<String, SongEntity>?> = MutableStateFlow(null)
     var canvasUrl: StateFlow<Pair<String, SongEntity>?> = _canvasUrl

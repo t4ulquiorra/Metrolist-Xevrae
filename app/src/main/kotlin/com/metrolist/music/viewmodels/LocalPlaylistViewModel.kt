@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import com.metrolist.innertube.YouTube
 import com.metrolist.innertube.models.PlaylistItem
 import com.metrolist.music.constants.HideVideoSongsKey
+import com.metrolist.music.playback.PlayerConnectionProvider
 import com.metrolist.music.constants.PlaylistSongSortDescendingKey
 import com.metrolist.music.constants.PlaylistSongSortType
 import com.metrolist.music.constants.PlaylistSongSortTypeKey
@@ -54,7 +55,8 @@ constructor(
     private val database: MusicDatabase,
     private val dataStoreManager: DataStoreManager,
     savedStateHandle: SavedStateHandle,
-) : BaseViewModel(context) {
+    playerConnectionProvider: PlayerConnectionProvider,
+) : BaseViewModel(context, playerConnectionProvider) {
     val playlistId = savedStateHandle.get<String>("playlistId")!!
 
     private val _uiState: MutableStateFlow<LocalPlaylistState> = MutableStateFlow(LocalPlaylistState.initial())

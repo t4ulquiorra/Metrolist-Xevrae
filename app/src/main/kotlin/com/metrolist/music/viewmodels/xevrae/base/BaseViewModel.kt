@@ -19,10 +19,9 @@ import com.metrolist.music.extensions.toMediaItem
 import com.metrolist.music.playback.queues.ListQueue
 
 abstract class BaseViewModel(
-    protected val context: Context
+    protected val context: Context,
+    internal val playerConnectionProvider: PlayerConnectionProvider
 ) : ViewModel() {
-    @Inject
-    internal lateinit var playerConnectionProvider: PlayerConnectionProvider
 
     internal val playerConnection: PlayerConnection
         get() = playerConnectionProvider.connection

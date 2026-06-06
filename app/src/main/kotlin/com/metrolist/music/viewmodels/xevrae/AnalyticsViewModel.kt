@@ -2,6 +2,7 @@ package com.metrolist.music.viewmodels.xevrae
 
 import androidx.lifecycle.viewModelScope
 import com.metrolist.music.db.MusicDatabase
+import com.metrolist.music.playback.PlayerConnectionProvider
 import com.metrolist.music.db.entities.Album
 import com.metrolist.music.db.entities.Artist
 import com.metrolist.music.db.entities.Event
@@ -43,7 +44,8 @@ val ANALYTICS_DAY_RANGE_KEY = stringPreferencesKey("analytics_day_range")
 class AnalyticsViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val database: MusicDatabase,
-) : BaseViewModel(context) {
+    playerConnectionProvider: PlayerConnectionProvider,
+) : BaseViewModel(context, playerConnectionProvider) {
     private val _analyticsUIState: MutableStateFlow<AnalyticsUiState> =
         MutableStateFlow(AnalyticsUiState())
     val analyticsUIState: StateFlow<AnalyticsUiState> get() = _analyticsUIState.asStateFlow()

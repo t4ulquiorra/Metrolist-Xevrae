@@ -15,6 +15,7 @@ import coil3.imageLoader
 import com.eygraber.uri.Uri
 import com.eygraber.uri.toAndroidUri
 import com.metrolist.music.common.Config
+import com.metrolist.music.playback.PlayerConnectionProvider
 import com.metrolist.music.common.DB_NAME
 import com.metrolist.music.common.DOWNLOAD_EXOPLAYER_FOLDER
 import com.metrolist.music.common.EXOPLAYER_DB_NAME
@@ -63,7 +64,8 @@ class SettingsViewModel @javax.inject.Inject constructor(
     @dagger.hilt.android.qualifiers.ApplicationContext context: android.content.Context,
     private val dataStoreManager: DataStoreManager,
     private val database: MusicDatabase,
-) : BaseViewModel(context) {
+    playerConnectionProvider: PlayerConnectionProvider,
+) : BaseViewModel(context, playerConnectionProvider) {
     private val commonRepository = CommonRepository(database, context)
     private val songRepository = SongRepository(database)
     private val accountRepository = AccountRepository(database)

@@ -77,6 +77,7 @@ import com.metrolist.music.models.xevrae.Thumbnail
 import com.metrolist.music.models.xevrae.XevraePlaylist
 import com.metrolist.music.models.xevrae.XevraeRecently
 import com.metrolist.music.playback.DownloadUtil
+import com.metrolist.music.playback.PlayerConnectionProvider
 import com.metrolist.music.ui.screens.xevrae.library.LibraryDynamicPlaylistType
 import com.metrolist.music.utils.Resource
 import com.metrolist.music.utils.SyncUtils
@@ -640,7 +641,8 @@ constructor(
 class LibraryViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val database: MusicDatabase,
-) : BaseViewModel(context) {
+    playerConnectionProvider: PlayerConnectionProvider,
+) : BaseViewModel(context, playerConnectionProvider) {
     private val dataStore = context.dataStore
     private val libraryCurrentScreenKey = stringPreferencesKey("library_current_screen")
 
@@ -838,7 +840,8 @@ class LibraryViewModel @Inject constructor(
 class LibraryDynamicPlaylistViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val database: MusicDatabase,
-) : BaseViewModel(context) {
+    playerConnectionProvider: PlayerConnectionProvider,
+) : BaseViewModel(context, playerConnectionProvider) {
     private val _listFavoriteSong: MutableStateFlow<List<SongEntity>> = MutableStateFlow(emptyList())
     val listFavoriteSong: StateFlow<List<SongEntity>> get() = _listFavoriteSong
 

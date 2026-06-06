@@ -15,6 +15,7 @@ import com.metrolist.innertube.models.PlaylistItem
 import com.metrolist.innertube.models.SongItem
 import com.metrolist.innertube.models.WatchEndpoint
 import com.metrolist.music.db.MusicDatabase
+import com.metrolist.music.playback.PlayerConnectionProvider
 import com.metrolist.music.db.entities.ArtistEntity
 import com.metrolist.music.db.entities.SongEntity
 import com.metrolist.music.models.xevrae.Albums
@@ -44,7 +45,8 @@ class ArtistViewModel @Inject constructor(
     private val database: MusicDatabase,
     private val syncUtils: SyncUtils,
     private val savedStateHandle: SavedStateHandle,
-) : BaseViewModel(context) {
+    playerConnectionProvider: PlayerConnectionProvider,
+) : BaseViewModel(context, playerConnectionProvider) {
 
     private val artistIdArg = savedStateHandle.get<String>("artistId") ?: savedStateHandle.get<String>("channelId") ?: ""
     private val isPodcastChannelArg = savedStateHandle.get<Boolean>("isPodcastChannel") ?: false

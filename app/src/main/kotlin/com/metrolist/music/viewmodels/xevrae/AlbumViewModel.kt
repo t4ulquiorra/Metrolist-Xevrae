@@ -11,6 +11,7 @@ import com.metrolist.music.db.entities.Album
 import com.metrolist.music.db.entities.Song
 import com.metrolist.music.db.entities.AlbumEntity
 import com.metrolist.music.playback.DownloadUtil
+import com.metrolist.music.playback.PlayerConnectionProvider
 import com.metrolist.music.ui.theme.xevrae.md_theme_dark_background
 import com.metrolist.music.viewmodels.xevrae.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,7 +38,8 @@ class AlbumViewModel @Inject constructor(
     private val database: MusicDatabase,
     private val downloadUtil: DownloadUtil,
     @ApplicationContext context: Context,
-) : BaseViewModel(context) {
+    playerConnectionProvider: PlayerConnectionProvider,
+) : BaseViewModel(context, playerConnectionProvider) {
     private val _uiState: MutableStateFlow<AlbumUIState> = MutableStateFlow(AlbumUIState.initial())
     val uiState: StateFlow<AlbumUIState> = _uiState
 

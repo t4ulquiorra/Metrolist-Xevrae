@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.metrolist.music.constants.DataSyncIdKey
+import com.metrolist.music.playback.PlayerConnectionProvider
 import com.metrolist.music.constants.DiscordTokenKey
 import com.metrolist.music.constants.InnerTubeCookieKey
 import com.metrolist.music.constants.VisitorDataKey
@@ -23,7 +24,8 @@ val SpotifySpdcKey = stringPreferencesKey("spotify_spdc")
 @HiltViewModel
 class LogInViewModel @Inject constructor(
     @ApplicationContext context: Context,
-) : BaseViewModel(context) {
+    playerConnectionProvider: PlayerConnectionProvider,
+) : BaseViewModel(context, playerConnectionProvider) {
     private val _spotifyStatus: MutableStateFlow<Boolean> = MutableStateFlow(false)
     val spotifyStatus: StateFlow<Boolean> get() = _spotifyStatus
 

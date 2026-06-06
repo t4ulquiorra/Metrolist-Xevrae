@@ -42,6 +42,7 @@ import com.metrolist.music.utils.Resource
 import com.metrolist.innertube.models.SongItem
 import com.metrolist.innertube.YouTube
 import com.metrolist.music.playback.PlayerConnection
+import com.metrolist.music.playback.PlayerConnectionProvider
 import com.metrolist.music.models.xevrae.toMediaItem
 import com.metrolist.music.extensions.metadata
 import com.metrolist.music.utils.Logger
@@ -100,7 +101,8 @@ class SharedViewModel @Inject constructor(
     private val playlistRepository: PlaylistRepository,
     private val lyricsCanvasRepository: LyricsCanvasRepository,
     private val cacheRepository: CacheRepository,
-) : BaseViewModel(context) {
+    playerConnectionProvider: PlayerConnectionProvider,
+) : BaseViewModel(context, playerConnectionProvider) {
     var isFirstLiked: Boolean = false
     var isFirstMiniplayer: Boolean = false
     var isFirstSuggestions: Boolean = false

@@ -19,6 +19,7 @@ import com.metrolist.music.domain.mediaservice.handler.PlaylistType
 import com.metrolist.music.domain.mediaservice.handler.QueueData
 import com.metrolist.music.models.xevrae.PlaylistState
 import com.metrolist.music.playback.DownloadUtil
+import com.metrolist.music.playback.PlayerConnectionProvider
 import com.metrolist.music.playback.ExoDownloadService
 import com.metrolist.music.viewmodels.xevrae.PlaylistUIState.Error
 import com.metrolist.music.viewmodels.xevrae.PlaylistUIState.Loading
@@ -43,7 +44,8 @@ class PlaylistViewModel @Inject constructor(
     private val database: MusicDatabase,
     private val downloadUtil: DownloadUtil,
     @ApplicationContext context: Context,
-) : BaseViewModel(context) {
+    playerConnectionProvider: PlayerConnectionProvider,
+) : BaseViewModel(context, playerConnectionProvider) {
     private var _uiState = MutableStateFlow<PlaylistUIState>(Loading)
     val uiState: StateFlow<PlaylistUIState> = _uiState
 

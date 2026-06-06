@@ -23,6 +23,7 @@ import com.metrolist.music.db.entities.Album
 import com.metrolist.music.domain.mediaservice.handler.PlaylistType
 import com.metrolist.music.domain.mediaservice.handler.QueueData
 import com.metrolist.music.playback.DownloadUtil
+import com.metrolist.music.playback.PlayerConnectionProvider
 import com.metrolist.music.playback.ExoDownloadService
 import com.metrolist.music.ui.theme.xevrae.md_theme_dark_background
 import com.metrolist.music.viewmodels.xevrae.LocalPlaylistState
@@ -47,7 +48,8 @@ class AlbumViewModel @Inject constructor(
     private val downloadUtil: DownloadUtil,
     private val savedStateHandle: SavedStateHandle,
     @ApplicationContext context: Context,
-) : BaseViewModel(context) {
+    playerConnectionProvider: PlayerConnectionProvider,
+) : BaseViewModel(context, playerConnectionProvider) {
 
     val albumId = savedStateHandle.get<String>("albumId") ?: savedStateHandle.get<String>("browseId") ?: ""
     val playlistId = MutableStateFlow("")

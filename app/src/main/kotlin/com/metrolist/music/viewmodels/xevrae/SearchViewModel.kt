@@ -14,6 +14,7 @@ import com.metrolist.innertube.models.filterExplicit
 import com.metrolist.innertube.models.filterVideoSongs
 import com.metrolist.innertube.models.filterYoutubeShorts
 import com.metrolist.music.constants.HideExplicitKey
+import com.metrolist.music.playback.PlayerConnectionProvider
 import com.metrolist.music.constants.HideVideoSongsKey
 import com.metrolist.music.constants.HideYoutubeShortsKey
 import com.metrolist.music.db.MusicDatabase
@@ -47,7 +48,8 @@ class SearchViewModel @Inject constructor(
     @ApplicationContext context: android.content.Context,
     private val database: MusicDatabase,
     private val savedStateHandle: SavedStateHandle,
-) : BaseViewModel(context) {
+    playerConnectionProvider: PlayerConnectionProvider,
+) : BaseViewModel(context, playerConnectionProvider) {
 
     private val _searchScreenState = MutableStateFlow(SearchScreenState())
     val searchScreenState: StateFlow<SearchScreenState> = _searchScreenState.asStateFlow()

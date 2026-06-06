@@ -14,6 +14,7 @@ import com.metrolist.music.db.entities.PlaylistSongMap
 import com.metrolist.music.db.entities.SongEntity
 import com.metrolist.music.models.xevrae.*
 import com.metrolist.music.playback.DownloadUtil
+import com.metrolist.music.playback.PlayerConnectionProvider
 import com.metrolist.music.playback.ExoDownloadService
 import com.metrolist.music.playback.PlayerConnection
 import com.metrolist.music.utils.dataStore
@@ -47,7 +48,8 @@ class NowPlayingBottomSheetViewModel @Inject constructor(
     @ApplicationContext context: Context,
     private val database: MusicDatabase,
     private val downloadUtil: DownloadUtil,
-) : BaseViewModel(context) {
+    playerConnectionProvider: PlayerConnectionProvider,
+) : BaseViewModel(context, playerConnectionProvider) {
     private val _uiState: MutableStateFlow<NowPlayingBottomSheetUIState> =
         MutableStateFlow(
             NowPlayingBottomSheetUIState(
