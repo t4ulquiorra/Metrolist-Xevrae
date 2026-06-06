@@ -211,7 +211,7 @@ fun PlayerMenu(
                             .fillParentMaxWidth()
                             .height(ListItemHeight)
                             .clickable {
-                                navController.navigate(ArtistDestination(channelId = artist.id))
+                                navController.navigate(ArtistDestination(channelId = artist.id ?: ""))
                                 showSelectArtistDialog = false
                                 playerBottomSheetState.collapseSoft()
                                 onDismiss()
@@ -435,7 +435,7 @@ fun PlayerMenu(
                                     },
                                     onClick = {
                                         if (mediaMetadata.artists.size == 1) {
-                                            navController.navigate(ArtistDestination(channelId = mediaMetadata.artists[0].id))
+                                            navController.navigate(ArtistDestination(channelId = mediaMetadata.artists[0].id ?: ""))
                                             playerBottomSheetState.collapseSoft()
                                             onDismiss()
                                         } else {
