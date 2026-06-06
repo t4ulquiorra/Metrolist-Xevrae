@@ -707,7 +707,7 @@ class MainActivity : ComponentActivity() {
                 val homeViewModel: HomeViewModel = hiltViewModel()
                 val accountImageUrl by homeViewModel.accountImageUrl.collectAsStateWithLifecycle()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val (previousTab, setPreviousTab) = rememberSaveable { mutableStateOf("home") }
+                val (previousTab, setPreviousTab) = rememberSaveable { mutableStateOf("com.metrolist.music.ui.navigation.xevrae.destination.home.HomeDestination") }
 
                 val (listenTogetherInTopBar) = rememberPreference(ListenTogetherInTopBarKey, defaultValue = true)
                 val navigationItems =

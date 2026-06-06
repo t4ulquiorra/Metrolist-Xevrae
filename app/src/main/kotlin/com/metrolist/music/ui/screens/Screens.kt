@@ -21,14 +21,14 @@ sealed class Screens(
         titleId = R.string.home,
         iconIdInactive = R.drawable.home_outlined,
         iconIdActive = R.drawable.home_filled,
-        route = "home"
+        route = "com.metrolist.music.ui.navigation.xevrae.destination.home.HomeDestination"
     )
 
     object Search : Screens(
         titleId = R.string.search,
         iconIdInactive = R.drawable.search,
         iconIdActive = R.drawable.search,
-        route = "search_input"
+        route = "com.metrolist.music.ui.navigation.xevrae.destination.search.SearchDestination"
     )
 
     object ListenTogether : Screens(
@@ -42,7 +42,7 @@ sealed class Screens(
         titleId = R.string.filter_library,
         iconIdInactive = R.drawable.library_music_outlined,
         iconIdActive = R.drawable.library_music_filled,
-        route = "library"
+        route = "com.metrolist.music.ui.navigation.xevrae.destination.library.LibraryDestination"
     )
 
     companion object {

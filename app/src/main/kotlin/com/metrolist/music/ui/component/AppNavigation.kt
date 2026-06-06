@@ -48,7 +48,7 @@ private fun isRouteSelected(currentRoute: String?, screenRoute: String, navigati
         currentRoute.startsWith("$screenRoute/")) return true
 
     // Fix: match the route template, not the resolved route
-    if (screenRoute == "search_input" &&
+    if (screenRoute == "com.metrolist.music.ui.navigation.xevrae.destination.search.SearchDestination" &&
         (currentRoute.startsWith("search/") || currentRoute == "search/{query}")) return true
 
     return false
