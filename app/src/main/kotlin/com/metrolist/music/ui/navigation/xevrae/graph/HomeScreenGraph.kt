@@ -51,6 +51,7 @@ fun NavGraphBuilder.homeScreenGraph(
     }
     composable<SettingsDestination> {
         SettingScreen(
+            innerPadding = innerPadding,
             navController = navController,
         )
     }

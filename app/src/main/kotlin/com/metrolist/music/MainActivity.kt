@@ -1145,6 +1145,7 @@ class MainActivity : ComponentActivity() {
                                 AppNavigationGraph(
                                     innerPadding = PaddingValues(0.dp),
                                     navController = navController,
+                                    sharedViewModel = sharedViewModel,
                                     startDestination = HomeDestination,
                                     hideNavBar = { shouldShowBottomBar = false },
                                     showNavBar = { shouldShowBottomBar = true }

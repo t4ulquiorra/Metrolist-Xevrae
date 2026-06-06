@@ -113,7 +113,6 @@ fun AppNavigationGraph(
                     navController.currentBackStackEntry?.savedStateHandle?.set("scrollToTop", true)
                 }
             },
-            modifier = Modifier.align(Alignment.BottomCenter),
         )
     }
 }
