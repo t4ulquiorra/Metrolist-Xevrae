@@ -293,6 +293,7 @@ class SharedViewModel @Inject constructor(
             }
         }
         viewModelScope.launch {
+            awaitConnection()
             playerConnection.currentSong
                 .distinctUntilChangedBy {
                     it?.id

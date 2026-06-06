@@ -12,6 +12,7 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import android.widget.Toast
 import com.metrolist.music.domain.mediaservice.handler.QueueData
@@ -65,10 +66,19 @@ abstract class BaseViewModel(
 
     init {
         viewModelScope.launch {
-            // Wait for playerConnection to be initialized by Hilt
-            // This is a bit hacky but since it's @Inject it should be fine
+            awaitConnection()
             getNowPlayingVideoId()
         }
+    }
+
+    protected suspend fun awaitConnection(): PlayerConnection {
+        var waited = 0
+        while (playerConnectionProvider.connection == null && waited < 100) {
+            delay(50)
+            waited++
+        }
+        return playerConnectionProvider.connection
+            ?: throw IllegalStateException("PlayerConnection never became available")
     }
 
     fun makeToast(message: String?) {
