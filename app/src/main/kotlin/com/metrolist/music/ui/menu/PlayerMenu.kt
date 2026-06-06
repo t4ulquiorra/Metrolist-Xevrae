@@ -8,6 +8,9 @@ package com.metrolist.music.ui.menu
 import android.content.Context
 import android.content.Intent
 import android.media.audiofx.AudioEffect
+import com.metrolist.music.ui.navigation.xevrae.destination.list.ArtistDestination
+import com.metrolist.music.ui.navigation.xevrae.destination.list.AlbumDestination
+import com.metrolist.music.ui.navigation.xevrae.destination.list.PodcastDestination
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import android.content.res.Configuration
@@ -208,7 +211,7 @@ fun PlayerMenu(
                             .fillParentMaxWidth()
                             .height(ListItemHeight)
                             .clickable {
-                                navController.navigate("artist/${artist.id}")
+                                navController.navigate(ArtistDestination(channelId = artist.id))
                                 showSelectArtistDialog = false
                                 playerBottomSheetState.collapseSoft()
                                 onDismiss()
@@ -285,7 +288,7 @@ fun PlayerMenu(
             ) {
                 FilledTonalButton(
                     onClick = {
-                        navController.navigate("equalizer")
+                        /* equalizer: use system intent */ run { val intent = android.content.Intent(android.media.audiofx.AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL); navController.context.startActivity(intent) }
                         onDismiss()
                     },
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
@@ -432,7 +435,7 @@ fun PlayerMenu(
                                     },
                                     onClick = {
                                         if (mediaMetadata.artists.size == 1) {
-                                            navController.navigate("artist/${mediaMetadata.artists[0].id}")
+                                            navController.navigate(ArtistDestination(channelId = mediaMetadata.artists[0].id))
                                             playerBottomSheetState.collapseSoft()
                                             onDismiss()
                                         } else {
@@ -462,9 +465,9 @@ fun PlayerMenu(
                                     },
                                     onClick = {
                                         if (isPodcast) {
-                                            navController.navigate("online_podcast/${mediaMetadata.album.id}")
+                                            navController.navigate(PodcastDestination(podcastId = mediaMetadata.album.id))
                                         } else {
-                                            navController.navigate("album/${mediaMetadata.album.id}")
+                                            navController.navigate(AlbumDestination(browseId = mediaMetadata.album.id))
                                         }
                                         playerBottomSheetState.collapseSoft()
                                         onDismiss()
@@ -722,7 +725,7 @@ fun PlayerMenu(
                                         )
                                     },
                                     onClick = {
-                                        navController.navigate("equalizer")
+                                        /* equalizer: use system intent */ run { val intent = android.content.Intent(android.media.audiofx.AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL); navController.context.startActivity(intent) }
                                         onDismiss()
                                     },
                                 ),
