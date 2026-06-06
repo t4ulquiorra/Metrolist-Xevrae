@@ -72,7 +72,7 @@ fun AppNavigationGraph(
     }
 
     val controllerState by sharedViewModel.controllerState.collectAsStateWithLifecycle()
-    val isShowMiniPlayer = controllerState.mediaItem.mediaId.isNotEmpty()
+    val isShowMiniPlayer = sharedViewModel.nowPlayingState.value?.songEntity != null
     val backdrop = rememberBackdrop()
 
     if (isLandscape) {
