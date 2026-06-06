@@ -24,7 +24,7 @@ abstract class BaseViewModel(
     @Inject
     internal lateinit var playerConnectionProvider: PlayerConnectionProvider
 
-    protected val playerConnection: PlayerConnection
+    internal val playerConnection: PlayerConnection
         get() = playerConnectionProvider.connection
             ?: throw IllegalStateException("PlayerConnection not yet initialized")
     private val _nowPlayingVideoId: MutableStateFlow<String> = MutableStateFlow("")
