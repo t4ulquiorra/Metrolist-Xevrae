@@ -16,13 +16,12 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Clock.System as ClockSystem
 
 import com.metrolist.music.db.entities.SearchHistory
 
 fun List<SearchHistory>.toQueryList(): List<String> = map { it.query }
 
-fun now(): LocalDateTime = ClockSystem.now().toLocalDateTime(TimeZone.currentSystemDefault())
+fun now(): LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
 
 
 fun LocalDateTime.isBefore(other: LocalDateTime): Boolean = this < other

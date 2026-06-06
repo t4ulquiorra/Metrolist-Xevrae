@@ -58,7 +58,7 @@ import com.metrolist.music.ui.utils.pressClickable
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun <T> GridLibraryPlaylist(
+fun <T : Any> GridLibraryPlaylist(
     navController: NavController,
     contentPadding: PaddingValues,
     data: LocalResource<List<T>>,
@@ -198,7 +198,7 @@ fun <T> GridLibraryPlaylist(
                                     is AlbumEntity -> {
                                         navController.navigate(
                                             AlbumDestination(
-                                                item.browseId,
+                                                item.id,
                                             ),
                                         )
                                     }

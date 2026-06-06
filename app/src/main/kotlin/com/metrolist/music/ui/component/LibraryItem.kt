@@ -153,7 +153,7 @@ fun LibraryItem(
                                                         is AlbumEntity -> {
                                                             navController.navigate(
                                                                 AlbumDestination(
-                                                                    item.browseId,
+                                                                    item.id,
                                                                 ),
                                                             )
                                                         }
@@ -278,7 +278,7 @@ fun LibraryItem(
                                                 is PlaylistsResult -> {
                                                     navController.navigate(
                                                         PlaylistDestination(
-                                                            item.browseId,
+                                                            item.id,
                                                             isYourYouTubePlaylist = true,
                                                         ),
                                                     )
@@ -287,7 +287,7 @@ fun LibraryItem(
                                                 is AlbumEntity -> {
                                                     navController.navigate(
                                                         AlbumDestination(
-                                                            item.browseId,
+                                                            item.id,
                                                         ),
                                                     )
                                                 }
