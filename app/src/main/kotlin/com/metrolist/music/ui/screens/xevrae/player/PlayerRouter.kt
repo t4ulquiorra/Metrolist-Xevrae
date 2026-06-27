@@ -4,7 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.metrolist.music.viewmodels.xevrae.SharedViewModel
 import com.metrolist.music.utils.isLandscape
+import androidx.compose.material3.ExperimentalMaterial3Api
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PlayerRouter(
     navController: NavController,
@@ -17,9 +19,7 @@ fun PlayerRouter(
         onDismiss()
     } else {
         NowPlayingScreen(
-            navController = navController,
-            hideNavBar = {},
-            showNavBar = {}
+            navController = navController
         )
     }
 }
