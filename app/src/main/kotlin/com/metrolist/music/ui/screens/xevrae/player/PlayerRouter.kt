@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.metrolist.music.viewmodels.xevrae.SharedViewModel
 import com.metrolist.music.utils.isLandscape
-import com.metrolist.music.ui.component.SidePlayerPanel
 
 @Composable
 fun PlayerRouter(
@@ -15,15 +14,11 @@ fun PlayerRouter(
     val isLandscape = isLandscape()
 
     if (isLandscape) {
-        // In landscape, we might want to just dismiss the fullscreen player 
-        // because the side panel will be visible anyway (if implemented in AdaptiveScaffold)
-        // Or we show a landscape-optimized side panel.
-        // For now, let's follow the plan.
-        onDismiss() 
+        onDismiss()
     } else {
-        FullscreenPlayer(
+        NowPlayingScreen(
             navController = navController,
-            hideNavBar = {}, // Handled by nav graph
+            hideNavBar = {},
             showNavBar = {}
         )
     }
